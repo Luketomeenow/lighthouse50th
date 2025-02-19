@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Upload } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import CountdownTimer from '@/components/CountdownTimer';
@@ -20,6 +21,8 @@ const Index = () => {
     venue: "World Trade Center, Pasay City"
   });
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -58,6 +61,61 @@ const Index = () => {
     navigate('/auth');
   };
 
+  const handleFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('video/')) {
+      toast.error('Please select a video file');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      // Upload to storage
+      const { error: uploadError } = await supabase.storage
+        .from('videos')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('videos')
+        .getPublicUrl(filePath);
+
+      // Update settings
+      const { error: updateError } = await supabase
+        .from('event_settings')
+        .update({ header_video_url: publicUrl })
+        .eq('id', settings.id);
+
+      if (updateError) throw updateError;
+
+      setSettings(prev => ({ ...prev, header_video_url: publicUrl }));
+      toast.success('Video updated successfully');
+    } catch (error: any) {
+      console.error('Error uploading video:', error);
+      toast.error('Error uploading video');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -67,15 +125,32 @@ const Index = () => {
         </video>
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
-        {/* Login Button */}
-        <div className="absolute top-4 right-4 z-30">
+        {/* Login Button and Upload Video Button for Admins */}
+        <div className="absolute top-4 right-4 z-30 flex gap-2">
           {isAdmin ? (
-            <Button
-              onClick={() => navigate('/admin')}
-              className="bg-white text-black hover:bg-white/90"
-            >
-              Go to Admin
-            </Button>
+            <>
+              <Button
+                onClick={() => navigate('/admin')}
+                className="bg-white text-black hover:bg-white/90"
+              >
+                Go to Admin
+              </Button>
+              <Button
+                onClick={handleFileSelect}
+                disabled={isUploading}
+                className="bg-white text-black hover:bg-white/90"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {isUploading ? 'Uploading...' : 'Upload Video'}
+              </Button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleVideoUpload}
+                accept="video/*"
+                className="hidden"
+              />
+            </>
           ) : (
             <Button
               onClick={handleLogin}
