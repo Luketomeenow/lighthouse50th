@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -248,7 +247,7 @@ const AdminDashboard = () => {
               <div className="flex gap-4">
                 <Button onClick={handleVideoUrlUpdate} className="flex items-center gap-2">
                   <Upload className="h-4 w-4" />
-                  Update Video URL
+                  Update Video Header
                 </Button>
               </div>
             </div>
