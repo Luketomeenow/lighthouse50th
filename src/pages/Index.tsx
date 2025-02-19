@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -123,18 +124,18 @@ const Index = () => {
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
         {/* Admin Controls */}
-        <div className="absolute top-4 right-4 z-30 flex gap-2">
+        <div className="absolute top-4 right-4 z-30 flex flex-col sm:flex-row gap-2">
           {isAdmin ? (
             <>
               <Button
                 onClick={() => navigate('/admin')}
-                className="bg-white text-black hover:bg-white/90"
+                className="bg-white text-black hover:bg-white/90 text-sm sm:text-base"
               >
                 Go to Admin
               </Button>
               <Button
                 onClick={() => setShowVideoUpdate(!showVideoUpdate)}
-                className="bg-white text-black hover:bg-white/90"
+                className="bg-white text-black hover:bg-white/90 text-sm sm:text-base"
               >
                 Update Video Header
               </Button>
@@ -142,7 +143,7 @@ const Index = () => {
           ) : (
             <Button
               onClick={handleLogin}
-              className="bg-white text-black hover:bg-white/90"
+              className="bg-white text-black hover:bg-white/90 text-sm sm:text-base"
             >
               Login
             </Button>
@@ -151,39 +152,39 @@ const Index = () => {
 
         {/* Video Update Form */}
         {showVideoUpdate && isAdmin && (
-          <div className="absolute top-20 right-4 z-30 bg-white p-4 rounded-lg shadow-lg">
-            <div className="flex gap-2">
+          <div className="absolute top-20 right-4 z-30 bg-white p-4 rounded-lg shadow-lg w-[90%] sm:w-auto mx-4 sm:mx-0">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="text"
                 placeholder="Enter new video URL"
                 value={newVideoUrl}
                 onChange={(e) => setNewVideoUrl(e.target.value)}
-                className="min-w-[300px]"
+                className="min-w-0 sm:min-w-[300px]"
               />
-              <Button onClick={handleUpdateVideo}>
+              <Button onClick={handleUpdateVideo} className="w-full sm:w-auto">
                 Update
               </Button>
             </div>
           </div>
         )}
 
-        <div className="relative z-20 h-full flex flex-col items-center justify-center text-white">
+        <div className="relative z-20 h-full flex flex-col items-center justify-center text-white px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center"
+            className="text-center w-full max-w-4xl mx-auto"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">{settings.event_title}</h1>
-            <p className="text-2xl md:text-3xl mb-3">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 leading-tight">{settings.event_title}</h1>
+            <p className="text-xl sm:text-2xl md:text-3xl mb-3">
               February 28 - March 1, 2026
             </p>
-            <p className="text-lg md:text-xl mb-8 opacity-90">{settings.venue}</p>
+            <p className="text-base sm:text-lg md:text-xl mb-8 opacity-90">{settings.venue}</p>
             <CountdownTimer targetDate={settings.event_date_start} />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="mt-8 px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-all"
+              className="mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-all text-sm sm:text-base"
             >
               Register Now
             </motion.button>
@@ -192,16 +193,16 @@ const Index = () => {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+          className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-20"
         >
-          <ChevronDown className="text-white w-8 h-8" />
+          <ChevronDown className="text-white w-6 h-6 sm:w-8 sm:h-8" />
         </motion.div>
       </section>
 
       {/* Program Flow Section */}
-      <section className="section-padding bg-gray-50">
+      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-gray-50">
         <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 md:mb-16">
             Program Flow
           </h2>
           <ProgramFlow />
@@ -209,14 +210,14 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="section-padding">
+      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8">
         <div className="container mx-auto max-w-3xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 md:mb-16">
             Frequently Asked Questions
           </h2>
-          <Accordion type="single" collapsible>
+          <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
-              <AccordionTrigger>How can I join the ministries?</AccordionTrigger>
+              <AccordionTrigger className="text-left">How can I join the ministries?</AccordionTrigger>
               <AccordionContent>
                 You can join our ministries by attending our orientation sessions, filling out a volunteer form, or speaking directly with our ministry leaders. We have various ministries including worship, youth, children's ministry, and community outreach.
               </AccordionContent>
@@ -250,16 +251,19 @@ const Index = () => {
       </section>
 
       {/* Navigation Section */}
-      <section className="section-padding bg-gray-50">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {['Funding', 'Ministries', 'Latest News'].map(item => <Link key={item} to={`/${item.toLowerCase().replace(' ', '-')}`} className="block">
-              <motion.div whileHover={{
-            y: -5
-          }} className="p-8 rounded-lg bg-white shadow-lg text-center hover:shadow-xl transition-all">
-                <h3 className="text-xl font-semibold">{item}</h3>
-                <p className="mt-2 text-gray-600">Learn more about {item.toLowerCase()}</p>
+      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-gray-50">
+        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          {['Funding', 'Ministries', 'Latest News'].map(item => (
+            <Link key={item} to={`/${item.toLowerCase().replace(' ', '-')}`} className="block">
+              <motion.div 
+                whileHover={{ y: -5 }} 
+                className="p-6 sm:p-8 rounded-lg bg-white shadow-lg text-center hover:shadow-xl transition-all"
+              >
+                <h3 className="text-lg sm:text-xl font-semibold">{item}</h3>
+                <p className="mt-2 text-sm sm:text-base text-gray-600">Learn more about {item.toLowerCase()}</p>
               </motion.div>
-            </Link>)}
+            </Link>
+          ))}
         </div>
       </section>
     </div>
