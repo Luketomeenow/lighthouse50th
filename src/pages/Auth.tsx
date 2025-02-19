@@ -14,63 +14,25 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
-    checkUser();
-
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event);
-      if (session?.user) {
-        await checkUserRole(session.user.id);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  const checkUserRole = async (userId: string) => {
-    try {
-      const { data: userRole, error: roleError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      if (roleError) {
-        console.error("Error fetching user role:", roleError);
-        throw roleError;
-      }
-
-      console.log("User role:", userRole);
-      if (userRole?.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
-    } catch (error) {
-      console.error("Error checking user role:", error);
-      toast.error("Error verifying user role. Please try again.");
-    }
-  };
-
-  const checkUser = async () => {
-    try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError) {
-        console.error("Error checking user:", userError);
-        return;
-      }
-
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        console.log("User found:", user.id);
-        await checkUserRole(user.id);
+        const { data: userRole } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (userRole?.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       }
-    } catch (error) {
-      console.error("Error in checkUser:", error);
-    }
-  };
+    };
+
+    checkUser();
+  }, [navigate]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +47,6 @@ const Auth = () => {
 
         if (signUpError) throw signUpError;
 
-        // Create user role after successful signup
         if (data.user) {
           const { error: roleError } = await supabase
             .from('user_roles')
@@ -93,14 +54,11 @@ const Auth = () => {
               { user_id: data.user.id, role: 'user' }
             ]);
 
-          if (roleError) {
-            console.error("Error creating user role:", roleError);
-          }
+          if (roleError) throw roleError;
         }
 
         toast.success("Check your email to confirm your account!");
       } else {
-        console.log("Attempting sign in...");
         const { error: signInError, data: { user } } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -109,9 +67,21 @@ const Auth = () => {
         if (signInError) throw signInError;
 
         if (user) {
-          console.log("User signed in:", user.id);
-          await checkUserRole(user.id);
+          const { data: userRole, error: roleError } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          if (roleError) throw roleError;
+
           toast.success("Successfully logged in!");
+          
+          if (userRole?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
         }
       }
     } catch (error: any) {
