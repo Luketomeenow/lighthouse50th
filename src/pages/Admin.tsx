@@ -10,7 +10,7 @@ import { toast } from "sonner";
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState('settings');
   const [isLoading, setIsLoading] = useState(true);
   const [videoUrl, setVideoUrl] = useState('');
   const [newAdminEmail, setNewAdminEmail] = useState('');
@@ -115,20 +115,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleVideoUrlUpdate = async () => {
-    try {
-      const {
-        error
-      } = await supabase.from('event_settings').update({
-        header_video_url: videoUrl
-      }).eq('id', settingsId);
-      if (error) throw error;
-      toast.success('Video URL updated successfully');
-    } catch (error: any) {
-      toast.error('Error updating video URL');
-    }
-  };
-
   const handleCreateAdmin = async () => {
     if (!newAdminEmail) {
       toast.error('Please enter an email address');
@@ -171,55 +157,9 @@ const AdminDashboard = () => {
     icon: BarChart3,
     section: 'dashboard'
   }, {
-    title: 'User Management',
-    icon: Users,
-    section: 'users'
-  }, {
-    title: 'User Information',
-    icon: UserCog,
-    section: 'user-info'
-  }, {
-    title: 'Reports',
-    icon: FileText,
-    section: 'reports'
-  }, {
-    title: 'Seat Planning',
-    icon: Grid,
-    section: 'seating'
-  }, {
-    title: 'Event Flow',
-    icon: ListOrdered,
-    section: 'flow'
-  }, {
     title: 'Settings',
     icon: Settings,
     section: 'settings'
-  }];
-
-  const statsCards = [{
-    title: 'Total Users',
-    value: '2,345',
-    icon: Users,
-    change: '+12%',
-    changeType: 'positive'
-  }, {
-    title: 'Active Events',
-    value: '18',
-    icon: CalendarDays,
-    change: '+3',
-    changeType: 'positive'
-  }, {
-    title: 'Revenue',
-    value: '$12,845',
-    icon: CircleDollarSign,
-    change: '+2.3%',
-    changeType: 'positive'
-  }, {
-    title: 'Venues',
-    value: '8',
-    icon: Building2,
-    change: '0',
-    changeType: 'neutral'
   }];
 
   if (isLoading) {
@@ -278,70 +218,16 @@ const AdminDashboard = () => {
       );
     }
 
-    return <>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">
-          Welcome to your Dashboard
-        </h1>
-        <p className="text-gray-600 mt-1">
-          Here's what's happening with your application today.
-        </p>
+    return (
+      <div className="space-y-8">
+        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <p className="text-gray-600">Welcome to the admin dashboard.</p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {statsCards.map((stat, index) => <div key={index} className="bg-white rounded-xl shadow-sm p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-              </div>
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <stat.icon className="h-6 w-6 text-gray-600" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <span className={`text-sm ${stat.changeType === 'positive' ? 'text-green-600' : stat.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'}`}>
-                {stat.change}
-              </span>
-              <span className="text-gray-600 text-sm ml-1">vs last month</span>
-            </div>
-          </div>)}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">Recent Activity</h2>
-            <Button variant="ghost" className="text-sm">View all</Button>
-          </div>
-          <div className="space-y-4">
-            {[1, 2, 3].map((_, index) => <div key={index} className="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                <div className="bg-blue-50 p-2 rounded-lg">
-                  <BarChart3 className="h-5 w-5 text-blue-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900">New event created</p>
-                  <p className="text-sm text-gray-500">John Doe created a new event "Summer Concert"</p>
-                  <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
-                </div>
-              </div>)}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {menuItems.slice(0, 4).map((item, index) => <Button key={index} variant="outline" className="h-auto py-4 px-4 flex flex-col items-center gap-2 text-gray-600 hover:text-gray-900" onClick={() => setActiveSection(item.section)}>
-                <item.icon className="h-5 w-5" />
-                <span className="text-sm text-center">{item.title}</span>
-              </Button>)}
-          </div>
-        </div>
-      </div>
-    </>;
+    );
   };
 
-  return <SidebarProvider>
+  return (
+    <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
         <aside className="w-64 border-r bg-white">
           <Sidebar>
@@ -353,18 +239,27 @@ const AdminDashboard = () => {
                 </div>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {menuItems.map(item => <SidebarMenuItem key={item.section}>
-                        <SidebarMenuButton onClick={() => setActiveSection(item.section)} className={`w-full justify-start gap-2 ${activeSection === item.section ? 'bg-gray-100 text-gray-900' : 'text-gray-600'}`}>
+                    {menuItems.map(item => (
+                      <SidebarMenuItem key={item.section}>
+                        <SidebarMenuButton 
+                          onClick={() => setActiveSection(item.section)} 
+                          className={`w-full justify-start gap-2 ${activeSection === item.section ? 'bg-gray-100 text-gray-900' : 'text-gray-600'}`}
+                        >
                           <item.icon className="h-4 w-4" />
                           <span>{item.title}</span>
                         </SidebarMenuButton>
-                      </SidebarMenuItem>)}
+                      </SidebarMenuItem>
+                    ))}
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
               <SidebarGroup className="mt-auto mb-4">
                 <SidebarGroupContent>
-                  <Button variant="ghost" className="w-full justify-start gap-2 text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleLogout}>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start gap-2 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                    onClick={handleLogout}
+                  >
                     <LogOut className="h-4 w-4" />
                     <span>Logout</span>
                   </Button>
@@ -380,7 +275,8 @@ const AdminDashboard = () => {
           </div>
         </main>
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 };
 
 export default AdminDashboard;
