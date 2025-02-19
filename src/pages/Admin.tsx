@@ -39,6 +39,7 @@ const AdminDashboard = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [settingsId, setSettingsId] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     checkAdminStatus();
@@ -85,6 +86,53 @@ const AdminDashboard = () => {
       setSettingsId(data.id);
     } catch (error: any) {
       toast.error('Error fetching video URL');
+    }
+  };
+
+  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('video/')) {
+      toast.error('Please upload a video file');
+      return;
+    }
+
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error('File size must be less than 100MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('videos')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('videos')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('event_settings')
+        .update({ header_video_url: publicUrl })
+        .eq('id', settingsId);
+
+      if (updateError) throw updateError;
+
+      setVideoUrl(publicUrl);
+      toast.success('Video uploaded successfully');
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast.error('Error uploading video');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -182,10 +230,26 @@ const AdminDashboard = () => {
                   className="max-w-xl"
                 />
               </div>
-              <Button onClick={handleVideoUrlUpdate} className="flex items-center gap-2">
-                <Upload className="h-4 w-4" />
-                Update Video
-              </Button>
+              <div className="space-y-2">
+                <label htmlFor="videoFile" className="text-sm font-medium text-gray-700">Upload Video</label>
+                <Input
+                  id="videoFile"
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  disabled={isUploading}
+                  className="max-w-xl"
+                />
+                {isUploading && (
+                  <p className="text-sm text-gray-500">Uploading video...</p>
+                )}
+              </div>
+              <div className="flex gap-4">
+                <Button onClick={handleVideoUrlUpdate} className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  Update Video URL
+                </Button>
+              </div>
             </div>
           </div>
 
