@@ -27,7 +27,7 @@ const Index = () => {
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
-    header_video_url: "https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4", // Default video
+    header_video_url: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4", // Fallback video
     event_title: "Seeing the Grace of God - In Lighthouse BBC @ 50",
     event_date_start: "2026-02-28",
     event_date_end: "2026-03-01",
@@ -53,18 +53,10 @@ const Index = () => {
       return;
     }
 
-    if (data?.header_video_url) {
-      // Get the public URL for the video if it's from our storage
-      const videoPath = data.header_video_url;
-      if (videoPath.startsWith('videos/')) {
-        const { data: { publicUrl } } = supabase.storage
-          .from('videos')
-          .getPublicUrl(videoPath);
-        data.header_video_url = publicUrl;
-      }
+    if (data) {
+      setSettings(data);
+      console.log('Video URL:', data.header_video_url); // Debug log
     }
-
-    setSettings(data || settings);
   };
 
   const checkAdminStatus = async () => {
@@ -118,9 +110,15 @@ const Index = () => {
           loop 
           playsInline 
           className="absolute inset-0 w-full h-full object-cover"
-          key={settings.header_video_url} // Force video reload when URL changes
+          poster="/placeholder.svg"
+          onError={(e) => {
+            console.error('Video error:', e);
+            const target = e.target as HTMLVideoElement;
+            target.src = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
+          }}
         >
           <source src={settings.header_video_url} type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
