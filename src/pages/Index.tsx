@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -26,6 +25,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [newVideoUrl, setNewVideoUrl] = useState('');
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
     header_video_url: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4", // Fallback video
@@ -36,6 +36,7 @@ const Index = () => {
   });
   const [isAdmin, setIsAdmin] = useState(false);
   const [showVideoUpdate, setShowVideoUpdate] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -43,20 +44,32 @@ const Index = () => {
     checkAdminStatus();
   }, []);
 
-  const fetchEventSettings = async () => {
-    const { data, error } = await supabase
-      .from('event_settings')
-      .select('*')
-      .single();
-
-    if (error) {
-      console.error('Error fetching settings:', error);
-      return;
+  useEffect(() => {
+    // Reset video element when URL changes
+    if (videoRef.current) {
+      videoRef.current.load();
     }
+    setVideoError(false);
+  }, [settings.header_video_url]);
 
-    if (data) {
-      setSettings(data);
-      console.log('Video URL:', data.header_video_url); // Debug log
+  const fetchEventSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('event_settings')
+        .select('*')
+        .single();
+
+      if (error) {
+        console.error('Error fetching settings:', error);
+        return;
+      }
+
+      if (data) {
+        console.log('Fetched video URL:', data.header_video_url);
+        setSettings(data);
+      }
+    } catch (error) {
+      console.error('Error in fetchEventSettings:', error);
     }
   };
 
@@ -101,26 +114,39 @@ const Index = () => {
     }
   };
 
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    console.error('Video error:', e);
+    setVideoError(true);
+    const target = e.currentTarget;
+    target.src = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
+    toast.error('Error loading video, falling back to default');
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen">
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline 
-          className="absolute inset-0 w-full h-full object-cover"
-          poster="/placeholder.svg"
-          onError={(e) => {
-            console.error('Video error:', e);
-            const target = e.target as HTMLVideoElement;
-            target.src = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
-          }}
-        >
-          <source src={settings.header_video_url} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        {!videoError && (
+          <video 
+            ref={videoRef}
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="/placeholder.svg"
+            onError={handleVideoError}
+          >
+            <source 
+              src={settings.header_video_url} 
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        )}
+        {videoError && (
+          <div className="absolute inset-0 w-full h-full bg-gray-900" />
+        )}
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
         {/* Admin Controls */}
