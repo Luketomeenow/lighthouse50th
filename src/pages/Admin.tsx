@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -75,11 +74,11 @@ const AdminDashboard = () => {
   const menuItems = [
     { title: 'Dashboard', icon: BarChart3, section: 'dashboard' },
     { title: 'User Management', icon: Users, section: 'users' },
-    { title: 'Settings', icon: Settings, section: 'settings' },
     { title: 'User Information', icon: UserCog, section: 'user-info' },
     { title: 'Reports', icon: FileText, section: 'reports' },
     { title: 'Seat Planning', icon: Grid, section: 'seating' },
     { title: 'Event Flow', icon: ListOrdered, section: 'flow' },
+    { title: 'Settings', icon: Settings, section: 'settings' },
   ];
 
   const statsCards = [
@@ -100,7 +99,6 @@ const AdminDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
-        {/* Sidebar */}
         <aside className="w-64 border-r bg-white">
           <Sidebar>
             <SidebarContent>
@@ -143,10 +141,8 @@ const AdminDashboard = () => {
           </Sidebar>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 overflow-auto">
           <div className="max-w-7xl mx-auto p-8">
-            {/* Header */}
             <div className="mb-8">
               <h1 className="text-2xl font-bold text-gray-800">
                 Welcome to your Dashboard
@@ -156,7 +152,6 @@ const AdminDashboard = () => {
               </p>
             </div>
 
-            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {statsCards.map((stat, index) => (
                 <div key={index} className="bg-white rounded-xl shadow-sm p-6">
@@ -183,9 +178,7 @@ const AdminDashboard = () => {
               ))}
             </div>
 
-            {/* Main Content Sections */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Recent Activity */}
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-gray-800">Recent Activity</h2>
@@ -207,7 +200,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Quick Actions */}
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
                 <div className="grid grid-cols-2 gap-4">
