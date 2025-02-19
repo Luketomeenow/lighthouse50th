@@ -27,7 +27,7 @@ const Index = () => {
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
-    header_video_url: "https://cdn.pixabay.com/vimeo/477145149/Church%20-%2071666.mp4?width=1280&hash=fed43ea46c93b84268c621097a84d0b54b7f1ed5", // Default video
+    header_video_url: "https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4", // Default video
     event_title: "Seeing the Grace of God - In Lighthouse BBC @ 50",
     event_date_start: "2026-02-28",
     event_date_end: "2026-03-01",
