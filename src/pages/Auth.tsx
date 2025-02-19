@@ -46,17 +46,15 @@ const Auth = () => {
         if (signInError) throw signInError;
 
         if (data.user) {
-          const { data: userRole, error: roleError } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', data.user.id)
-            .single();
+          // Using RPC call to get user role
+          const { data: role, error: roleError } = await supabase
+            .rpc('get_user_role', { user_id: data.user.id });
 
           if (roleError) throw roleError;
 
           toast.success("Successfully logged in!");
           
-          if (userRole?.role === 'admin') {
+          if (role === 'admin') {
             navigate('/admin');
           } else {
             navigate('/');
