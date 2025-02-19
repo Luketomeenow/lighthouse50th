@@ -1,9 +1,12 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +25,7 @@ type EventSettings = {
 const Index = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [newVideoUrl, setNewVideoUrl] = useState('');
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
     header_video_url: "/your-video.mp4", // Replace this with your video URL
@@ -31,6 +35,7 @@ const Index = () => {
     venue: "World Trade Center, Pasay City"
   });
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showVideoUpdate, setShowVideoUpdate] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -69,6 +74,30 @@ const Index = () => {
     navigate('/auth');
   };
 
+  const handleUpdateVideo = async () => {
+    if (!newVideoUrl) {
+      toast.error('Please enter a video URL');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('event_settings')
+        .update({ header_video_url: newVideoUrl })
+        .eq('id', settings.id);
+
+      if (error) throw error;
+
+      setSettings(prev => ({ ...prev, header_video_url: newVideoUrl }));
+      setNewVideoUrl('');
+      setShowVideoUpdate(false);
+      toast.success('Video header updated successfully');
+    } catch (error: any) {
+      console.error('Error updating video:', error);
+      toast.error('Failed to update video header');
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -78,15 +107,23 @@ const Index = () => {
         </video>
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
-        {/* Login Button */}
-        <div className="absolute top-4 right-4 z-30">
+        {/* Admin Controls */}
+        <div className="absolute top-4 right-4 z-30 flex gap-2">
           {isAdmin ? (
-            <Button
-              onClick={() => navigate('/admin')}
-              className="bg-white text-black hover:bg-white/90"
-            >
-              Go to Admin
-            </Button>
+            <>
+              <Button
+                onClick={() => navigate('/admin')}
+                className="bg-white text-black hover:bg-white/90"
+              >
+                Go to Admin
+              </Button>
+              <Button
+                onClick={() => setShowVideoUpdate(!showVideoUpdate)}
+                className="bg-white text-black hover:bg-white/90"
+              >
+                Update Video Header
+              </Button>
+            </>
           ) : (
             <Button
               onClick={handleLogin}
@@ -96,6 +133,24 @@ const Index = () => {
             </Button>
           )}
         </div>
+
+        {/* Video Update Form */}
+        {showVideoUpdate && isAdmin && (
+          <div className="absolute top-20 right-4 z-30 bg-white p-4 rounded-lg shadow-lg">
+            <div className="flex gap-2">
+              <Input
+                type="text"
+                placeholder="Enter new video URL"
+                value={newVideoUrl}
+                onChange={(e) => setNewVideoUrl(e.target.value)}
+                className="min-w-[300px]"
+              />
+              <Button onClick={handleUpdateVideo}>
+                Update
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="relative z-20 h-full flex flex-col items-center justify-center text-white">
           <motion.div
