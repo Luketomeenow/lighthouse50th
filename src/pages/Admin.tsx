@@ -73,6 +73,7 @@ const AdminDashboard = () => {
   };
 
   const menuItems = [
+    { title: 'Dashboard', icon: BarChart3, section: 'dashboard' },
     { title: 'User Management', icon: Users, section: 'users' },
     { title: 'Settings', icon: Settings, section: 'settings' },
     { title: 'User Information', icon: UserCog, section: 'user-info' },
