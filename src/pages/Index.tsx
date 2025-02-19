@@ -1,115 +1,127 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronDown, Upload } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState("https://cdn.coverr.co/videos/coverr-typing-on-computer-1584/1080p.mp4");
-  const [isUploading, setIsUploading] = useState(false);
+  const [settings, setSettings] = useState({
+    header_video_url: "https://cdn.coverr.co/videos/coverr-typing-on-computer-1584/1080p.mp4",
+    event_title: "Seeing the Grace of God - In Lighthouse BBC @ 50",
+    event_date_start: "2026-02-28",
+    event_date_end: "2026-03-01",
+    venue: "World Trade Center, Pasay City"
+  });
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
+    fetchEventSettings();
+    checkAdminStatus();
   }, []);
 
-  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const fetchEventSettings = async () => {
+    const { data, error } = await supabase
+      .from('event_settings')
+      .select('*')
+      .single();
 
-    // Check file size (max 100MB)
-    if (file.size > 100 * 1024 * 1024) {
-      toast.error("Video file is too large. Maximum size is 100MB");
+    if (error) {
+      console.error('Error fetching settings:', error);
       return;
     }
 
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append('video', file);
+    setSettings(data);
+  };
 
-    try {
-      const { data: { publicUrl: functionUrl } } = supabase.functions.getPublicUrl('upload-video');
-      const response = await fetch(functionUrl, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${supabase.auth.getSession()}`
-        }
-      });
+  const checkAdminStatus = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-      const data = await response.json();
-      if (data.url) {
-        setVideoUrl(data.url);
-        toast.success("Video uploaded successfully!");
-      } else {
-        throw new Error(data.error || 'Failed to upload video');
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    setIsAdmin(roles?.role === 'admin');
+  };
+
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/admin`
       }
-    } catch (error) {
-      toast.error("Failed to upload video. Please try again.");
-      console.error('Upload error:', error);
-    } finally {
-      setIsUploading(false);
+    });
+
+    if (error) {
+      toast.error('Failed to login');
     }
   };
 
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={videoUrl} type="video/mp4" />
+          <source src={settings.header_video_url} type="video/mp4" />
         </video>
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
-        {/* Admin Video Upload Button - You might want to add proper auth checks */}
+        {/* Login Button */}
         <div className="absolute top-4 right-4 z-30">
-          <label className={`cursor-pointer flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full 
-            hover:bg-opacity-90 transition-all ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-            <Upload size={20} />
-            <span>Upload Video</span>
-            <input
-              type="file"
-              accept="video/mp4"
-              className="hidden"
-              onChange={handleVideoUpload}
-              disabled={isUploading}
-            />
-          </label>
+          {isAdmin ? (
+            <Button
+              onClick={() => navigate('/admin')}
+              className="bg-white text-black hover:bg-white/90"
+            >
+              Go to Admin
+            </Button>
+          ) : (
+            <Button
+              onClick={handleLogin}
+              className="bg-white text-black hover:bg-white/90"
+            >
+              Login
+            </Button>
+          )}
         </div>
 
         <div className="relative z-20 h-full flex flex-col items-center justify-center text-white">
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: isLoaded ? 1 : 0,
-          y: isLoaded ? 0 : 20
-        }} transition={{
-          duration: 0.8,
-          delay: 0.2
-        }} className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">Seeing the Grace of God - In Lighthouse BBC @ 50</h1>
-            <p className="text-2xl md:text-3xl mb-3">February 28 - March 1, 2026</p>
-            <p className="text-lg md:text-xl mb-8 opacity-90">World Trade Center, Pasay City</p>
-            <CountdownTimer targetDate="2026-02-28" />
-            <motion.button whileHover={{
-            scale: 1.05
-          }} whileTap={{
-            scale: 0.95
-          }} className="mt-8 px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-all">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">{settings.event_title}</h1>
+            <p className="text-2xl md:text-3xl mb-3">
+              {new Date(settings.event_date_start).toLocaleDateString()} - {new Date(settings.event_date_end).toLocaleDateString()}
+            </p>
+            <p className="text-lg md:text-xl mb-8 opacity-90">{settings.venue}</p>
+            <CountdownTimer targetDate={settings.event_date_start} />
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-8 px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-all"
+            >
               Register Now
             </motion.button>
           </motion.div>
         </div>
-        <motion.div animate={{
-        y: [0, 10, 0]
-      }} transition={{
-        duration: 2,
-        repeat: Infinity
-      }} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+        >
           <ChevronDown className="text-white w-8 h-8" />
         </motion.div>
       </section>
@@ -178,7 +190,8 @@ const Index = () => {
             </Link>)}
         </div>
       </section>
-    </div>;
+    </div>
+  );
 };
 
 export default Index;
