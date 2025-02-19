@@ -2,25 +2,89 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Upload } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
+import { createClient } from '@supabase/supabase-js';
+import { toast } from "sonner";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("https://cdn.coverr.co/videos/coverr-typing-on-computer-1584/1080p.mp4");
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
+  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 100MB)
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error("Video file is too large. Maximum size is 100MB");
+      return;
+    }
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('video', file);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-video`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        }
+      });
+
+      const data = await response.json();
+      if (data.url) {
+        setVideoUrl(data.url);
+        toast.success("Video uploaded successfully!");
+      } else {
+        throw new Error(data.error || 'Failed to upload video');
+      }
+    } catch (error) {
+      toast.error("Failed to upload video. Please try again.");
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-1584/1080p.mp4" type="video/mp4" />
+          <source src={videoUrl} type="video/mp4" />
         </video>
-        <div className="video-overlay" />
+        <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
+        
+        {/* Admin Video Upload Button - You might want to add proper auth checks */}
+        <div className="absolute top-4 right-4 z-30">
+          <label className={`cursor-pointer flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full 
+            hover:bg-opacity-90 transition-all ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <Upload size={20} />
+            <span>Upload Video</span>
+            <input
+              type="file"
+              accept="video/mp4"
+              className="hidden"
+              onChange={handleVideoUpload}
+              disabled={isUploading}
+            />
+          </label>
+        </div>
+
         <div className="relative z-20 h-full flex flex-col items-center justify-center text-white">
           <motion.div initial={{
           opacity: 0,
