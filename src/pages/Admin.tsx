@@ -38,6 +38,7 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [videoUrl, setVideoUrl] = useState('');
   const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [settingsId, setSettingsId] = useState<string>('');
 
   useEffect(() => {
     checkAdminStatus();
@@ -76,11 +77,12 @@ const AdminDashboard = () => {
     try {
       const { data, error } = await supabase
         .from('event_settings')
-        .select('header_video_url')
+        .select('header_video_url, id')
         .single();
 
       if (error) throw error;
       setVideoUrl(data.header_video_url);
+      setSettingsId(data.id);
     } catch (error: any) {
       toast.error('Error fetching video URL');
     }
@@ -91,7 +93,7 @@ const AdminDashboard = () => {
       const { error } = await supabase
         .from('event_settings')
         .update({ header_video_url: videoUrl })
-        .eq('id', 1);
+        .eq('id', settingsId);
 
       if (error) throw error;
       toast.success('Video URL updated successfully');
