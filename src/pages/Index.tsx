@@ -10,10 +10,22 @@ import ProgramFlow from '@/components/ProgramFlow';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type EventSettings = {
+  id: string;
+  header_video_url: string;
+  event_title: string;
+  event_date_start: string;
+  event_date_end: string;
+  venue: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
 const Index = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<EventSettings>({
+    id: '',
     header_video_url: "https://cdn.coverr.co/videos/coverr-typing-on-computer-1584/1080p.mp4",
     event_title: "Seeing the Grace of God - In Lighthouse BBC @ 50",
     event_date_start: "2026-02-28",
