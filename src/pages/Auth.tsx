@@ -87,11 +87,10 @@ const Auth = () => {
       
       {/* Right side - Cover Image */}
       <div className="w-full h-48 md:h-auto md:w-1/2">
-        <div 
-          className="h-full w-full bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/lovable-uploads/34c5cb1a-e6cf-4f8d-82ab-3ed4ba01669c.png')",
-          }}
+        <img 
+          src="/lovable-uploads/8563d1cb-03bf-439d-b626-6728139dec6d.png"
+          alt="Cover"
+          className="h-full w-full object-cover"
         />
       </div>
     </div>
