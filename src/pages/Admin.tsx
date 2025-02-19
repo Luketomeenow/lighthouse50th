@@ -77,8 +77,9 @@ const AdminDashboard = () => {
       return;
     }
 
-    if (file.size > 100 * 1024 * 1024) {
-      toast.error('File size must be less than 100MB');
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error('File size must be less than 50MB');
       return;
     }
 
@@ -90,9 +91,18 @@ const AdminDashboard = () => {
 
       const { error: uploadError } = await supabase.storage
         .from('videos')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          contentType: file.type,
+          upsert: false
+        });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        if (uploadError.message.includes('Payload too large')) {
+          throw new Error('File size exceeds the maximum limit of 50MB');
+        }
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('videos')
@@ -109,7 +119,7 @@ const AdminDashboard = () => {
       toast.success('Video uploaded successfully');
     } catch (error: any) {
       console.error('Upload error:', error);
-      toast.error('Error uploading video');
+      toast.error(error.message || 'Error uploading video');
     } finally {
       setIsUploading(false);
     }
