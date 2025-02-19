@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -5,11 +6,14 @@ import { ChevronDown } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
+
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
   return <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen">
@@ -28,8 +32,9 @@ const Index = () => {
           duration: 0.8,
           delay: 0.2
         }} className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Seeing His Grace @ 50</h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto px-4">February 28 - March 1, 2026</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">Seeing the Grace of God - In Lighthouse BBC @ 50</h1>
+            <p className="text-2xl md:text-3xl mb-3">February 28 - March 1, 2026</p>
+            <p className="text-lg md:text-xl mb-8 opacity-90">World Trade Center, Pasay City</p>
             <CountdownTimer targetDate="2026-02-28" />
             <motion.button whileHover={{
             scale: 1.05
@@ -116,4 +121,5 @@ const Index = () => {
       </section>
     </div>;
 };
+
 export default Index;
