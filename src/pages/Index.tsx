@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -6,13 +5,8 @@ import { ChevronDown, Upload } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,11 +32,12 @@ const Index = () => {
     formData.append('video', file);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-video`, {
+      const { data: { publicUrl: functionUrl } } = supabase.functions.getPublicUrl('upload-video');
+      const response = await fetch(functionUrl, {
         method: 'POST',
         body: formData,
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          'Authorization': `Bearer ${supabase.auth.getSession()}`
         }
       });
 
