@@ -35,25 +35,31 @@ const AdminDashboard = () => {
   }, []);
 
   const checkAdminStatus = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/auth');
+        return;
+      }
+
+      const { data: role, error: roleError } = await supabase
+        .rpc('get_user_role', { user_id: user.id });
+
+      if (roleError) throw roleError;
+
+      if (role !== 'admin') {
+        toast.error("Unauthorized access");
+        navigate('/');
+        return;
+      }
+
+      setIsAdmin(true);
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error("Error checking admin status:", error);
+      toast.error("Error verifying permissions");
       navigate('/');
-      return;
     }
-
-    const { data: userRole } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
-
-    if (userRole?.role !== 'admin') {
-      navigate('/');
-      return;
-    }
-
-    setIsAdmin(true);
-    setIsLoading(false);
   };
 
   const handleLogout = async () => {
