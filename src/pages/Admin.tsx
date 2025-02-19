@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Settings, UserCog, FileText, Grid, ListOrdered, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus } from 'lucide-react';
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [settingsId, setSettingsId] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     checkAdminStatus();
@@ -24,19 +26,12 @@ const AdminDashboard = () => {
 
   const checkAdminStatus = async () => {
     try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         navigate('/auth');
         return;
       }
-      const {
-        data: role,
-        error: roleError
-      } = await supabase.rpc('get_user_role', {
+      const { data: role, error: roleError } = await supabase.rpc('get_user_role', {
         user_id: user.id
       });
       if (roleError) throw roleError;
@@ -56,10 +51,10 @@ const AdminDashboard = () => {
 
   const fetchCurrentVideoUrl = async () => {
     try {
-      const {
-        data,
-        error
-      } = await supabase.from('event_settings').select('header_video_url, id').single();
+      const { data, error } = await supabase
+        .from('event_settings')
+        .select('header_video_url, id')
+        .single();
       if (error) throw error;
       setVideoUrl(data.header_video_url);
       setSettingsId(data.id);
@@ -68,7 +63,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -83,17 +78,26 @@ const AdminDashboard = () => {
       return;
     }
 
+    setSelectedFile(file);
+  };
+
+  const handleVideoUpload = async () => {
+    if (!selectedFile) {
+      toast.error('Please select a video file first');
+      return;
+    }
+
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${crypto.randomUUID()}.${fileExt}`;
       const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('videos')
-        .upload(filePath, file, {
+        .upload(filePath, selectedFile, {
           cacheControl: '3600',
-          contentType: file.type,
+          contentType: selectedFile.type,
           upsert: false
         });
 
@@ -116,7 +120,8 @@ const AdminDashboard = () => {
       if (updateError) throw updateError;
 
       setVideoUrl(publicUrl);
-      toast.success('Video uploaded successfully');
+      setSelectedFile(null);
+      toast.success('Video uploaded and header updated successfully');
     } catch (error: any) {
       console.error('Upload error:', error);
       toast.error(error.message || 'Error uploading video');
@@ -131,23 +136,18 @@ const AdminDashboard = () => {
       return;
     }
     try {
-      const {
-        data: {
-          user
-        },
-        error: signUpError
-      } = await supabase.auth.signUp({
+      const { data: { user }, error: signUpError } = await supabase.auth.signUp({
         email: newAdminEmail,
         password: Math.random().toString(36).slice(-8)
       });
       if (signUpError) throw signUpError;
       if (user) {
-        const {
-          error: roleError
-        } = await supabase.from('user_roles').insert({
-          user_id: user.id,
-          role: 'admin'
-        });
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: user.id,
+            role: 'admin'
+          });
         if (roleError) throw roleError;
         toast.success('Admin account created successfully. Check email for password.');
         setNewAdminEmail('');
@@ -213,14 +213,21 @@ const AdminDashboard = () => {
                   id="videoFile"
                   type="file"
                   accept="video/*"
-                  onChange={handleVideoUpload}
-                  disabled={isUploading}
+                  onChange={handleFileSelect}
                   className="max-w-xl"
                 />
-                {isUploading && (
-                  <p className="text-sm text-gray-500">Uploading video...</p>
+                {selectedFile && (
+                  <p className="text-sm text-gray-500">Selected file: {selectedFile.name}</p>
                 )}
               </div>
+              <Button 
+                onClick={handleVideoUpload} 
+                disabled={!selectedFile || isUploading}
+                className="flex items-center gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                {isUploading ? 'Uploading...' : 'Update Landing Page Video'}
+              </Button>
             </div>
           </div>
 
