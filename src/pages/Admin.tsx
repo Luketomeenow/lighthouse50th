@@ -20,6 +20,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarProvider
 } from "@/components/ui/sidebar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -85,71 +86,73 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className="w-64 border-r bg-background">
-        <Sidebar>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Admin Dashboard</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.section}>
-                      <SidebarMenuButton 
-                        onClick={() => setActiveSection(item.section)}
-                        className={`w-full justify-start gap-2 ${
-                          activeSection === item.section ? 'bg-muted' : ''
-                        }`}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup className="mt-auto">
-              <SidebarGroupContent>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start gap-2 text-red-500 hover:text-red-600 hover:bg-red-50"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </Button>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-        </Sidebar>
-      </aside>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        {/* Sidebar */}
+        <aside className="w-64 border-r bg-background">
+          <Sidebar>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Admin Dashboard</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {menuItems.map((item) => (
+                      <SidebarMenuItem key={item.section}>
+                        <SidebarMenuButton 
+                          onClick={() => setActiveSection(item.section)}
+                          className={`w-full justify-start gap-2 ${
+                            activeSection === item.section ? 'bg-muted' : ''
+                          }`}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              <SidebarGroup className="mt-auto">
+                <SidebarGroupContent>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start gap-2 text-red-500 hover:text-red-600 hover:bg-red-50"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </Button>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+        </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">
-            {menuItems.find(item => item.section === activeSection)?.title || 'Dashboard'}
-          </h1>
+        {/* Main Content */}
+        <main className="flex-1 p-8">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold mb-8">
+              {menuItems.find(item => item.section === activeSection)?.title || 'Dashboard'}
+            </h1>
 
-          {/* Placeholder content - we'll implement each section in subsequent steps */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-600">
-              This section ({activeSection}) will be implemented in the next step. It will include:
-            </p>
-            <ul className="list-disc ml-6 mt-4 space-y-2">
-              <li>Complete user management system</li>
-              <li>Settings and profile management</li>
-              <li>User information editing</li>
-              <li>Report generation and printing</li>
-              <li>Interactive seat planning interface</li>
-              <li>Step-by-step event flow configuration</li>
-            </ul>
+            {/* Placeholder content - we'll implement each section in subsequent steps */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600">
+                This section ({activeSection}) will be implemented in the next step. It will include:
+              </p>
+              <ul className="list-disc ml-6 mt-4 space-y-2">
+                <li>Complete user management system</li>
+                <li>Settings and profile management</li>
+                <li>User information editing</li>
+                <li>Report generation and printing</li>
+                <li>Interactive seat planning interface</li>
+                <li>Step-by-step event flow configuration</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };
 
