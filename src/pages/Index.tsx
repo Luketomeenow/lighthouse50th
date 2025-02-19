@@ -78,21 +78,33 @@ const Index = () => {
           </h2>
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>What is the program duration?</AccordionTrigger>
+              <AccordionTrigger>How can I join the ministries?</AccordionTrigger>
               <AccordionContent>
-                The program runs for 12 weeks, with flexible learning options to fit your schedule.
+                You can join our ministries by attending our orientation sessions, filling out a volunteer form, or speaking directly with our ministry leaders. We have various ministries including worship, youth, children's ministry, and community outreach.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger>How much does it cost?</AccordionTrigger>
+              <AccordionTrigger>How can I make a donation?</AccordionTrigger>
               <AccordionContent>
-                Visit our Funding page for detailed information about program costs and available financial aid options.
+                You can make donations through multiple channels: online giving through our website, bank transfer, or during our regular services. All donations are tax-deductible and will be used to support our various ministry programs and community initiatives.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-              <AccordionTrigger>What are the prerequisites?</AccordionTrigger>
+              <AccordionTrigger>What volunteer opportunities are available?</AccordionTrigger>
               <AccordionContent>
-                No specific prerequisites are required. Just bring your enthusiasm and willingness to learn!
+                We offer numerous volunteer opportunities including worship team, technical support, children's ministry, youth mentoring, community outreach, and administrative support. Training will be provided for all volunteer positions.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger>What are your service times?</AccordionTrigger>
+              <AccordionContent>
+                Our main services are held every Sunday at 9:00 AM and 11:00 AM. We also have midweek Bible studies, youth meetings, and various ministry activities throughout the week. Check our calendar for specific times and events.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-5">
+              <AccordionTrigger>Do you have programs for children?</AccordionTrigger>
+              <AccordionContent>
+                Yes, we have dedicated programs for children of all ages! Our children's ministry provides age-appropriate Bible lessons, activities, and worship experiences during regular service times. We also organize special events and camps throughout the year.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
