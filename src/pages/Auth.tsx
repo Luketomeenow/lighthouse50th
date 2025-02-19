@@ -15,7 +15,44 @@ const Auth = () => {
 
   useEffect(() => {
     checkUser();
+
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event);
+      if (session?.user) {
+        await checkUserRole(session.user.id);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
+  const checkUserRole = async (userId: string) => {
+    try {
+      const { data: userRole, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (roleError) {
+        console.error("Error fetching user role:", roleError);
+        throw roleError;
+      }
+
+      console.log("User role:", userRole);
+      if (userRole?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error("Error checking user role:", error);
+      toast.error("Error verifying user role. Please try again.");
+    }
+  };
 
   const checkUser = async () => {
     try {
@@ -28,27 +65,7 @@ const Auth = () => {
 
       if (user) {
         console.log("User found:", user.id);
-        try {
-          const { data: userRole, error: roleError } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', user.id)
-            .maybeSingle();
-
-          if (roleError) {
-            console.error("Error fetching user role:", roleError);
-            return;
-          }
-
-          console.log("User role:", userRole);
-          if (userRole?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
-          }
-        } catch (error) {
-          console.error("Error in role check:", error);
-        }
+        await checkUserRole(user.id);
       }
     } catch (error) {
       console.error("Error in checkUser:", error);
@@ -61,12 +78,25 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { error: signUpError, data } = await supabase.auth.signUp({
           email,
           password,
         });
 
         if (signUpError) throw signUpError;
+
+        // Create user role after successful signup
+        if (data.user) {
+          const { error: roleError } = await supabase
+            .from('user_roles')
+            .insert([
+              { user_id: data.user.id, role: 'user' }
+            ]);
+
+          if (roleError) {
+            console.error("Error creating user role:", roleError);
+          }
+        }
 
         toast.success("Check your email to confirm your account!");
       } else {
@@ -80,35 +110,13 @@ const Auth = () => {
 
         if (user) {
           console.log("User signed in:", user.id);
-          try {
-            const { data: userRole, error: roleError } = await supabase
-              .from('user_roles')
-              .select('role')
-              .eq('user_id', user.id)
-              .maybeSingle();
-
-            if (roleError) {
-              console.error("Error fetching user role:", roleError);
-              throw roleError;
-            }
-
-            console.log("User role fetched:", userRole);
-            toast.success("Successfully logged in!");
-            
-            if (userRole?.role === 'admin') {
-              navigate('/admin');
-            } else {
-              navigate('/');
-            }
-          } catch (error) {
-            console.error("Error checking user role:", error);
-            toast.error("Error checking user role. Please try again.");
-          }
+          await checkUserRole(user.id);
+          toast.success("Successfully logged in!");
         }
       }
     } catch (error: any) {
       console.error("Authentication error:", error);
-      toast.error(error.message);
+      toast.error(error.message || "An error occurred during authentication");
     } finally {
       setIsLoading(false);
     }
