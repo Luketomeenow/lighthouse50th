@@ -27,7 +27,7 @@ const Index = () => {
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
-    header_video_url: "/your-video.mp4", // Replace this with your video URL
+    header_video_url: "https://cdn.pixabay.com/vimeo/477145149/Church%20-%2071666.mp4?width=1280&hash=fed43ea46c93b84268c621097a84d0b54b7f1ed5", // Default video
     event_title: "Seeing the Grace of God - In Lighthouse BBC @ 50",
     event_date_start: "2026-02-28",
     event_date_end: "2026-03-01",
@@ -53,7 +53,18 @@ const Index = () => {
       return;
     }
 
-    setSettings(data);
+    if (data?.header_video_url) {
+      // Get the public URL for the video if it's from our storage
+      const videoPath = data.header_video_url;
+      if (videoPath.startsWith('videos/')) {
+        const { data: { publicUrl } } = supabase.storage
+          .from('videos')
+          .getPublicUrl(videoPath);
+        data.header_video_url = publicUrl;
+      }
+    }
+
+    setSettings(data || settings);
   };
 
   const checkAdminStatus = async () => {
@@ -101,7 +112,14 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover"
+          key={settings.header_video_url} // Force video reload when URL changes
+        >
           <source src={settings.header_video_url} type="video/mp4" />
         </video>
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />

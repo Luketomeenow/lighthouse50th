@@ -142,10 +142,11 @@ const AdminDashboard = () => {
     try {
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `videos/${fileName}`;
 
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('videos')
-        .upload(fileName, selectedFile, {
+        .upload(filePath, selectedFile, {
           cacheControl: '3600',
           contentType: selectedFile.type,
           upsert: false
@@ -159,13 +160,9 @@ const AdminDashboard = () => {
         throw uploadError;
       }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('videos')
-        .getPublicUrl(fileName);
-
       const { error: updateError } = await supabase
         .from('event_settings')
-        .update({ header_video_url: publicUrl })
+        .update({ header_video_url: filePath })
         .eq('id', settingsId);
 
       if (updateError) {
@@ -173,7 +170,7 @@ const AdminDashboard = () => {
         throw updateError;
       }
 
-      setVideoUrl(publicUrl);
+      setVideoUrl(filePath);
       setSelectedFile(null);
       toast.success('Video uploaded and header updated successfully');
     } catch (error: any) {
