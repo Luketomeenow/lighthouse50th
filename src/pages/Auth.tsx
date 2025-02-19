@@ -32,16 +32,16 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col-reverse md:flex-row">
       {/* Left side - Login Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
+      <div className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8 bg-white">
+        <div className="w-full max-w-md space-y-6 md:space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold">Welcome Back</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Welcome Back</h2>
             <p className="mt-2 text-gray-600">Please sign in to your account</p>
           </div>
           
-          <form onSubmit={handleLogin} className="mt-8 space-y-6">
+          <form onSubmit={handleLogin} className="mt-6 md:mt-8 space-y-4 md:space-y-6">
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -54,6 +54,7 @@ const Auth = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@gmail.com"
                   required
+                  className="mt-1"
                 />
               </div>
               
@@ -68,13 +69,14 @@ const Auth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  className="mt-1"
                 />
               </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full mt-6"
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "Sign in"}
@@ -84,7 +86,7 @@ const Auth = () => {
       </div>
       
       {/* Right side - Cover Image */}
-      <div className="hidden md:block md:w-1/2">
+      <div className="w-full h-48 md:h-auto md:w-1/2">
         <div 
           className="h-full w-full bg-cover bg-center"
           style={{
