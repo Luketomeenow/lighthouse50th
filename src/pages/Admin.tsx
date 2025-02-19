@@ -1,12 +1,44 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Settings, UserCog, FileText, Grid, ListOrdered, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus } from 'lucide-react';
+import { Users, Settings, FileText, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus, ArrowUpRight, ArrowDownRight, Activity, DollarSign } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const dummyData = [
+  { name: 'Jan', value: 400 },
+  { name: 'Feb', value: 300 },
+  { name: 'Mar', value: 600 },
+  { name: 'Apr', value: 800 },
+  { name: 'May', value: 700 },
+  { name: 'Jun', value: 900 },
+  { name: 'Jul', value: 1000 },
+];
+
+const StatCard = ({ title, value, trend, icon: Icon, trendValue }: { 
+  title: string; 
+  value: string; 
+  trend: 'up' | 'down'; 
+  icon: any;
+  trendValue: string;
+}) => (
+  <div className="bg-white rounded-xl p-6 shadow-sm">
+    <div className="flex justify-between items-start mb-4">
+      <div className="p-2 bg-primary/10 rounded-lg">
+        <Icon className="h-6 w-6 text-primary" />
+      </div>
+      <span className={`flex items-center gap-1 text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+        {trend === 'up' ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+        {trendValue}
+      </span>
+    </div>
+    <h3 className="text-sm font-medium text-gray-600">{title}</h3>
+    <p className="text-2xl font-semibold text-gray-900 mt-1">{value}</p>
+  </div>
+);
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -228,7 +260,96 @@ const AdminDashboard = () => {
   }
 
   const renderContent = () => {
-    if (activeSection === 'settings') {
+    if (activeSection === 'dashboard') {
+      return (
+        <div className="space-y-8">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+            <p className="text-gray-600 mt-1">Welcome back to your dashboard</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatCard
+              title="Total Users"
+              value="2,345"
+              trend="up"
+              icon={Users}
+              trendValue="12%"
+            />
+            <StatCard
+              title="Monthly Revenue"
+              value="$34,567"
+              trend="up"
+              icon={DollarSign}
+              trendValue="8%"
+            />
+            <StatCard
+              title="Active Events"
+              value="45"
+              trend="down"
+              icon={CalendarDays}
+              trendValue="3%"
+            />
+            <StatCard
+              title="Engagement Rate"
+              value="67%"
+              trend="up"
+              icon={Activity}
+              trendValue="5%"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">User Growth</h3>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={dummyData}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#8884d8" 
+                      fillOpacity={1} 
+                      fill="url(#colorValue)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
+              <div className="space-y-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">New user registered</p>
+                      <p className="text-sm text-gray-500">{i} hour ago</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (activeSection === 'settings') {
       return (
         <div className="space-y-8">
           <div className="bg-white rounded-xl shadow-sm p-6">
@@ -282,12 +403,7 @@ const AdminDashboard = () => {
       );
     }
 
-    return (
-      <div className="space-y-8">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        <p className="text-gray-600">Welcome to the admin dashboard.</p>
-      </div>
-    );
+    return null;
   };
 
   return (
