@@ -31,15 +31,24 @@ const AdminDashboard = () => {
         navigate('/auth');
         return;
       }
-      const { data: role, error: roleError } = await supabase.rpc('get_user_role', {
+
+      const { data: userRole, error: roleError } = await supabase.rpc('get_user_role', {
         user_id: user.id
       });
-      if (roleError) throw roleError;
-      if (role !== 'admin') {
+
+      if (roleError) {
+        console.error("Error checking role:", roleError);
+        toast.error("Error verifying permissions");
+        navigate('/');
+        return;
+      }
+
+      if (userRole !== 'admin') {
         toast.error("Unauthorized access");
         navigate('/');
         return;
       }
+
       setIsAdmin(true);
       setIsLoading(false);
     } catch (error: any) {
@@ -54,11 +63,21 @@ const AdminDashboard = () => {
       const { data, error } = await supabase
         .from('event_settings')
         .select('header_video_url, id')
+        .limit(1)
         .single();
-      if (error) throw error;
-      setVideoUrl(data.header_video_url);
-      setSettingsId(data.id);
+
+      if (error) {
+        console.error("Error fetching video URL:", error);
+        toast.error('Error fetching video URL');
+        return;
+      }
+
+      if (data) {
+        setVideoUrl(data.header_video_url);
+        setSettingsId(data.id);
+      }
     } catch (error: any) {
+      console.error("Error fetching video URL:", error);
       toast.error('Error fetching video URL');
     }
   };
@@ -89,11 +108,12 @@ const AdminDashboard = () => {
 
     setIsUploading(true);
     try {
+      // Upload video to storage
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${crypto.randomUUID()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError, data: uploadData } = await supabase.storage
         .from('videos')
         .upload(filePath, selectedFile, {
           cacheControl: '3600',
@@ -112,12 +132,16 @@ const AdminDashboard = () => {
         .from('videos')
         .getPublicUrl(filePath);
 
+      // Update event settings with new video URL
       const { error: updateError } = await supabase
         .from('event_settings')
         .update({ header_video_url: publicUrl })
         .eq('id', settingsId);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error("Error updating video URL:", updateError);
+        throw updateError;
+      }
 
       setVideoUrl(publicUrl);
       setSelectedFile(null);
@@ -140,7 +164,9 @@ const AdminDashboard = () => {
         email: newAdminEmail,
         password: Math.random().toString(36).slice(-8)
       });
+
       if (signUpError) throw signUpError;
+
       if (user) {
         const { error: roleError } = await supabase
           .from('user_roles')
@@ -148,11 +174,14 @@ const AdminDashboard = () => {
             user_id: user.id,
             role: 'admin'
           });
+
         if (roleError) throw roleError;
+
         toast.success('Admin account created successfully. Check email for password.');
         setNewAdminEmail('');
       }
     } catch (error: any) {
+      console.error("Error creating admin:", error);
       toast.error('Error creating admin account');
     }
   };
