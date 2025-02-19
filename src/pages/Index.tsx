@@ -41,7 +41,7 @@ const Index = () => {
             <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto px-4">
               Join us for an extraordinary journey of learning and growth
             </p>
-            <CountdownTimer targetDate="2024-02-28" />
+            <CountdownTimer targetDate="2026-02-28" />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
