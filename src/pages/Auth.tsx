@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,28 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already logged in
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: userRole } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+
+      if (userRole?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    }
+  };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,15 +52,28 @@ const Auth = () => {
         toast.success("Check your email to confirm your account!");
       } else {
         // Sign in
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+        const { error: signInError, data: { user } } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (signInError) throw signInError;
 
-        toast.success("Successfully logged in!");
-        navigate("/admin");
+        if (user) {
+          const { data: userRole } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .single();
+
+          toast.success("Successfully logged in!");
+          
+          if (userRole?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        }
       }
     } catch (error: any) {
       toast.error(error.message);
