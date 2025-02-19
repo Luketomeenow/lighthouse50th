@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Settings, UserCog, FileText, Grid, ListOrdered, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus } from 'lucide-react';
@@ -139,7 +138,6 @@ const AdminDashboard = () => {
         .eq('id', settingsId);
 
       if (updateError) {
-        console.error("Error updating video URL:", updateError);
         throw updateError;
       }
 
