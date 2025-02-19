@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -161,7 +160,7 @@ const Index = () => {
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-4">{settings.event_title}</h1>
             <p className="text-2xl md:text-3xl mb-3">
-              {new Date(settings.event_date_start).toLocaleDateString()} - {new Date(settings.event_date_end).toLocaleDateString()}
+              February 28 - March 1, 2026
             </p>
             <p className="text-lg md:text-xl mb-8 opacity-90">{settings.venue}</p>
             <CountdownTimer targetDate={settings.event_date_start} />
