@@ -14,24 +14,44 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
     checkUser();
   }, []);
 
   const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: userRole } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
-
-      if (userRole?.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        console.error("Error checking user:", userError);
+        return;
       }
+
+      if (user) {
+        console.log("User found:", user.id);
+        try {
+          const { data: userRole, error: roleError } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          if (roleError) {
+            console.error("Error fetching user role:", roleError);
+            return;
+          }
+
+          console.log("User role:", userRole);
+          if (userRole?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        } catch (error) {
+          console.error("Error in role check:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Error in checkUser:", error);
     }
   };
 
@@ -41,7 +61,6 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        // Sign up
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -51,7 +70,7 @@ const Auth = () => {
 
         toast.success("Check your email to confirm your account!");
       } else {
-        // Sign in
+        console.log("Attempting sign in...");
         const { error: signInError, data: { user } } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -60,22 +79,35 @@ const Auth = () => {
         if (signInError) throw signInError;
 
         if (user) {
-          const { data: userRole } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', user.id)
-            .single();
+          console.log("User signed in:", user.id);
+          try {
+            const { data: userRole, error: roleError } = await supabase
+              .from('user_roles')
+              .select('role')
+              .eq('user_id', user.id)
+              .maybeSingle();
 
-          toast.success("Successfully logged in!");
-          
-          if (userRole?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
+            if (roleError) {
+              console.error("Error fetching user role:", roleError);
+              throw roleError;
+            }
+
+            console.log("User role fetched:", userRole);
+            toast.success("Successfully logged in!");
+            
+            if (userRole?.role === 'admin') {
+              navigate('/admin');
+            } else {
+              navigate('/');
+            }
+          } catch (error) {
+            console.error("Error checking user role:", error);
+            toast.error("Error checking user role. Please try again.");
           }
         }
       }
     } catch (error: any) {
+      console.error("Authentication error:", error);
       toast.error(error.message);
     } finally {
       setIsLoading(false);
