@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Settings, UserCog, FileText, Grid, ListOrdered, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus } from 'lucide-react';
@@ -63,7 +64,7 @@ const AdminDashboard = () => {
         .from('event_settings')
         .select('header_video_url, id')
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error("Error fetching video URL:", error);
@@ -107,20 +108,19 @@ const AdminDashboard = () => {
 
     setIsUploading(true);
     try {
-      // Upload video to storage
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `${fileName}`;
 
       const { error: uploadError, data: uploadData } = await supabase.storage
         .from('videos')
-        .upload(filePath, selectedFile, {
+        .upload(fileName, selectedFile, {
           cacheControl: '3600',
           contentType: selectedFile.type,
           upsert: false
         });
 
       if (uploadError) {
+        console.error("Upload error:", uploadError);
         if (uploadError.message.includes('Payload too large')) {
           throw new Error('File size exceeds the maximum limit of 50MB');
         }
@@ -129,15 +129,15 @@ const AdminDashboard = () => {
 
       const { data: { publicUrl } } = supabase.storage
         .from('videos')
-        .getPublicUrl(filePath);
+        .getPublicUrl(fileName);
 
-      // Update event settings with new video URL
       const { error: updateError } = await supabase
         .from('event_settings')
         .update({ header_video_url: publicUrl })
         .eq('id', settingsId);
 
       if (updateError) {
+        console.error("Update error:", updateError);
         throw updateError;
       }
 
@@ -145,7 +145,7 @@ const AdminDashboard = () => {
       setSelectedFile(null);
       toast.success('Video uploaded and header updated successfully');
     } catch (error: any) {
-      console.error('Upload error:', error);
+      console.error('Error:', error);
       toast.error(error.message || 'Error uploading video');
     } finally {
       setIsUploading(false);
