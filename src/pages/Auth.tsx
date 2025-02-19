@@ -88,8 +88,8 @@ const Auth = () => {
       {/* Right side - Cover Image */}
       <div className="w-full h-48 md:h-auto md:w-1/2">
         <img 
-          src="/lovable-uploads/8563d1cb-03bf-439d-b626-6728139dec6d.png"
-          alt="Cover"
+          src="/lovable-uploads/55b6eb21-e93e-4b8d-8242-7f8904b099eb.png"
+          alt="Lighthouse BBC 50th Anniversary"
           className="h-full w-full object-cover"
         />
       </div>
