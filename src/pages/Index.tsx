@@ -54,17 +54,8 @@ const Index = () => {
     setIsAdmin(roles?.role === 'admin');
   };
 
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/admin`
-      }
-    });
-
-    if (error) {
-      toast.error('Failed to login');
-    }
+  const handleLogin = () => {
+    navigate('/auth');
   };
 
   return (
