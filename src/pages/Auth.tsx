@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,27 +12,6 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: userRole } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (userRole?.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
-      }
-    };
-
-    checkUser();
-  }, [navigate]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,19 +38,19 @@ const Auth = () => {
 
         toast.success("Check your email to confirm your account!");
       } else {
-        const { error: signInError, data: { user } } = await supabase.auth.signInWithPassword({
+        const { error: signInError, data } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (signInError) throw signInError;
 
-        if (user) {
+        if (data.user) {
           const { data: userRole, error: roleError } = await supabase
             .from('user_roles')
             .select('role')
-            .eq('user_id', user.id)
-            .maybeSingle();
+            .eq('user_id', data.user.id)
+            .single();
 
           if (roleError) throw roleError;
 
