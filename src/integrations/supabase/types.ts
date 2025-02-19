@@ -9,7 +9,60 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      event_settings: {
+        Row: {
+          created_at: string
+          event_date_end: string
+          event_date_start: string
+          event_title: string
+          header_video_url: string
+          id: string
+          updated_at: string
+          venue: string
+        }
+        Insert: {
+          created_at?: string
+          event_date_end?: string
+          event_date_start?: string
+          event_title?: string
+          header_video_url?: string
+          id?: string
+          updated_at?: string
+          venue?: string
+        }
+        Update: {
+          created_at?: string
+          event_date_end?: string
+          event_date_start?: string
+          event_title?: string
+          header_video_url?: string
+          id?: string
+          updated_at?: string
+          venue?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +71,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
