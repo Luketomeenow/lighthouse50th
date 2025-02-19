@@ -88,7 +88,7 @@ const Auth = () => {
         <div 
           className="h-full w-full bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1469474968028-56623f02e42e')",
+            backgroundImage: "url('/lovable-uploads/34c5cb1a-e6cf-4f8d-82ab-3ed4ba01669c.png')",
           }}
         />
       </div>
