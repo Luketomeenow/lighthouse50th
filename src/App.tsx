@@ -11,6 +11,11 @@ import NotFound from "./pages/NotFound";
 import Funding from "./pages/Funding";
 import Ministries from "./pages/Ministries";
 import LatestNews from "./pages/LatestNews";
+import Dashboard from "./pages/Dashboard";
+import Flow from "./pages/Flow";
+import SeatPlan from "./pages/SeatPlan";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +32,11 @@ const App = () => (
           <Route path="/funding" element={<Funding />} />
           <Route path="/ministries" element={<Ministries />} />
           <Route path="/latest-news" element={<LatestNews />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/flow" element={<Flow />} />
+          <Route path="/seat-plan" element={<SeatPlan />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
