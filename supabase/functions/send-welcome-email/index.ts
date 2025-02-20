@@ -17,14 +17,30 @@ interface WelcomeEmailRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("Received request to send welcome email");
+
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { email, password, firstName, lastName }: WelcomeEmailRequest = await req.json();
+    // Log request body for debugging
+    const requestBody = await req.json();
+    console.log("Request body:", requestBody);
+
+    const { email, password, firstName, lastName }: WelcomeEmailRequest = requestBody;
+
+    // Validate required fields
+    if (!email || !password) {
+      console.error("Missing required fields");
+      throw new Error("Email and password are required");
+    }
+
     const name = firstName && lastName ? `${firstName} ${lastName}` : "there";
+
+    // Log before sending email
+    console.log("Attempting to send email to:", email);
 
     const emailResponse = await resend.emails.send({
       from: "BBC Registration <onboarding@resend.dev>",
@@ -43,19 +59,33 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Welcome email sent successfully:", emailResponse);
+    console.log("Email sent successfully:", emailResponse);
 
     return new Response(JSON.stringify(emailResponse), {
       status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders },
+      headers: { 
+        "Content-Type": "application/json",
+        ...corsHeaders 
+      },
     });
   } catch (error: any) {
-    console.error("Error sending welcome email:", error);
+    console.error("Error in send-welcome-email function:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+    });
+
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: "Failed to send welcome email" 
+      }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders 
+        },
       }
     );
   }
