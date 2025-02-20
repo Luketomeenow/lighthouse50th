@@ -76,9 +76,11 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     otherLighthouseWork: '',
     needsAccommodation: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     // Validate required fields
     const requiredFields = { ...formData };
@@ -88,19 +90,25 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     
     if (!Object.values(requiredFields).every(value => value)) {
       toast.error("Please fill in all fields");
+      setIsSubmitting(false);
       return;
     }
 
     if (!ageGroups.includes(formData.ageGroup as AgeGroup)) {
       toast.error("Please select a valid age group");
+      setIsSubmitting(false);
       return;
     }
 
     try {
+      console.log("Starting registration process...");
+      
       // Generate a random password
       const generatedPassword = generatePassword();
+      console.log("Password generated successfully");
 
       // Create user account in Supabase
+      console.log("Creating user account...");
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: generatedPassword,
@@ -112,9 +120,14 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
         }
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        console.error("Auth error:", authError);
+        throw authError;
+      }
+      console.log("User account created successfully:", authData?.user?.id);
 
       // Save registration data
+      console.log("Saving registration data...");
       const { error: registrationError } = await supabase
         .from('registrations')
         .insert({
@@ -130,10 +143,15 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
           needs_accommodation: formData.needsAccommodation === 'yes'
         });
 
-      if (registrationError) throw registrationError;
+      if (registrationError) {
+        console.error("Registration error:", registrationError);
+        throw registrationError;
+      }
+      console.log("Registration data saved successfully");
 
-      // Send welcome email with credentials
-      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
+      // Send welcome email
+      console.log("Sending welcome email...");
+      const { data: emailData, error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: JSON.stringify({
           email: formData.email,
           password: generatedPassword,
@@ -142,7 +160,11 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
         }),
       });
 
-      if (emailError) throw emailError;
+      if (emailError) {
+        console.error("Email error:", emailError);
+        throw emailError;
+      }
+      console.log("Email function response:", emailData);
 
       toast.success("Registration submitted successfully! Please check your email for login credentials.");
       onOpenChange(false);
@@ -159,7 +181,9 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
       });
     } catch (error: any) {
       console.error('Registration error:', error);
-      toast.error(error.message || "Failed to submit registration");
+      toast.error(error.message || "Failed to submit registration. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -296,8 +320,8 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
             </RadioGroup>
           </div>
 
-          <Button type="submit" className="w-full">
-            Submit Registration
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit Registration"}
           </Button>
         </form>
       </DialogContent>
