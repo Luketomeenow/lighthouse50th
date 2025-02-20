@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
+import RegistrationForm from '@/components/RegistrationForm';
 import { supabase } from "@/integrations/supabase/client";
 
 type EventSettings = {
@@ -24,6 +25,7 @@ type EventSettings = {
 const Index = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [settings, setSettings] = useState<EventSettings>({
@@ -124,7 +126,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="relative h-screen">
         {!videoError && (
           <video 
@@ -149,7 +150,6 @@ const Index = () => {
         )}
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
-        {/* Admin Controls */}
         <div className="absolute top-4 right-4 z-30 flex flex-col sm:flex-row gap-2">
           {isAdmin ? (
             <>
@@ -176,7 +176,6 @@ const Index = () => {
           )}
         </div>
 
-        {/* Video Update Form */}
         {showVideoUpdate && isAdmin && (
           <div className="absolute top-20 right-4 z-30 bg-white p-4 rounded-lg shadow-lg w-[90%] sm:w-auto mx-4 sm:mx-0">
             <div className="flex flex-col sm:flex-row gap-2">
@@ -210,6 +209,7 @@ const Index = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => setShowRegistrationForm(true)}
               className="mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-all text-sm sm:text-base"
             >
               Register Now
@@ -225,7 +225,11 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Program Flow Section */}
+      <RegistrationForm 
+        open={showRegistrationForm} 
+        onOpenChange={setShowRegistrationForm}
+      />
+
       <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 md:mb-16">
@@ -235,7 +239,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8">
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 md:mb-16">
@@ -276,7 +279,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Navigation Section */}
       <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-gray-50">
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {['Funding', 'Ministries', 'Latest News'].map(item => (
