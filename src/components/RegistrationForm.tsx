@@ -249,7 +249,13 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
             <Label htmlFor="lighthouseWork">Lighthouse Work</Label>
             <Select
               value={formData.lighthouseWork}
-              onValueChange={(value: LighthouseWork) => setFormData(prev => ({ ...prev, lighthouseWork: value }))}
+              onValueChange={(value) => {
+                // Explicitly type the spread to match FormData type
+                setFormData((prev) => ({
+                  ...prev,
+                  lighthouseWork: value as LighthouseWork,
+                }));
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your Lighthouse work" />
