@@ -22,6 +22,7 @@ type RegistrationFormProps = {
 const ageGroups = ['Children', 'YP', 'SWYP', 'Adult', 'Senior'];
 
 const lighthouseWorks = [
+  'Bataan',
   'Cainta',
   'Marikina',
   'Olongapo',
