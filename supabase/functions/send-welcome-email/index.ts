@@ -43,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Attempting to send email to:", email);
 
     const emailResponse = await resend.emails.send({
-      from: "BBC Registration <onboarding@resend.dev>",
+      from: "onboarding@resend.dev",
       to: [email],
       subject: "Welcome to BBC 50th Anniversary Event - Your Account Details",
       html: `
