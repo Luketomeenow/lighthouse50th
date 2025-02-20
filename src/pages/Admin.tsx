@@ -7,6 +7,7 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGrou
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import UsersSection from '@/components/admin/UsersSection';
 
 const dummyData = [
   { name: 'Jan', value: 400 },
@@ -346,6 +347,8 @@ const AdminDashboard = () => {
           </div>
         </div>
       );
+    } else if (activeSection === 'users') {
+      return <UsersSection />;
     } else if (activeSection === 'settings') {
       return (
         <div className="space-y-8">
