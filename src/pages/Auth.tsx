@@ -37,19 +37,36 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
+      // First, check if user exists
+      const { data: userExists, error: userCheckError } = await supabase.auth.admin.getUserByEmail(email);
+      console.log("User exists check:", userExists);
+
+      if (userCheckError) {
+        console.error("Error checking user:", userCheckError);
+      }
+
+      // Attempt sign in
       const { error: signInError, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        console.error("Sign in error details:", signInError);
+        if (signInError.message.includes("Email not confirmed")) {
+          toast.error("Please verify your email before logging in");
+        } else {
+          toast.error("Invalid login credentials. Please check your email and password.");
+        }
+        throw signInError;
+      }
 
       if (data.user) {
         toast.success("Successfully logged in!");
         navigate('/dashboard');
       }
     } catch (error: any) {
-      console.error("Authentication error:", error);
+      console.error("Full authentication error:", error);
       toast.error(error.message || "An error occurred during authentication");
     } finally {
       setIsLoading(false);
