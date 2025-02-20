@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 type RegistrationFormProps = {
   open: boolean;
@@ -34,6 +35,17 @@ const lighthouseWorks = [
   'Tatalon (Lighthouse District 4)',
   'Others'
 ];
+
+const generatePassword = () => {
+  const length = 12;
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+};
 
 const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
   const [formData, setFormData] = useState({
@@ -63,9 +75,38 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     }
 
     try {
+      // Generate a random password
+      const generatedPassword = generatePassword();
+
+      // Create user account in Supabase
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: generatedPassword,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+          }
+        }
+      });
+
+      if (authError) throw authError;
+
+      // Send welcome email with credentials
+      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
+        body: JSON.stringify({
+          email: formData.email,
+          password: generatedPassword,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        }),
+      });
+
+      if (emailError) throw emailError;
+
       // Here we'll add the logic to save the registration data
       console.log('Form submitted:', formData);
-      toast.success("Registration submitted successfully!");
+      toast.success("Registration submitted successfully! Please check your email for login credentials.");
       onOpenChange(false);
       setFormData({
         lastName: '',
@@ -78,9 +119,9 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
         otherLighthouseWork: '',
         needsAccommodation: ''
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
-      toast.error("Failed to submit registration");
+      toast.error(error.message || "Failed to submit registration");
     }
   };
 
