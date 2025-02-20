@@ -19,14 +19,47 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-// Form schema
+const ageGroups = ["Children", "YP", "SWYP", "Adult", "Senior"] as const;
+const lighthouseWorks = [
+  "Cainta",
+  "Marikina",
+  "Olongapo",
+  "Pasig",
+  "Taguig",
+  "Tatalon (Lighthouse District 1)",
+  "Tatalon (Lighthouse District 2)",
+  "Tatalon (Lighthouse District 3)",
+  "Tatalon (Lighthouse District 4)",
+  "Others",
+] as const;
+
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
+  contact: z.string().min(1, "Contact number is required"),
+  age: z.coerce.number().int().min(1, "Age must be at least 1"),
+  ageGroup: z.enum(ageGroups, {
+    required_error: "Please select your age group",
+  }),
+  lighthouseWork: z.enum(lighthouseWorks, {
+    required_error: "Please select your Lighthouse work",
+  }),
+  needsAccommodation: z.enum(["yes", "no"], {
+    required_error: "Please indicate if you need accommodation",
+  }),
+  otherLighthouseWork: z.string().optional(),
 });
 
 interface RegistrationFormProps {
@@ -43,68 +76,38 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
       firstName: "",
       lastName: "",
       email: "",
+      contact: "",
+      age: undefined,
+      ageGroup: undefined,
+      lighthouseWork: undefined,
+      needsAccommodation: undefined,
+      otherLighthouseWork: "",
     },
   });
 
-  const generatePassword = () => {
-    console.log("Password generated successfully");
-    return "pass123"; // For testing purposes
-  };
+  const lighthouseWorkValue = form.watch("lighthouseWork");
 
   const handleRegistration = async (values: z.infer<typeof formSchema>) => {
     console.log("Starting registration process...");
     setIsLoading(true);
 
     try {
-      const password = generatePassword();
-      console.log("Password generated successfully");
-
-      // Create user account
-      console.log("Creating user account...");
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      const { error } = await supabase.from("registrations").insert({
+        first_name: values.firstName,
+        last_name: values.lastName,
         email: values.email,
-        password: password,
-        options: {
-          data: {
-            first_name: values.firstName,
-            last_name: values.lastName,
-          },
-        },
+        contact: values.contact,
+        age: values.age,
+        age_group: values.ageGroup,
+        lighthouse_work: values.lighthouseWork,
+        needs_accommodation: values.needsAccommodation === "yes",
+        other_lighthouse_work:
+          values.lighthouseWork === "Others" ? values.otherLighthouseWork : null,
       });
 
-      if (signUpError) {
-        console.error("Auth error:", signUpError);
-        throw signUpError;
-      }
+      if (error) throw error;
 
-      // Send welcome email with credentials
-      console.log("Sending welcome email...");
-      const response = await fetch(
-        "https://fwxblkgnyneqwotlsqss.supabase.co/functions/v1/send-welcome-email",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${
-              import.meta.env.VITE_SUPABASE_ANON_KEY
-            }`,
-          },
-          body: JSON.stringify({
-            email: values.email,
-            password: password,
-            firstName: values.firstName,
-            lastName: values.lastName,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Email error:", errorData);
-        throw new Error("Failed to send welcome email");
-      }
-
-      toast.success("Registration successful! Check your email for login details.");
+      toast.success("Registration successful!");
       onOpenChange(false);
       form.reset();
     } catch (error: any) {
@@ -129,10 +132,10 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
           >
             <FormField
               control={form.control}
-              name="firstName"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>Last Name</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -143,10 +146,10 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
 
             <FormField
               control={form.control}
-              name="lastName"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -163,6 +166,136 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input {...field} type="email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="contact"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contact Number</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="tel" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Age</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="number" min={1} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="ageGroup"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Age Group</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      {ageGroups.map((group) => (
+                        <FormItem
+                          key={group}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={group} />
+                          </FormControl>
+                          <FormLabel className="font-normal">{group}</FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lighthouseWork"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Lighthouse Work</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your Lighthouse work" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {lighthouseWorks.map((work) => (
+                        <SelectItem key={work} value={work}>
+                          {work}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {lighthouseWorkValue === "Others" && (
+              <FormField
+                control={form.control}
+                name="otherLighthouseWork"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Other Lighthouse Work</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <FormField
+              control={form.control}
+              name="needsAccommodation"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Need Accommodation?</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="yes" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Yes</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="no" />
+                        </FormControl>
+                        <FormLabel className="font-normal">No</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
