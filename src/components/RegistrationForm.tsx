@@ -43,6 +43,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     age: '',
     ageGroup: '',
     lighthouseWork: '',
+    otherLighthouseWork: '',
     needsAccommodation: ''
   });
 
@@ -50,7 +51,12 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     e.preventDefault();
     
     // Validate required fields
-    if (!Object.values(formData).every(value => value)) {
+    const requiredFields = { ...formData };
+    if (formData.lighthouseWork !== 'Others') {
+      delete requiredFields.otherLighthouseWork;
+    }
+    
+    if (!Object.values(requiredFields).every(value => value)) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -68,6 +74,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
         age: '',
         ageGroup: '',
         lighthouseWork: '',
+        otherLighthouseWork: '',
         needsAccommodation: ''
       });
     } catch (error) {
@@ -174,6 +181,16 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
                 ))}
               </SelectContent>
             </Select>
+            {formData.lighthouseWork === 'Others' && (
+              <div className="mt-2">
+                <Input
+                  id="otherLighthouseWork"
+                  value={formData.otherLighthouseWork}
+                  onChange={(e) => setFormData(prev => ({ ...prev, otherLighthouseWork: e.target.value }))}
+                  placeholder="Please specify your Lighthouse work"
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
