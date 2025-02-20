@@ -39,6 +39,9 @@ const lighthouseWorks = [
   'Others'
 ] as const;
 
+// Create a type from the lighthouse works array
+type LighthouseWork = typeof lighthouseWorks[number];
+
 type FormData = {
   lastName: string;
   firstName: string;
@@ -46,7 +49,7 @@ type FormData = {
   contact: string;
   age: string;
   ageGroup: AgeGroup | '';
-  lighthouseWork: typeof lighthouseWorks[number] | '';
+  lighthouseWork: LighthouseWork | '';
   otherLighthouseWork: string;
   needsAccommodation: 'yes' | 'no' | '';
 };
@@ -246,7 +249,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
             <Label htmlFor="lighthouseWork">Lighthouse Work</Label>
             <Select
               value={formData.lighthouseWork}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, lighthouseWork: value }))}
+              onValueChange={(value: LighthouseWork) => setFormData(prev => ({ ...prev, lighthouseWork: value }))}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your Lighthouse work" />
