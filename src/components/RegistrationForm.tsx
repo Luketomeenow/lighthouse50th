@@ -32,6 +32,7 @@ import { toast } from "sonner";
 
 const ageGroups = ["Children", "YP", "SWYP", "Adult", "Senior"] as const;
 const lighthouseWorks = [
+  "Bataan",
   "Cainta",
   "Marikina",
   "Olongapo",
