@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,24 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
+  // Check for existing session on component mount
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        navigate('/dashboard');
+      }
+    });
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        navigate('/dashboard');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -27,21 +45,8 @@ const Auth = () => {
       if (signInError) throw signInError;
 
       if (data.user) {
-        // Check if user is admin using the is_admin function
-        const { data: isAdmin, error: roleError } = await supabase
-          .rpc('is_admin', { uid: data.user.id });
-
-        if (roleError) throw roleError;
-
         toast.success("Successfully logged in!");
-        
-        // Redirect based on user role
-        if (isAdmin) {
-          toast.success("Welcome to the admin dashboard!");
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        navigate('/dashboard');
       }
     } catch (error: any) {
       console.error("Authentication error:", error);
