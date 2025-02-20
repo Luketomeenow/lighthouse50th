@@ -1,9 +1,22 @@
 
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, ListOrdered, Grid, Users, UserCircle, Settings, Menu } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { 
+  LayoutDashboard, 
+  ListOrdered, 
+  Grid, 
+  Users, 
+  UserCircle, 
+  Settings, 
+  Menu, 
+  Bell,
+  LogOut,
+  UserRound
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -21,6 +34,19 @@ interface UserPanelLayoutProps {
 const UserPanelLayout = ({ children }: UserPanelLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast.success("Successfully logged out");
+      navigate("/auth");
+    } catch (error: any) {
+      toast.error(error.message || "Error logging out");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -33,6 +59,17 @@ const UserPanelLayout = ({ children }: UserPanelLayoutProps) => {
       >
         <Menu className="h-4 w-4" />
       </Button>
+
+      {/* Top Header with User Icon and Notification Bell */}
+      <div className="fixed top-0 right-0 z-40 flex items-center gap-4 p-4">
+        <Button variant="ghost" size="icon" className="relative">
+          <Bell className="h-5 w-5" />
+          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
+        </Button>
+        <Button variant="ghost" size="icon">
+          <UserRound className="h-5 w-5" />
+        </Button>
+      </div>
 
       {/* Sidebar */}
       <aside
@@ -63,13 +100,24 @@ const UserPanelLayout = ({ children }: UserPanelLayoutProps) => {
               </Link>
             ))}
           </nav>
+          {/* Logout Button */}
+          <div className="border-t p-4">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-5 w-5" />
+              Logout
+            </Button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
       <main
         className={cn(
-          "min-h-screen transition-all duration-200 ease-in-out",
+          "min-h-screen pt-16 transition-all duration-200 ease-in-out", // Added pt-16 for top header spacing
           sidebarOpen ? "md:ml-64" : ""
         )}
       >
