@@ -42,6 +42,54 @@ export type Database = {
         }
         Relationships: []
       }
+      registrations: {
+        Row: {
+          age: number
+          age_group: Database["public"]["Enums"]["age_group"]
+          contact: string
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          lighthouse_work: string
+          needs_accommodation: boolean
+          other_lighthouse_work: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          age: number
+          age_group: Database["public"]["Enums"]["age_group"]
+          contact: string
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          lighthouse_work: string
+          needs_accommodation?: boolean
+          other_lighthouse_work?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          age?: number
+          age_group?: Database["public"]["Enums"]["age_group"]
+          contact?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          lighthouse_work?: string
+          needs_accommodation?: boolean
+          other_lighthouse_work?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -82,6 +130,7 @@ export type Database = {
       }
     }
     Enums: {
+      age_group: "Children" | "YP" | "SWYP" | "Adult" | "Senior"
       app_role: "admin" | "user"
     }
     CompositeTypes: {

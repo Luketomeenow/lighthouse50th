@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import UsersSection from '@/components/admin/UsersSection';
+import RegistrationsSection from '@/components/admin/RegistrationsSection';
 
 const dummyData = [
   { name: 'Jan', value: 400 },
@@ -224,6 +225,10 @@ const AdminDashboard = () => {
     icon: BarChart3,
     section: 'dashboard'
   }, {
+    title: 'Registrations',
+    icon: FileText,
+    section: 'registrations'
+  }, {
     title: 'Users',
     icon: Users,
     section: 'users'
@@ -349,6 +354,8 @@ const AdminDashboard = () => {
       );
     } else if (activeSection === 'users') {
       return <UsersSection />;
+    } else if (activeSection === 'registrations') {
+      return <RegistrationsSection />;
     } else if (activeSection === 'settings') {
       return (
         <div className="space-y-8">

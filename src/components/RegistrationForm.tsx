@@ -92,6 +92,24 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
 
       if (authError) throw authError;
 
+      // Save registration data
+      const { error: registrationError } = await supabase
+        .from('registrations')
+        .insert({
+          user_id: authData.user?.id,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          contact: formData.contact,
+          age: parseInt(formData.age),
+          age_group: formData.ageGroup,
+          lighthouse_work: formData.lighthouseWork === 'Others' ? formData.otherLighthouseWork : formData.lighthouseWork,
+          other_lighthouse_work: formData.lighthouseWork === 'Others' ? formData.otherLighthouseWork : null,
+          needs_accommodation: formData.needsAccommodation === 'yes'
+        });
+
+      if (registrationError) throw registrationError;
+
       // Send welcome email with credentials
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: JSON.stringify({
@@ -104,8 +122,6 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
 
       if (emailError) throw emailError;
 
-      // Here we'll add the logic to save the registration data
-      console.log('Form submitted:', formData);
       toast.success("Registration submitted successfully! Please check your email for login credentials.");
       onOpenChange(false);
       setFormData({
