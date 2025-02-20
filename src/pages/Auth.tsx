@@ -37,14 +37,6 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
-      // First, check if user exists
-      const { data: userExists, error: userCheckError } = await supabase.auth.admin.getUserByEmail(email);
-      console.log("User exists check:", userExists);
-
-      if (userCheckError) {
-        console.error("Error checking user:", userCheckError);
-      }
-
       // Attempt sign in
       const { error: signInError, data } = await supabase.auth.signInWithPassword({
         email,
