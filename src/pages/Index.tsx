@@ -30,7 +30,7 @@ const Index = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
-    header_video_url: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4", // Fallback video
+    header_video_url: "https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4",
     event_title: "Seeing the Grace of God - In Lighthouse BBC @ 50",
     event_date_start: "2026-02-28",
     event_date_end: "2026-03-01",
@@ -47,7 +47,6 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    // Reset video element when URL changes
     if (videoRef.current) {
       videoRef.current.load();
     }
