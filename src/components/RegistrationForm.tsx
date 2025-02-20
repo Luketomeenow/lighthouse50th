@@ -68,6 +68,16 @@ interface RegistrationFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
+function generateRandomPassword(length = 12) {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+
 const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -93,7 +103,19 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.from("registrations").insert({
+      // Generate a random password for the new user
+      const password = generateRandomPassword();
+
+      // Create the user account
+      const { error: signUpError, data: signUpData } = await supabase.auth.signUp({
+        email: values.email,
+        password: password,
+      });
+
+      if (signUpError) throw signUpError;
+
+      // Create the registration record
+      const { error: registrationError } = await supabase.from("registrations").insert({
         first_name: values.firstName,
         last_name: values.lastName,
         email: values.email,
@@ -104,11 +126,28 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
         needs_accommodation: values.needsAccommodation === "yes",
         other_lighthouse_work:
           values.lighthouseWork === "Others" ? values.otherLighthouseWork : null,
+        user_id: signUpData.user?.id,
       });
 
-      if (error) throw error;
+      if (registrationError) throw registrationError;
 
-      toast.success("Registration successful!");
+      // Send welcome email with credentials
+      const { error: emailError } = await supabase.functions.invoke("send-welcome-email", {
+        body: {
+          email: values.email,
+          password: password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+        },
+      });
+
+      if (emailError) {
+        console.error("Error sending welcome email:", emailError);
+        toast.error("Registration successful but failed to send welcome email");
+      } else {
+        toast.success("Registration successful! Please check your email for login credentials.");
+      }
+
       onOpenChange(false);
       form.reset();
     } catch (error: any) {

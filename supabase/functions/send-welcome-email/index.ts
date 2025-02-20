@@ -38,13 +38,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     const name = firstName && lastName ? `${firstName} ${lastName}` : "there";
     
-    // Log the API key status
-    const apiKey = Deno.env.get("RESEND_API_KEY");
-    console.log("🔑 API Key status:", {
-      exists: Boolean(apiKey),
-      length: apiKey?.length ?? 0
-    });
-
     try {
       const emailResponse = await resend.emails.send({
         from: "registration@resend.dev",
