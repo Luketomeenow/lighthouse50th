@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -249,11 +248,10 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
             <Label htmlFor="lighthouseWork">Lighthouse Work</Label>
             <Select
               value={formData.lighthouseWork}
-              onValueChange={(value) => {
-                // Explicitly type the spread to match FormData type
-                setFormData((prev) => ({
+              onValueChange={(value: LighthouseWork | '') => {
+                setFormData(prev => ({
                   ...prev,
-                  lighthouseWork: value as LighthouseWork,
+                  lighthouseWork: value
                 }));
               }}
             >
