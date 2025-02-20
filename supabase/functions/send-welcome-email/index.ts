@@ -38,35 +38,49 @@ const handler = async (req: Request): Promise<Response> => {
 
     const name = firstName && lastName ? `${firstName} ${lastName}` : "there";
     
-    console.log(`📧 Attempting to send email to: ${email}`);
-    console.log(`🔑 RESEND_API_KEY exists: ${Boolean(Deno.env.get("RESEND_API_KEY"))}`);
-
-    const emailResponse = await resend.emails.send({
-      from: "BBC Registration <onboarding@resend.dev>",
-      to: [email],
-      subject: "Welcome to BBC 50th Anniversary Event - Your Account Details",
-      html: `
-        <h1>Welcome to BBC 50th Anniversary Event!</h1>
-        <p>Hello ${name},</p>
-        <p>Your account has been successfully created for the BBC 50th Anniversary Event registration. Here are your login credentials:</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Password:</strong> ${password}</p>
-        <p>Please keep this information secure. You can use these credentials to log in to your account and manage your event registration.</p>
-        <p>We recommend changing your password after your first login.</p>
-        <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
-        <p>Best regards,<br>The BBC Team</p>
-      `,
+    // Log the API key status
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    console.log("🔑 API Key status:", {
+      exists: Boolean(apiKey),
+      length: apiKey?.length ?? 0
     });
 
-    console.log("✅ Email sent successfully:", JSON.stringify(emailResponse, null, 2));
+    try {
+      const emailResponse = await resend.emails.send({
+        from: "registration@resend.dev",
+        to: [email],
+        subject: "Welcome to BBC 50th Anniversary Event - Your Account Details",
+        html: `
+          <h1>Welcome to BBC 50th Anniversary Event!</h1>
+          <p>Hello ${name},</p>
+          <p>Your account has been successfully created for the BBC 50th Anniversary Event registration. Here are your login credentials:</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Password:</strong> ${password}</p>
+          <p>Please keep this information secure. You can use these credentials to log in to your account and manage your event registration.</p>
+          <p>We recommend changing your password after your first login.</p>
+          <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
+          <p>Best regards,<br>The BBC Team</p>
+        `,
+      });
 
-    return new Response(JSON.stringify(emailResponse), {
-      status: 200,
-      headers: { 
-        "Content-Type": "application/json",
-        ...corsHeaders 
-      },
-    });
+      console.log("✅ Email sent successfully:", JSON.stringify(emailResponse, null, 2));
+
+      return new Response(JSON.stringify(emailResponse), {
+        status: 200,
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders 
+        },
+      });
+    } catch (sendError: any) {
+      console.error("📧 Resend API Error:", {
+        message: sendError.message,
+        response: sendError.response,
+        status: sendError.status,
+        stack: sendError.stack
+      });
+      throw sendError;
+    }
   } catch (error: any) {
     console.error("❌ Error in send-welcome-email function:", error);
     console.error("Error details:", {
