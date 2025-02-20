@@ -20,7 +20,10 @@ type RegistrationFormProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-const ageGroups = ['Children', 'YP', 'SWYP', 'Adult', 'Senior'];
+// Match the database enum type exactly
+type AgeGroup = "Children" | "YP" | "SWYP" | "Adult" | "Senior";
+
+const ageGroups: AgeGroup[] = ['Children', 'YP', 'SWYP', 'Adult', 'Senior'];
 
 const lighthouseWorks = [
   'Bataan',
@@ -34,7 +37,19 @@ const lighthouseWorks = [
   'Tatalon (Lighthouse District 3)',
   'Tatalon (Lighthouse District 4)',
   'Others'
-];
+] as const;
+
+type FormData = {
+  lastName: string;
+  firstName: string;
+  email: string;
+  contact: string;
+  age: string;
+  ageGroup: AgeGroup | '';
+  lighthouseWork: typeof lighthouseWorks[number] | '';
+  otherLighthouseWork: string;
+  needsAccommodation: 'yes' | 'no' | '';
+};
 
 const generatePassword = () => {
   const length = 12;
@@ -48,7 +63,7 @@ const generatePassword = () => {
 };
 
 const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     lastName: '',
     firstName: '',
     email: '',
@@ -71,6 +86,11 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     
     if (!Object.values(requiredFields).every(value => value)) {
       toast.error("Please fill in all fields");
+      return;
+    }
+
+    if (!ageGroups.includes(formData.ageGroup as AgeGroup)) {
+      toast.error("Please select a valid age group");
       return;
     }
 
@@ -102,7 +122,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
           email: formData.email,
           contact: formData.contact,
           age: parseInt(formData.age),
-          age_group: formData.ageGroup,
+          age_group: formData.ageGroup as AgeGroup,
           lighthouse_work: formData.lighthouseWork === 'Others' ? formData.otherLighthouseWork : formData.lighthouseWork,
           other_lighthouse_work: formData.lighthouseWork === 'Others' ? formData.otherLighthouseWork : null,
           needs_accommodation: formData.needsAccommodation === 'yes'
@@ -206,7 +226,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
               <Label htmlFor="ageGroup">Age Group</Label>
               <Select
                 value={formData.ageGroup}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, ageGroup: value }))}
+                onValueChange={(value: AgeGroup) => setFormData(prev => ({ ...prev, ageGroup: value }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select age group" />
@@ -255,7 +275,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
             <Label>In Need of Accommodation</Label>
             <RadioGroup
               value={formData.needsAccommodation}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, needsAccommodation: value }))}
+              onValueChange={(value: 'yes' | 'no') => setFormData(prev => ({ ...prev, needsAccommodation: value }))}
               className="flex space-x-4"
             >
               <div className="flex items-center space-x-2">
