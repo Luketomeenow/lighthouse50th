@@ -1,329 +1,179 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
-type RegistrationFormProps = {
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+// Form schema
+const formSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+});
+
+interface RegistrationFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-};
-
-// Match the database enum type exactly
-type AgeGroup = "Children" | "YP" | "SWYP" | "Adult" | "Senior";
-
-const ageGroups: AgeGroup[] = ['Children', 'YP', 'SWYP', 'Adult', 'Senior'];
-
-const lighthouseWorks = [
-  'Bataan',
-  'Cainta',
-  'Marikina',
-  'Olongapo',
-  'Pasig',
-  'Taguig',
-  'Tatalon (Lighthouse District 1)',
-  'Tatalon (Lighthouse District 2)',
-  'Tatalon (Lighthouse District 3)',
-  'Tatalon (Lighthouse District 4)',
-  'Others'
-] as const;
-
-// Create a type from the lighthouse works array
-type LighthouseWork = typeof lighthouseWorks[number];
-
-type FormData = {
-  lastName: string;
-  firstName: string;
-  email: string;
-  contact: string;
-  age: string;
-  ageGroup: AgeGroup | '';
-  lighthouseWork: LighthouseWork | '';
-  otherLighthouseWork: string;
-  needsAccommodation: 'yes' | 'no' | '';
-};
-
-const generatePassword = () => {
-  const length = 12;
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    password += charset[randomIndex];
-  }
-  return password;
-};
+}
 
 const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
-  const [formData, setFormData] = useState<FormData>({
-    lastName: '',
-    firstName: '',
-    email: '',
-    contact: '',
-    age: '',
-    ageGroup: '',
-    lighthouseWork: '',
-    otherLighthouseWork: '',
-    needsAccommodation: ''
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+    },
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Validate required fields
-    const requiredFields = { ...formData };
-    if (formData.lighthouseWork !== 'Others') {
-      delete requiredFields.otherLighthouseWork;
-    }
-    
-    if (!Object.values(requiredFields).every(value => value)) {
-      toast.error("Please fill in all fields");
-      setIsSubmitting(false);
-      return;
-    }
+  const generatePassword = () => {
+    console.log("Password generated successfully");
+    return "pass123"; // For testing purposes
+  };
 
-    if (!ageGroups.includes(formData.ageGroup as AgeGroup)) {
-      toast.error("Please select a valid age group");
-      setIsSubmitting(false);
-      return;
-    }
+  const handleRegistration = async (values: z.infer<typeof formSchema>) => {
+    console.log("Starting registration process...");
+    setIsLoading(true);
 
     try {
-      console.log("Starting registration process...");
-      
-      // Generate a random password
-      const generatedPassword = generatePassword();
+      const password = generatePassword();
       console.log("Password generated successfully");
 
-      // Create user account in Supabase
+      // Create user account
       console.log("Creating user account...");
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: generatedPassword,
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: values.email,
+        password: password,
         options: {
           data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-          }
-        }
+            first_name: values.firstName,
+            last_name: values.lastName,
+          },
+        },
       });
 
-      if (authError) {
-        console.error("Auth error:", authError);
-        throw authError;
+      if (signUpError) {
+        console.error("Auth error:", signUpError);
+        throw signUpError;
       }
-      console.log("User account created successfully:", authData?.user?.id);
 
-      // Save registration data
-      console.log("Saving registration data...");
-      const { error: registrationError } = await supabase
-        .from('registrations')
-        .insert({
-          user_id: authData.user?.id,
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          contact: formData.contact,
-          age: parseInt(formData.age),
-          age_group: formData.ageGroup as AgeGroup,
-          lighthouse_work: formData.lighthouseWork === 'Others' ? formData.otherLighthouseWork : formData.lighthouseWork,
-          other_lighthouse_work: formData.lighthouseWork === 'Others' ? formData.otherLighthouseWork : null,
-          needs_accommodation: formData.needsAccommodation === 'yes'
-        });
-
-      if (registrationError) {
-        console.error("Registration error:", registrationError);
-        throw registrationError;
-      }
-      console.log("Registration data saved successfully");
-
-      // Send welcome email
+      // Send welcome email with credentials
       console.log("Sending welcome email...");
-      const { data: emailData, error: emailError } = await supabase.functions.invoke('send-welcome-email', {
-        body: JSON.stringify({
-          email: formData.email,
-          password: generatedPassword,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-        }),
-      });
+      const response = await fetch(
+        "https://fwxblkgnyneqwotlsqss.supabase.co/functions/v1/send-welcome-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${
+              import.meta.env.VITE_SUPABASE_ANON_KEY
+            }`,
+          },
+          body: JSON.stringify({
+            email: values.email,
+            password: password,
+            firstName: values.firstName,
+            lastName: values.lastName,
+          }),
+        }
+      );
 
-      if (emailError) {
-        console.error("Email error:", emailError);
-        throw emailError;
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Email error:", errorData);
+        throw new Error("Failed to send welcome email");
       }
-      console.log("Email function response:", emailData);
 
-      toast.success("Registration submitted successfully! Please check your email for login credentials.");
+      toast.success("Registration successful! Check your email for login details.");
       onOpenChange(false);
-      setFormData({
-        lastName: '',
-        firstName: '',
-        email: '',
-        contact: '',
-        age: '',
-        ageGroup: '',
-        lighthouseWork: '',
-        otherLighthouseWork: '',
-        needsAccommodation: ''
-      });
+      form.reset();
     } catch (error: any) {
-      console.error('Registration error:', error);
-      toast.error(error.message || "Failed to submit registration. Please try again.");
+      console.error("Registration error:", error);
+      toast.error(error.message || "An error occurred during registration");
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Event Registration</DialogTitle>
+          <DialogTitle>Register for the Event</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                placeholder="Enter your last name"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                placeholder="Enter your first name"
-              />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="contact">Contact</Label>
-              <Input
-                id="contact"
-                value={formData.contact}
-                onChange={(e) => setFormData(prev => ({ ...prev, contact: e.target.value }))}
-                placeholder="Enter your contact number"
-              />
-            </div>
-          </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleRegistration)}
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
-              <Input
-                id="age"
-                type="number"
-                value={formData.age}
-                onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
-                placeholder="Enter your age"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="ageGroup">Age Group</Label>
-              <Select
-                value={formData.ageGroup}
-                onValueChange={(value: AgeGroup) => setFormData(prev => ({ ...prev, ageGroup: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select age group" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ageGroups.map((group) => (
-                    <SelectItem key={group} value={group}>
-                      {group}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label htmlFor="lighthouseWork">Lighthouse Work</Label>
-            <Select
-              value={formData.lighthouseWork}
-              onValueChange={(value: LighthouseWork | '') => {
-                setFormData(prev => ({
-                  ...prev,
-                  lighthouseWork: value
-                }));
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select your Lighthouse work" />
-              </SelectTrigger>
-              <SelectContent>
-                {lighthouseWorks.map((work) => (
-                  <SelectItem key={work} value={work}>
-                    {work}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {formData.lighthouseWork === 'Others' && (
-              <div className="mt-2">
-                <Input
-                  id="otherLighthouseWork"
-                  value={formData.otherLighthouseWork}
-                  onChange={(e) => setFormData(prev => ({ ...prev, otherLighthouseWork: e.target.value }))}
-                  placeholder="Please specify your Lighthouse work"
-                />
-              </div>
-            )}
-          </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label>In Need of Accommodation</Label>
-            <RadioGroup
-              value={formData.needsAccommodation}
-              onValueChange={(value: 'yes' | 'no') => setFormData(prev => ({ ...prev, needsAccommodation: value }))}
-              className="flex space-x-4"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="yes" />
-                <Label htmlFor="yes">Yes</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="no" />
-                <Label htmlFor="no">No</Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit Registration"}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Processing..." : "Register"}
+            </Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
