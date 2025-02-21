@@ -103,10 +103,10 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     setIsLoading(true);
 
     try {
-      // Generate a random password for the new user
-      const password = generateRandomPassword();
+      // Use fixed password for all new registrations
+      const password = "pass123";
 
-      // Create the user account
+      // Create the user account with fixed password
       const { error: signUpError, data: signUpData } = await supabase.auth.signUp({
         email: values.email,
         password: password,
