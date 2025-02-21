@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,18 +13,41 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Check for existing session on component mount
+  // Check for existing session and role on component mount
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const checkSessionAndRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/dashboard');
+        // Check user role
+        const { data: role } = await supabase.rpc('get_user_role', {
+          user_id: session.user.id
+        });
+        
+        // Redirect based on role
+        if (role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
       }
-    });
+    };
+
+    checkSessionAndRole();
 
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
-        navigate('/dashboard');
+        // Check user role when auth state changes
+        const { data: role } = await supabase.rpc('get_user_role', {
+          user_id: session.user.id
+        });
+        
+        // Redirect based on role
+        if (role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
       }
     });
 
@@ -54,8 +76,25 @@ const Auth = () => {
       }
 
       if (data.user) {
+        // Check user role after successful login
+        const { data: role, error: roleError } = await supabase.rpc('get_user_role', {
+          user_id: data.user.id
+        });
+
+        if (roleError) {
+          console.error("Error checking role:", roleError);
+          toast.error("Error checking user permissions");
+          return;
+        }
+
         toast.success("Successfully logged in!");
-        navigate('/dashboard');
+        
+        // Redirect based on role
+        if (role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (error: any) {
       console.error("Full authentication error:", error);
