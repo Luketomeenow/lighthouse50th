@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Settings, FileText, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus, ArrowUpRight, ArrowDownRight, Activity, DollarSign } from 'lucide-react';
+import { Users, Settings, FileText, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus, ArrowUpRight, ArrowDownRight, Activity, DollarSign, LayoutDashboard, Grid } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import UsersSection from '@/components/admin/UsersSection';
 import RegistrationsSection from '@/components/admin/RegistrationsSection';
+import SeatPlanSection from '@/components/admin/SeatPlanSection';
 
 const dummyData = [
   { name: 'Jan', value: 400 },
@@ -222,7 +223,7 @@ const AdminDashboard = () => {
 
   const menuItems = [{
     title: 'Dashboard',
-    icon: BarChart3,
+    icon: LayoutDashboard,
     section: 'dashboard'
   }, {
     title: 'Registrations',
@@ -233,21 +234,9 @@ const AdminDashboard = () => {
     icon: Users,
     section: 'users'
   }, {
-    title: 'Reports',
-    icon: FileText,
-    section: 'reports'
-  }, {
-    title: 'Calendar',
-    icon: CalendarDays,
-    section: 'calendar'
-  }, {
-    title: 'Finance',
-    icon: CircleDollarSign,
-    section: 'finance'
-  }, {
-    title: 'Organizations',
-    icon: Building2,
-    section: 'organizations'
+    title: 'Seat Plan',
+    icon: Grid,
+    section: 'seat-plan'
   }, {
     title: 'Settings',
     icon: Settings,
@@ -356,6 +345,8 @@ const AdminDashboard = () => {
       return <UsersSection />;
     } else if (activeSection === 'registrations') {
       return <RegistrationsSection />;
+    } else if (activeSection === 'seat-plan') {
+      return <SeatPlanSection />;
     } else if (activeSection === 'settings') {
       return (
         <div className="space-y-8">
