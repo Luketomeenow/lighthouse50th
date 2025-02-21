@@ -49,6 +49,8 @@ const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
   contact: z.string().min(1, "Contact number is required"),
   age: z.coerce.number().int().min(1, "Age must be at least 1"),
   ageGroup: z.enum(ageGroups, {
@@ -61,21 +63,14 @@ const formSchema = z.object({
     required_error: "Please indicate if you need accommodation",
   }),
   otherLighthouseWork: z.string().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 interface RegistrationFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
-
-function generateRandomPassword(length = 12) {
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    password += charset[randomIndex];
-  }
-  return password;
 }
 
 const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
@@ -87,6 +82,8 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
       firstName: "",
       lastName: "",
       email: "",
+      password: "",
+      confirmPassword: "",
       contact: "",
       age: undefined,
       ageGroup: undefined,
@@ -103,13 +100,10 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     setIsLoading(true);
 
     try {
-      // Use fixed password for all new registrations
-      const password = "pass123";
-
-      // Create the user account with fixed password
+      // Create the user account with the provided password
       const { error: signUpError, data: signUpData } = await supabase.auth.signUp({
         email: values.email,
-        password: password,
+        password: values.password,
       });
 
       if (signUpError) throw signUpError;
@@ -135,7 +129,7 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
       const { error: emailError } = await supabase.functions.invoke("send-welcome-email", {
         body: {
           email: values.email,
-          password: password,
+          password: values.password,
           firstName: values.firstName,
           lastName: values.lastName,
         },
@@ -223,6 +217,36 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
                     <FormLabel>Contact Number</FormLabel>
                     <FormControl>
                       <Input {...field} type="tel" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
