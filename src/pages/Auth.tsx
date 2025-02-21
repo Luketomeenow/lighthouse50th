@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,36 +17,61 @@ const Auth = () => {
   // Check for existing session and role on component mount
   useEffect(() => {
     const checkSessionAndRole = async () => {
+      console.log("Checking session and role...");
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (session) {
+        console.log("Found existing session:", session.user.email);
         // Check user role
-        const { data: role } = await supabase.rpc('get_user_role', {
+        const { data: role, error: roleError } = await supabase.rpc('get_user_role', {
           user_id: session.user.id
         });
         
+        console.log("User role check result:", { role, error: roleError });
+        
+        if (roleError) {
+          console.error("Error checking role:", roleError);
+          return;
+        }
+
         // Redirect based on role
         if (role === 'admin') {
+          console.log("Redirecting to admin panel");
           navigate('/admin');
         } else {
+          console.log("Redirecting to user dashboard");
           navigate('/dashboard');
         }
+      } else {
+        console.log("No existing session found");
       }
     };
 
     checkSessionAndRole();
 
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session?.user.email);
+      
       if (session) {
         // Check user role when auth state changes
-        const { data: role } = await supabase.rpc('get_user_role', {
+        const { data: role, error: roleError } = await supabase.rpc('get_user_role', {
           user_id: session.user.id
         });
         
+        console.log("Auth state change role check:", { role, error: roleError });
+
+        if (roleError) {
+          console.error("Error checking role on auth state change:", roleError);
+          return;
+        }
+        
         // Redirect based on role
         if (role === 'admin') {
+          console.log("Auth state change: Redirecting to admin");
           navigate('/admin');
         } else {
+          console.log("Auth state change: Redirecting to dashboard");
           navigate('/dashboard');
         }
       }
@@ -57,6 +83,7 @@ const Auth = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log("Attempting login for email:", email);
 
     try {
       // Attempt sign in
@@ -76,10 +103,14 @@ const Auth = () => {
       }
 
       if (data.user) {
+        console.log("Login successful for user:", data.user.email);
+        
         // Check user role after successful login
         const { data: role, error: roleError } = await supabase.rpc('get_user_role', {
           user_id: data.user.id
         });
+
+        console.log("Login role check result:", { role, error: roleError });
 
         if (roleError) {
           console.error("Error checking role:", roleError);
@@ -91,8 +122,10 @@ const Auth = () => {
         
         // Redirect based on role
         if (role === 'admin') {
+          console.log("Login success: Redirecting to admin");
           navigate('/admin');
         } else {
+          console.log("Login success: Redirecting to dashboard");
           navigate('/dashboard');
         }
       }
