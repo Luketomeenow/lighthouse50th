@@ -90,6 +90,33 @@ export type Database = {
         }
         Relationships: []
       }
+      seat_blocks: {
+        Row: {
+          available_seats: number
+          created_at: string
+          id: string
+          name: string
+          total_seats: number
+          updated_at: string
+        }
+        Insert: {
+          available_seats: number
+          created_at?: string
+          id?: string
+          name: string
+          total_seats: number
+          updated_at?: string
+        }
+        Update: {
+          available_seats?: number
+          created_at?: string
+          id?: string
+          name?: string
+          total_seats?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -132,6 +159,7 @@ export type Database = {
     Enums: {
       age_group: "Children" | "YP" | "SWYP" | "Adult" | "Senior"
       app_role: "admin" | "user"
+      seat_status: "available" | "reserved" | "occupied"
     }
     CompositeTypes: {
       [_ in never]: never

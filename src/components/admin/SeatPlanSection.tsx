@@ -8,12 +8,14 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Edit, Trash2 } from "lucide-react";
 
+// Define a simple interface based on the table structure
 interface SeatBlock {
   id: string;
   name: string;
   total_seats: number;
   available_seats: number;
   created_at: string;
+  updated_at: string;
 }
 
 const SeatPlanSection = () => {
@@ -25,9 +27,9 @@ const SeatPlanSection = () => {
   const fetchBlocks = async () => {
     try {
       const { data, error } = await supabase
-        .from("seat_blocks")
-        .select("*")
-        .order("created_at", { ascending: true });
+        .from('seat_blocks')
+        .select('*')
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
       setBlocks(data || []);
@@ -50,11 +52,14 @@ const SeatPlanSection = () => {
         return;
       }
 
-      const { error } = await supabase.from("seat_blocks").insert({
-        name: newBlockName,
-        total_seats: parseInt(newTotalSeats),
-        available_seats: parseInt(newTotalSeats),
-      });
+      const totalSeats = parseInt(newTotalSeats);
+      const { error } = await supabase
+        .from('seat_blocks')
+        .insert({
+          name: newBlockName,
+          total_seats: totalSeats,
+          available_seats: totalSeats,
+        });
 
       if (error) throw error;
 
@@ -71,9 +76,9 @@ const SeatPlanSection = () => {
   const handleDeleteBlock = async (id: string) => {
     try {
       const { error } = await supabase
-        .from("seat_blocks")
+        .from('seat_blocks')
         .delete()
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw error;
 
