@@ -100,15 +100,24 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
     setIsLoading(true);
 
     try {
-      // Create the user account with the provided password
+      // Step 1: Create the user account
+      console.log("Creating user account...");
       const { error: signUpError, data: signUpData } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
       });
 
-      if (signUpError) throw signUpError;
+      if (signUpError) {
+        console.error("Error during signup:", signUpError);
+        throw signUpError;
+      }
 
-      // Create the registration record
+      if (!signUpData.user?.id) {
+        throw new Error("User account created but no user ID was returned");
+      }
+
+      // Step 2: Create the registration record
+      console.log("Creating registration record...");
       const { error: registrationError } = await supabase.from("registrations").insert({
         first_name: values.firstName,
         last_name: values.lastName,
@@ -120,33 +129,51 @@ const RegistrationForm = ({ open, onOpenChange }: RegistrationFormProps) => {
         needs_accommodation: values.needsAccommodation === "yes",
         other_lighthouse_work:
           values.lighthouseWork === "Others" ? values.otherLighthouseWork : null,
-        user_id: signUpData.user?.id,
+        user_id: signUpData.user.id,
       });
 
-      if (registrationError) throw registrationError;
-
-      // Send welcome email with credentials
-      const { error: emailError } = await supabase.functions.invoke("send-welcome-email", {
-        body: {
-          email: values.email,
-          password: values.password,
-          firstName: values.firstName,
-          lastName: values.lastName,
-        },
-      });
-
-      if (emailError) {
-        console.error("Error sending welcome email:", emailError);
-        toast.error("Registration successful but failed to send welcome email");
-      } else {
-        toast.success("Registration successful! Please check your email for login credentials.");
+      if (registrationError) {
+        console.error("Registration record error:", registrationError);
+        throw registrationError;
       }
 
+      // Step 3: Send welcome email
+      console.log("Sending welcome email...");
+      try {
+        const { error: emailError } = await supabase.functions.invoke("send-welcome-email", {
+          body: {
+            email: values.email,
+            password: values.password,
+            firstName: values.firstName,
+            lastName: values.lastName,
+          },
+        });
+
+        if (emailError) {
+          console.error("Error sending welcome email:", emailError);
+          // Don't throw here, just notify user but consider registration successful
+          toast.warning("Registration successful but failed to send welcome email");
+        }
+      } catch (emailInvokeError) {
+        console.error("Failed to invoke email function:", emailInvokeError);
+        toast.warning("Registration successful but failed to send welcome email");
+      }
+
+      // Registration succeeded
+      toast.success("Registration successful! You can now log in with your credentials.");
       onOpenChange(false);
       form.reset();
     } catch (error: any) {
-      console.error("Registration error:", error);
-      toast.error(error.message || "An error occurred during registration");
+      console.error("Registration process error:", error);
+      
+      // Handle specific error cases
+      if (error.message?.includes("User already registered")) {
+        toast.error("A user with this email already exists");
+      } else if (error.message?.includes("Password")) {
+        toast.error("Password issue: " + error.message);
+      } else {
+        toast.error(error.message || "An error occurred during registration");
+      }
     } finally {
       setIsLoading(false);
     }
