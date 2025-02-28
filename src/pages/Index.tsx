@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import CountdownTimer from '@/components/CountdownTimer';
 import ProgramFlow from '@/components/ProgramFlow';
-import RegistrationForm from '@/components/RegistrationForm';
+import RegistrationFormSection from '@/components/RegistrationFormSection';
 import { supabase } from "@/integrations/supabase/client";
 
 type EventSettings = {
@@ -25,7 +26,6 @@ type EventSettings = {
 const Index = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [settings, setSettings] = useState<EventSettings>({
@@ -39,6 +39,7 @@ const Index = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showVideoUpdate, setShowVideoUpdate] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const registrationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -121,6 +122,10 @@ const Index = () => {
     const target = e.currentTarget;
     target.src = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
     toast.error('Error loading video, falling back to default');
+  };
+
+  const scrollToRegistration = () => {
+    registrationRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -208,7 +213,7 @@ const Index = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowRegistrationForm(true)}
+              onClick={scrollToRegistration}
               className="mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-all text-sm sm:text-base"
             >
               Register Now
@@ -224,10 +229,17 @@ const Index = () => {
         </motion.div>
       </section>
 
-      <RegistrationForm 
-        open={showRegistrationForm} 
-        onOpenChange={setShowRegistrationForm}
-      />
+      <section 
+        ref={registrationRef}
+        className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-white"
+      >
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 md:mb-16">
+            Register for the Event
+          </h2>
+          <RegistrationFormSection />
+        </div>
+      </section>
 
       <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-gray-50">
         <div className="container mx-auto">
