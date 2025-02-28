@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Settings, FileText, LogOut, BarChart3, CalendarDays, CircleDollarSign, Building2, Upload, UserPlus, ArrowUpRight, ArrowDownRight, Activity, DollarSign, LayoutDashboard, Grid } from 'lucide-react';
+import { Users, Settings, FileText, LogOut, BarChart3, Grid, Upload, UserPlus, LayoutDashboard } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
@@ -11,32 +12,27 @@ import UsersSection from '@/components/admin/UsersSection';
 import RegistrationsSection from '@/components/admin/RegistrationsSection';
 import SeatPlanSection from '@/components/admin/SeatPlanSection';
 
-const dummyData = [
-  { name: 'Jan', value: 400 },
-  { name: 'Feb', value: 300 },
-  { name: 'Mar', value: 600 },
-  { name: 'Apr', value: 800 },
-  { name: 'May', value: 700 },
-  { name: 'Jun', value: 900 },
-  { name: 'Jul', value: 1000 },
-];
+type RegistrationData = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  created_at: string;
+};
 
-const StatCard = ({ title, value, trend, icon: Icon, trendValue }: { 
+type RegistrationsByMonthMap = {
+  [key: string]: number;
+};
+
+const StatCard = ({ title, value, icon: Icon }: { 
   title: string; 
-  value: string; 
-  trend: 'up' | 'down'; 
+  value: string | number; 
   icon: any;
-  trendValue: string;
 }) => (
   <div className="bg-white rounded-xl p-6 shadow-sm">
     <div className="flex justify-between items-start mb-4">
       <div className="p-2 bg-primary/10 rounded-lg">
         <Icon className="h-6 w-6 text-primary" />
       </div>
-      <span className={`flex items-center gap-1 text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-        {trend === 'up' ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
-        {trendValue}
-      </span>
     </div>
     <h3 className="text-sm font-medium text-gray-600">{title}</h3>
     <p className="text-2xl font-semibold text-gray-900 mt-1">{value}</p>
@@ -46,18 +42,27 @@ const StatCard = ({ title, value, trend, icon: Icon, trendValue }: {
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeSection, setActiveSection] = useState('settings');
+  const [activeSection, setActiveSection] = useState('dashboard');
   const [isLoading, setIsLoading] = useState(true);
   const [videoUrl, setVideoUrl] = useState('');
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [settingsId, setSettingsId] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [registrations, setRegistrations] = useState<RegistrationData[]>([]);
+  const [totalRegistrations, setTotalRegistrations] = useState(0);
+  const [monthlyData, setMonthlyData] = useState<{name: string, value: number}[]>([]);
 
   useEffect(() => {
     checkAdminStatus();
     fetchCurrentVideoUrl();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin && activeSection === 'dashboard') {
+      fetchRegistrationData();
+    }
+  }, [isAdmin, activeSection]);
 
   const checkAdminStatus = async () => {
     try {
@@ -114,6 +119,47 @@ const AdminDashboard = () => {
     } catch (error: any) {
       console.error("Error fetching video URL:", error);
       toast.error('Error fetching video URL');
+    }
+  };
+
+  const fetchRegistrationData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('registrations')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setRegistrations(data || []);
+      setTotalRegistrations(data?.length || 0);
+
+      // Process data for monthly chart
+      const monthlyRegistrations: RegistrationsByMonthMap = {};
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      // Initialize all months with 0
+      monthNames.forEach(month => {
+        monthlyRegistrations[month] = 0;
+      });
+      
+      // Count registrations by month
+      data?.forEach(reg => {
+        const date = new Date(reg.created_at);
+        const month = monthNames[date.getMonth()];
+        monthlyRegistrations[month] = (monthlyRegistrations[month] || 0) + 1;
+      });
+      
+      // Convert to chart data format
+      const chartData = monthNames.map(month => ({
+        name: month,
+        value: monthlyRegistrations[month]
+      }));
+      
+      setMonthlyData(chartData);
+    } catch (error: any) {
+      console.error("Error fetching registration data:", error);
+      toast.error('Error fetching registration data');
     }
   };
 
@@ -260,34 +306,11 @@ const AdminDashboard = () => {
             <p className="text-gray-600 mt-1">Welcome back to your dashboard</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <StatCard
-              title="Total Users"
-              value="2,345"
-              trend="up"
+              title="Total Registrations"
+              value={totalRegistrations}
               icon={Users}
-              trendValue="12%"
-            />
-            <StatCard
-              title="Monthly Revenue"
-              value="$34,567"
-              trend="up"
-              icon={DollarSign}
-              trendValue="8%"
-            />
-            <StatCard
-              title="Active Events"
-              value="45"
-              trend="down"
-              icon={CalendarDays}
-              trendValue="3%"
-            />
-            <StatCard
-              title="Engagement Rate"
-              value="67%"
-              trend="up"
-              icon={Activity}
-              trendValue="5%"
             />
           </div>
 
@@ -297,7 +320,7 @@ const AdminDashboard = () => {
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
-                    data={dummyData}
+                    data={monthlyData}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                   >
                     <defs>
@@ -325,14 +348,14 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
               <div className="space-y-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50">
+                {registrations.slice(0, 4).map((reg, i) => (
+                  <div key={reg.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50">
                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                       <Users className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">New user registered</p>
-                      <p className="text-sm text-gray-500">{i} hour ago</p>
+                      <p className="text-sm text-gray-500">{i+1} hour ago</p>
                     </div>
                   </div>
                 ))}
