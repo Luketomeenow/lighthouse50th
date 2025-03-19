@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Loader2, Download } from 'lucide-react';
+import { Loader2, Download, Search } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import {
   Table,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 type Registration = {
   id: string;
@@ -29,11 +30,30 @@ type Registration = {
 
 const RegistrationsSection = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [filteredRegistrations, setFilteredRegistrations] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchRegistrations();
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredRegistrations(registrations);
+    } else {
+      const lowercaseSearch = searchTerm.toLowerCase();
+      const filtered = registrations.filter(reg => 
+        reg.first_name.toLowerCase().includes(lowercaseSearch) ||
+        reg.last_name.toLowerCase().includes(lowercaseSearch) ||
+        reg.email.toLowerCase().includes(lowercaseSearch) ||
+        reg.contact.toLowerCase().includes(lowercaseSearch) ||
+        reg.lighthouse_work.toLowerCase().includes(lowercaseSearch) ||
+        (reg.other_lighthouse_work && reg.other_lighthouse_work.toLowerCase().includes(lowercaseSearch))
+      );
+      setFilteredRegistrations(filtered);
+    }
+  }, [searchTerm, registrations]);
 
   const fetchRegistrations = async () => {
     try {
@@ -52,6 +72,7 @@ const RegistrationsSection = () => {
 
       console.log("Registrations fetched successfully:", data);
       setRegistrations(data || []);
+      setFilteredRegistrations(data || []);
     } catch (error: any) {
       console.error("Error fetching registrations:", error);
       toast.error("Failed to fetch registrations: " + (error.message || "Unknown error"));
@@ -142,10 +163,25 @@ const RegistrationsSection = () => {
           Export to CSV
         </Button>
       </div>
+      
+      {/* Search input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <Input
+          placeholder="Search by name, email, contact or lighthouse work..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 max-w-md"
+        />
+      </div>
 
-      {registrations.length === 0 ? (
+      {filteredRegistrations.length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center shadow-sm">
-          <p className="text-gray-600">No registrations found.</p>
+          {searchTerm.trim() !== '' ? (
+            <p className="text-gray-600">No registrations found matching your search.</p>
+          ) : (
+            <p className="text-gray-600">No registrations found.</p>
+          )}
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -163,7 +199,7 @@ const RegistrationsSection = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {registrations.map((registration) => (
+                {filteredRegistrations.map((registration) => (
                   <TableRow key={registration.id}>
                     <TableCell>{`${registration.first_name} ${registration.last_name}`}</TableCell>
                     <TableCell>{registration.email}</TableCell>

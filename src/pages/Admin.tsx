@@ -1,7 +1,21 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Settings, FileText, LogOut, BarChart3, Grid, Upload, UserPlus, LayoutDashboard } from 'lucide-react';
+import { 
+  Users, 
+  Settings, 
+  FileText, 
+  LogOut, 
+  BarChart3, 
+  Grid, 
+  Upload, 
+  UserPlus, 
+  LayoutDashboard,
+  Calendar,
+  MessageCircle,
+  FileBarChart2,
+  HelpCircle,
+  Megaphone
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
@@ -284,6 +298,26 @@ const AdminDashboard = () => {
     icon: Grid,
     section: 'seat-plan'
   }, {
+    title: 'Event Schedule',
+    icon: Calendar,
+    section: 'schedule'
+  }, {
+    title: 'Announcements',
+    icon: Megaphone,
+    section: 'announcements'
+  }, {
+    title: 'Communications',
+    icon: MessageCircle,
+    section: 'communications'
+  }, {
+    title: 'Reports',
+    icon: FileBarChart2,
+    section: 'reports'
+  }, {
+    title: 'Help Center',
+    icon: HelpCircle,
+    section: 'help'
+  }, {
     title: 'Settings',
     icon: Settings,
     section: 'settings'
@@ -419,6 +453,56 @@ const AdminDashboard = () => {
                 Create Admin
               </Button>
             </div>
+          </div>
+        </div>
+      );
+    } else if (activeSection === 'schedule') {
+      return (
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">Event Schedule</h1>
+          <p className="text-gray-600">Manage your event schedule and sessions.</p>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <p className="text-center text-gray-500">Event schedule management will be available soon.</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === 'announcements') {
+      return (
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">Announcements</h1>
+          <p className="text-gray-600">Create and manage event announcements.</p>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <p className="text-center text-gray-500">Announcement management will be available soon.</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === 'communications') {
+      return (
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">Communications</h1>
+          <p className="text-gray-600">Email and message center.</p>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <p className="text-center text-gray-500">Communication tools will be available soon.</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === 'reports') {
+      return (
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">Reports</h1>
+          <p className="text-gray-600">Analytics and event reports.</p>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <p className="text-center text-gray-500">Reporting tools will be available soon.</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === 'help') {
+      return (
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">Help Center</h1>
+          <p className="text-gray-600">Documentation and support resources.</p>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <p className="text-center text-gray-500">Help center will be available soon.</p>
           </div>
         </div>
       );
