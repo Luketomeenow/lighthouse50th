@@ -170,7 +170,8 @@ const Index = () => {
                 Update Video Header
               </Button>
             </>
-          )/*  : (
+          ) /* Correctly commented-out login button
+          : (
             <Button
               onClick={handleLogin}
               className="bg-white text-black hover:bg-white/90 text-sm sm:text-base"
