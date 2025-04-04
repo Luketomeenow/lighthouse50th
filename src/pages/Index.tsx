@@ -170,7 +170,8 @@ const Index = () => {
                 Update Video Header
               </Button>
             </>
-          ) /* Correctly commented-out login button
+          ) 
+          /* Login button commented out
           : (
             <Button
               onClick={handleLogin}
@@ -178,7 +179,8 @@ const Index = () => {
             >
               Login
             </Button>
-          ) */}
+          )
+          */}
         </div>
 
         {showVideoUpdate && isAdmin && (
