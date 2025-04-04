@@ -155,7 +155,7 @@ const Index = () => {
         <div className="video-overlay absolute inset-0 bg-black bg-opacity-50" />
         
         <div className="absolute top-4 right-4 z-30 flex flex-col sm:flex-row gap-2">
-          {isAdmin ? (
+          {isAdmin && (
             <>
               <Button
                 onClick={() => navigate('/admin')}
@@ -170,16 +170,16 @@ const Index = () => {
                 Update Video Header
               </Button>
             </>
-          ) 
-          /* Login button commented out
-          : (
+          )}
+          {/* Login button commented out
+          {!isAdmin && (
             <Button
               onClick={handleLogin}
               className="bg-white text-black hover:bg-white/90 text-sm sm:text-base"
             >
               Login
             </Button>
-          )
+          )}
           */}
         </div>
 
