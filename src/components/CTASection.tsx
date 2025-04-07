@@ -37,7 +37,7 @@ const CTASection = () => {
               <Button 
                 variant="outline" 
                 size="xl" 
-                className="border-white text-white hover:bg-none/10 rounded-full"
+                className="border-white text-black hover:bg-white/10 rounded-full"
                 onClick={() => window.open('https://www.lighthousebbc.org', '_blank')}
               >
                 VISIT OUR WEBSITE
