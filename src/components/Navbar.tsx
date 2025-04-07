@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const Navbar = () => {
@@ -9,10 +9,10 @@ const Navbar = () => {
   
   const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'History', path: '/ministries' },
+    { name: 'History', path: '/history' },
     { name: 'Program', path: '/flow' },
-    { name: 'Activities', path: '/funding' },
-    { name: 'Resources', path: '/latest-news' },
+    { name: 'Activities', path: '/activities' },
+    { name: 'Resources', path: '/resources' },
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -52,7 +52,7 @@ const Navbar = () => {
           onClick={toggleMenu}
           className="text-white focus:outline-none"
         >
-          <Menu className="h-6 w-6" />
+          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 

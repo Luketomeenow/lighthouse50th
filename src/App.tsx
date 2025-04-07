@@ -16,6 +16,9 @@ import Flow from "./pages/Flow";
 import SeatPlan from "./pages/SeatPlan";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import History from "./pages/History";
+import Activities from "./pages/Activities";
+import Resources from "./pages/Resources";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +40,9 @@ const App = () => (
           <Route path="/seat-plan" element={<SeatPlan />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/resources" element={<Resources />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

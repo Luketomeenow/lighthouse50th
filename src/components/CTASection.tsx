@@ -21,16 +21,25 @@ const CTASection = () => {
               <p className="text-yellow-300 mb-2">Join us on this Grand Lighthouse Celebration</p>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">BE PART OF OUR GREAT WORK!</h2>
               <p className="text-gray-300 max-w-xl">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Join us as we celebrate 50 years of God's faithfulness. Come be part of this historic event as we gather to worship, fellowship, and give thanks for half a century of ministry.
               </p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-8 py-6 rounded-full font-semibold">
+              <Button 
+                variant="yellow" 
+                size="xl" 
+                className="rounded-full"
+                onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 REGISTER NOW
               </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-6 rounded-full">
+              <Button 
+                variant="outline" 
+                size="xl" 
+                className="border-white text-white hover:bg-white/10 rounded-full"
+                onClick={() => window.open('https://www.lighthousebbc.org', '_blank')}
+              >
                 VISIT OUR WEBSITE
               </Button>
             </div>

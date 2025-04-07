@@ -96,7 +96,7 @@ const Footer = () => {
                 />
               </div>
               <div className="flex space-x-3">
-                <Button type="submit" disabled={isSubmitting} className="bg-yellow-500 hover:bg-yellow-600 text-green-950">
+                <Button type="submit" disabled={isSubmitting} variant="yellow" className="w-full">
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setShowContactForm(false)}>
@@ -143,7 +143,7 @@ const Footer = () => {
               <Instagram size={22} />
             </a>
             <a 
-              href="#" 
+              href="https://www.youtube.com/@LighthouseBibleBaptistChurch" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-gray-400 hover:text-red-500 transition-colors"
@@ -152,7 +152,7 @@ const Footer = () => {
               <Youtube size={22} />
             </a>
             <a 
-              href="mailto:contact@lighthousebbc.org" 
+              href="mailto:ministries@lighthousebbc.org" 
               className="text-gray-400 hover:text-green-500 transition-colors"
               aria-label="Email"
             >
