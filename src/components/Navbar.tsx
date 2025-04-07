@@ -10,7 +10,7 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'History', path: '/history' },
-    { name: 'Program', path: '/flow' },
+    { name: 'Program', path: '/#program-schedule' }, // Updated to anchor link
     { name: 'Activities', path: '/activities' },
     { name: 'Resources', path: '/resources' },
   ];
@@ -40,6 +40,26 @@ const Navbar = () => {
             <Link 
               to={item.path}
               className="text-white hover:text-yellow-300 transition-colors duration-300 font-medium"
+              onClick={(e) => {
+                // Handle anchor links
+                if (item.path.startsWith('/#')) {
+                  e.preventDefault();
+                  const element = document.querySelector(item.path.substring(1));
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  } else if (window.location.pathname === '/') {
+                    // If we're already on the homepage, just scroll to the section
+                    const sectionId = item.path.split('#')[1];
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                      section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  } else {
+                    // Navigate to homepage then to the section
+                    window.location.href = item.path;
+                  }
+                }
+              }}
             >
               {item.name}
             </Link>
@@ -66,7 +86,25 @@ const Navbar = () => {
                   <Link 
                     to={item.path}
                     className="text-white text-xl hover:text-yellow-300 transition-colors duration-300 font-medium"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={(e) => {
+                      if (item.path.startsWith('/#')) {
+                        e.preventDefault();
+                        setIsMenuOpen(false);
+                        // If we're already on the homepage
+                        if (window.location.pathname === '/') {
+                          const sectionId = item.path.split('#')[1];
+                          const section = document.getElementById(sectionId);
+                          if (section) {
+                            section.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        } else {
+                          // Navigate to homepage then to the section
+                          window.location.href = item.path;
+                        }
+                      } else {
+                        setIsMenuOpen(false);
+                      }
+                    }}
                   >
                     {item.name}
                   </Link>
