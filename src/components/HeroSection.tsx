@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from 'react-router-dom';
 
 type HeroSectionProps = {
   title: string;
@@ -36,6 +37,7 @@ const HeroSection = ({
   venue,
   targetDate,
 }: HeroSectionProps) => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -83,7 +85,7 @@ const HeroSection = ({
       {/* Background image with 50th anniversary logo */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15" 
-        style={{ backgroundImage: `url('/lovable-uploads/c3e2a5e3-f4fc-48a7-a5c3-f82290bffb9c.png')` }} 
+        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }} 
       />
       
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 via-green-900/60 to-green-900/90" />
@@ -108,10 +110,19 @@ const HeroSection = ({
                 <p className="text-white font-medium text-lg">February 28 - March 1, 2026</p>
                 <p className="text-gray-300">World Trade Center, Pasay City</p>
               </div>
+
+              <div className="text-center lg:text-left">
+                <Button 
+                  onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-green-950 font-bold py-3 px-8 rounded-full text-lg"
+                >
+                  REGISTER NOW
+                </Button>
+              </div>
             </motion.div>
           </div>
           
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-1/2" id="registration-form">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -257,7 +268,7 @@ const HeroSection = ({
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-green-950 py-3 rounded-full font-semibold"
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-green-950 py-3 rounded-full font-semibold text-lg"
                   >
                     {isSubmitting ? "Submitting..." : "REGISTER NOW"}
                   </Button>

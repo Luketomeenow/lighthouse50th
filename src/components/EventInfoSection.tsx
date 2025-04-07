@@ -1,8 +1,12 @@
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
+import { Play } from 'lucide-react';
 
 const EventInfoSection = () => {
+  const [showVideo, setShowVideo] = useState(false);
+  
   return (
     <div className="py-16 md:py-24 bg-green-900 relative overflow-hidden">
       {/* Background image with overlay */}
@@ -23,12 +27,33 @@ const EventInfoSection = () => {
               viewport={{ once: true }}
               className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20"
             >
-              <img 
-                src="/placeholder.svg" 
-                alt="50th Anniversary Celebration" 
-                className="w-full h-auto rounded-lg mb-6"
-              />
-              <h3 className="text-xl font-semibold text-white mb-2">50th Anniversary - Lighthouse Bible Baptist Church</h3>
+              {showVideo ? (
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <video 
+                    src="https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4" 
+                    controls 
+                    autoPlay
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div 
+                  className="aspect-video rounded-lg relative overflow-hidden cursor-pointer group"
+                  onClick={() => setShowVideo(true)}
+                >
+                  <img 
+                    src="/lovable-uploads/f42480e0-c777-47c3-85fc-8f99a8b02ce8.png" 
+                    alt="50th Anniversary Celebration" 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/60 transition-all">
+                    <div className="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center pulse">
+                      <Play className="h-8 w-8 text-green-950 fill-current" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <h3 className="text-xl font-semibold text-white mt-4">50th Anniversary - Lighthouse Bible Baptist Church</h3>
             </motion.div>
           </div>
           
@@ -59,15 +84,18 @@ const EventInfoSection = () => {
               
               <div className="flex flex-col sm:flex-row gap-4 mt-8">
                 <Button 
-                  className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-8 py-3 rounded-full font-semibold"
+                  onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-8 py-6 rounded-full font-bold text-lg"
                 >
                   REGISTER NOW
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-white text-white hover:bg-white/10 px-8 py-3 rounded-full"
+                  onClick={() => setShowVideo(true)}
+                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
                 >
-                  PLAY VIDEO
+                  <Play className="h-5 w-5" />
+                  <span>PLAY VIDEO</span>
                 </Button>
               </div>
             </motion.div>
