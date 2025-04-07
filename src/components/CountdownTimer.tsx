@@ -35,23 +35,39 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  const formatNumber = (num: number): string => {
+    return num.toString().padStart(2, '0');
+  };
+
   return (
-    <div className="grid grid-cols-4 gap-4 md:gap-6">
-      {Object.entries(timeLeft).map(([unit, value]) => (
-        <div key={unit} className="flex flex-col items-center">
-          <motion.div
-            key={`${unit}-${value}`}
-            initial={{ rotateX: -180 }}
-            animate={{ rotateX: 0 }}
-            className="bg-white/10 backdrop-blur-md border border-white/20 p-2 md:p-4 rounded-lg w-full aspect-square flex items-center justify-center"
-          >
-            <span className="text-xl md:text-3xl lg:text-4xl font-bold text-white">
-              {value.toString().padStart(2, '0')}
-            </span>
-          </motion.div>
-          <span className="mt-2 text-xs md:text-sm uppercase text-gray-300">{unit}</span>
-        </div>
-      ))}
+    <div className="bg-green-900 p-8 rounded-xl text-white">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl font-bold">February 28 - March 1, 2026</h2>
+        <p className="text-gray-300 mt-2">World Trade Center, Pasay City</p>
+      </div>
+      
+      <div className="grid grid-cols-4 gap-4">
+        {[
+          { label: 'DAYS', value: timeLeft.days },
+          { label: 'HOURS', value: timeLeft.hours },
+          { label: 'MINUTES', value: timeLeft.minutes },
+          { label: 'SECONDS', value: timeLeft.seconds }
+        ].map((item, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <motion.div
+              key={`${item.label}-${item.value}`}
+              initial={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
+              className="bg-green-700/50 backdrop-blur-sm border border-green-600/30 rounded-lg w-full aspect-square flex items-center justify-center"
+            >
+              <span className="text-3xl md:text-4xl font-bold">
+                {item.value < 100 ? formatNumber(item.value) : item.value}
+              </span>
+            </motion.div>
+            <span className="mt-2 text-xs uppercase text-gray-300">{item.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

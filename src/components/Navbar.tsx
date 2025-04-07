@@ -16,12 +16,12 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full flex justify-between items-center py-4 px-6 md:px-12 lg:px-24"
+      className="w-full flex justify-between items-center py-4 px-6 md:px-12 lg:px-24 bg-green-900/90 backdrop-blur-md"
     >
       <div className="flex items-center">
         <Link to="/">
           <img 
-            src="/lovable-uploads/6c5afdd0-e051-4913-895e-35063a9cc9be.png" 
+            src="/lovable-uploads/4ade3d2b-9267-4f94-bc08-dfe2f63bca8f.png" 
             alt="Lighthouse BBC 50th Anniversary" 
             className="h-12 md:h-16 w-auto"
           />
