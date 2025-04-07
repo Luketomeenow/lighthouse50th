@@ -1,17 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useNavigate } from 'react-router-dom';
 import { toast } from "sonner";
-import CountdownTimer from '@/components/CountdownTimer';
-import ProgramFlow from '@/components/ProgramFlow';
-import RegistrationFormSection from '@/components/RegistrationFormSection';
 import { supabase } from "@/integrations/supabase/client";
 
-// New components
+// Components
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import StatsSection from '@/components/StatsSection';
@@ -37,7 +29,6 @@ const Index = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [newVideoUrl, setNewVideoUrl] = useState('');
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [settings, setSettings] = useState<EventSettings>({
     id: '',
     header_video_url: "https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4",
@@ -48,21 +39,12 @@ const Index = () => {
   });
   const [isAdmin, setIsAdmin] = useState(false);
   const [showVideoUpdate, setShowVideoUpdate] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-  const registrationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsLoaded(true);
     fetchEventSettings();
     checkAdminStatus();
   }, []);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load();
-    }
-    setVideoError(false);
-  }, [settings.header_video_url]);
 
   const fetchEventSettings = async () => {
     try {
@@ -77,7 +59,7 @@ const Index = () => {
       }
 
       if (data) {
-        console.log('Fetched video URL:', data.header_video_url);
+        console.log('Fetched event settings:', data);
         setSettings(data);
       }
     } catch (error) {
@@ -126,18 +108,6 @@ const Index = () => {
     }
   };
 
-  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    console.error('Video error:', e);
-    setVideoError(true);
-    const target = e.currentTarget;
-    target.src = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
-    toast.error('Error loading video, falling back to default');
-  };
-
-  const scrollToRegistration = () => {
-    registrationRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <div className="min-h-screen bg-green-900">
       {/* Admin controls - only visible to admins */}
@@ -184,7 +154,6 @@ const Index = () => {
           title={settings.event_title}
           venue={settings.venue}
           targetDate={settings.event_date_start}
-          onRegisterClick={scrollToRegistration}
         />
         
         <StatsSection />
@@ -193,9 +162,7 @@ const Index = () => {
         
         <ProgramScheduleSection />
         
-        <div ref={registrationRef}>
-          <ExpectationsSection />
-        </div>
+        <ExpectationsSection />
         
         <FAQSection />
         

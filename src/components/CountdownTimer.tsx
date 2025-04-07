@@ -40,13 +40,13 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   };
 
   return (
-    <div className="bg-green-900 p-8 rounded-xl text-white">
+    <div className="bg-green-900 p-8 rounded-xl text-white max-w-xl mx-auto">
       <div className="text-center mb-4">
         <h2 className="text-2xl font-bold">February 28 - March 1, 2026</h2>
         <p className="text-gray-300 mt-2">World Trade Center, Pasay City</p>
       </div>
       
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-3">
         {[
           { label: 'DAYS', value: timeLeft.days },
           { label: 'HOURS', value: timeLeft.hours },
@@ -58,9 +58,9 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
               key={`${item.label}-${item.value}`}
               initial={{ opacity: 0.8 }}
               animate={{ opacity: 1 }}
-              className="bg-green-700/50 backdrop-blur-sm border border-green-600/30 rounded-lg w-full aspect-square flex items-center justify-center"
+              className="bg-green-800 rounded-lg w-full aspect-square flex items-center justify-center"
             >
-              <span className="text-3xl md:text-4xl font-bold">
+              <span className="text-4xl md:text-5xl font-bold">
                 {item.value < 100 ? formatNumber(item.value) : item.value}
               </span>
             </motion.div>
