@@ -12,14 +12,14 @@ type HeroSectionProps = {
 
 const HeroSection = ({ title, venue, targetDate, onRegisterClick }: HeroSectionProps) => {
   return (
-    <div className="relative min-h-screen bg-green-900 flex items-center overflow-hidden">
+    <div className="relative min-h-screen bg-green-900 flex items-center overflow-hidden pt-20">
       {/* Background image with 50th anniversary logo */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{ backgroundImage: `url('/lovable-uploads/5c9ddb02-4670-4564-82cc-662538e13afd.png')` }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
+        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
       />
       
-      <div className="absolute inset-0 bg-gradient-to-b from-green-900/80 via-green-900/60 to-green-900/90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 via-green-900/60 to-green-900/90" />
       
       <div className="container mx-auto px-6 md:px-12 z-10 py-12 md:py-0">
         <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12">
@@ -31,7 +31,7 @@ const HeroSection = ({ title, venue, targetDate, onRegisterClick }: HeroSectionP
             >
               <div className="flex justify-center lg:justify-start mb-6">
                 <img 
-                  src="/lovable-uploads/4ade3d2b-9267-4f94-bc08-dfe2f63bca8f.png" 
+                  src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" 
                   alt="Lighthouse BBC 50th Anniversary Logo"
                   className="h-32 md:h-40 w-auto"
                 />

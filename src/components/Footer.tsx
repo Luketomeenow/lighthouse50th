@@ -6,11 +6,17 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="container mx-auto py-12 px-6 md:px-12">
+    <footer className="bg-gray-900 text-white relative overflow-hidden">
+      {/* Background pattern */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-5"
+        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
+      />
+      
+      <div className="container mx-auto py-12 px-6 md:px-12 relative z-10">
         <div className="flex flex-col items-center mb-8">
           <img 
-            src="/lovable-uploads/6c5afdd0-e051-4913-895e-35063a9cc9be.png" 
+            src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" 
             alt="Lighthouse BBC 50th Anniversary" 
             className="h-16 w-auto mb-6"
           />

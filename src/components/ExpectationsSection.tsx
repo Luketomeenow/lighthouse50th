@@ -7,7 +7,7 @@ const ExpectationsSection = () => {
       {/* Background image with overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
-        style={{ backgroundImage: `url('/lovable-uploads/ac2bdd30-804c-4cbf-bb35-33d2817a36ca.png')` }}
+        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
       />
       
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 to-green-900/70" />
@@ -26,11 +26,17 @@ const ExpectationsSection = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: item * 0.1 }}
               viewport={{ once: true }}
-              className={`bg-white/10 backdrop-blur-md border border-white/20 rounded-lg overflow-hidden ${
+              className={`bg-white/10 backdrop-blur-md border border-white/20 rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 ${
                 item > 3 ? 'sm:col-span-2 lg:col-span-1' : ''
               }`}
             >
               <div className="aspect-video bg-gray-300/20"></div>
+              <div className="p-4">
+                <h3 className="font-bold text-lg mb-2">Event {item}</h3>
+                <p className="text-gray-300 text-sm">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam.
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>

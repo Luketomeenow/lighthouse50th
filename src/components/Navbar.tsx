@@ -1,8 +1,12 @@
 
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Menu } from 'lucide-react';
+import { useState } from 'react';
 
 const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'History', path: '/ministries' },
@@ -11,17 +15,19 @@ const Navbar = () => {
     { name: 'Resources', path: '/latest-news' },
   ];
 
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   return (
     <motion.nav 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full flex justify-between items-center py-4 px-6 md:px-12 lg:px-24 bg-green-900/90 backdrop-blur-md"
+      className="w-full fixed top-0 left-0 z-50 flex justify-between items-center py-4 px-6 md:px-12 lg:px-24 bg-green-900/90 backdrop-blur-md"
     >
       <div className="flex items-center">
         <Link to="/">
           <img 
-            src="/lovable-uploads/4ade3d2b-9267-4f94-bc08-dfe2f63bca8f.png" 
+            src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" 
             alt="Lighthouse BBC 50th Anniversary" 
             className="h-12 md:h-16 w-auto"
           />
@@ -42,12 +48,34 @@ const Navbar = () => {
       </ul>
       
       <div className="block md:hidden">
-        <button className="text-white focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+        <button 
+          onClick={toggleMenu}
+          className="text-white focus:outline-none"
+        >
+          <Menu className="h-6 w-6" />
         </button>
       </div>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-green-900/95 z-50 md:hidden flex flex-col pt-20">
+          <div className="px-6">
+            <ul className="flex flex-col space-y-6">
+              {navItems.map((item) => (
+                <li key={item.name}>
+                  <Link 
+                    to={item.path}
+                    className="text-white text-xl hover:text-yellow-300 transition-colors duration-300 font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </motion.nav>
   );
 };

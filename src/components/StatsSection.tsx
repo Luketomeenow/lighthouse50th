@@ -42,8 +42,14 @@ const StatsSection = () => {
   };
 
   return (
-    <div className="bg-yellow-500 text-green-950 py-8">
-      <div className="container mx-auto px-6 md:px-12">
+    <div className="bg-yellow-500 text-green-950 py-8 relative overflow-hidden">
+      {/* Background pattern */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-5"
+        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
+      />
+      
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -51,10 +57,25 @@ const StatsSection = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-2">
-            {formatTime(timeLeft.days)}:{formatTime(timeLeft.hours)}:{formatTime(timeLeft.minutes)}:{formatTime(timeLeft.seconds)}
+          <h2 className="text-4xl md:text-6xl font-bold mb-2 flex items-center justify-center">
+            <span className="inline-block w-20 text-right">{formatTime(timeLeft.days)}</span>
+            <span className="mx-2">:</span>
+            <span className="inline-block w-16 text-center">{formatTime(timeLeft.hours)}</span>
+            <span className="mx-2">:</span>
+            <span className="inline-block w-16 text-center">{formatTime(timeLeft.minutes)}</span>
+            <span className="mx-2">:</span>
+            <span className="inline-block w-16 text-left">{formatTime(timeLeft.seconds)}</span>
           </h2>
-          <p className="text-green-800">(Until 50th Anniversary)</p>
+          <div className="flex justify-center text-xs font-medium">
+            <span className="inline-block w-20 text-right">DAYS</span>
+            <span className="mx-2 opacity-0">:</span>
+            <span className="inline-block w-16 text-center">HOURS</span>
+            <span className="mx-2 opacity-0">:</span>
+            <span className="inline-block w-16 text-center">MINUTES</span>
+            <span className="mx-2 opacity-0">:</span>
+            <span className="inline-block w-16 text-left">SECONDS</span>
+          </div>
+          <p className="text-green-800 mt-2">(Until 50th Anniversary)</p>
         </motion.div>
       </div>
     </div>
