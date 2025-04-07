@@ -43,15 +43,15 @@ const StatsSection = () => {
   }, []);
 
   return (
-    <div className="bg-yellow-500 py-12 md:py-16 relative overflow-hidden">
+    <div className="bg-yellow-500 py-8 md:py-10 relative overflow-hidden">
       {/* Background pattern */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
         style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
       />
       
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="flex flex-col items-center gap-8">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="flex flex-col items-center gap-5 sm:gap-6">
           <CountdownTimer targetDate={targetDate} />
           
           <motion.div
@@ -59,10 +59,10 @@ const StatsSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="bg-green-950 text-yellow-500 py-6 px-12 rounded-xl text-center shadow-lg"
+            className="bg-green-950 text-yellow-500 py-4 px-8 rounded-xl text-center shadow-lg w-full max-w-xs"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-2">{registeredCount}</h2>
-            <p className="text-yellow-300 font-medium text-xl">Members Registered</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-1">{registeredCount}</h2>
+            <p className="text-yellow-300 font-medium text-lg">Members Registered</p>
           </motion.div>
         </div>
       </div>

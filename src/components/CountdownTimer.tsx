@@ -40,12 +40,12 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   };
 
   return (
-    <div className="bg-yellow-500 p-8 rounded-xl text-green-950 max-w-4xl mx-auto shadow-lg">
-      <div className="text-center mb-6">
-        <h2 className="text-3xl md:text-4xl font-bold">Until 50th Anniversary</h2>
+    <div className="bg-yellow-500 p-5 sm:p-6 rounded-xl text-green-950 max-w-full mx-auto shadow-lg">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold">Until 50th Anniversary</h2>
       </div>
       
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2 sm:gap-3">
         {[
           { label: 'DAYS', value: timeLeft.days },
           { label: 'HOURS', value: timeLeft.hours },
@@ -59,11 +59,11 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
               animate={{ opacity: 1 }}
               className="bg-green-950 rounded-lg w-full aspect-square flex items-center justify-center shadow-inner"
             >
-              <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-yellow-500">
+              <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-500">
                 {item.value < 100 ? formatNumber(item.value) : item.value}
               </span>
             </motion.div>
-            <span className="mt-2 text-lg md:text-xl font-semibold uppercase text-green-950">{item.label}</span>
+            <span className="mt-1 text-xs sm:text-sm font-semibold uppercase text-green-950">{item.label}</span>
           </div>
         ))}
       </div>
