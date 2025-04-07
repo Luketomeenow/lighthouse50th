@@ -36,20 +36,20 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   }, [targetDate]);
 
   return (
-    <div className="flex gap-4 justify-center">
+    <div className="grid grid-cols-4 gap-4 md:gap-6">
       {Object.entries(timeLeft).map(([unit, value]) => (
         <div key={unit} className="flex flex-col items-center">
           <motion.div
-            key={value}
+            key={`${unit}-${value}`}
             initial={{ rotateX: -180 }}
             animate={{ rotateX: 0 }}
-            className="glass p-4 rounded-lg min-w-[80px]"
+            className="bg-white/10 backdrop-blur-md border border-white/20 p-2 md:p-4 rounded-lg w-full aspect-square flex items-center justify-center"
           >
-            <span className="text-3xl md:text-4xl font-bold">
+            <span className="text-xl md:text-3xl lg:text-4xl font-bold text-white">
               {value.toString().padStart(2, '0')}
             </span>
           </motion.div>
-          <span className="mt-2 text-sm uppercase">{unit}</span>
+          <span className="mt-2 text-xs md:text-sm uppercase text-gray-300">{unit}</span>
         </div>
       ))}
     </div>
