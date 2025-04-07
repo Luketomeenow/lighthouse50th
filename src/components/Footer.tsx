@@ -120,7 +120,7 @@ const Footer = () => {
               Contact Us
             </button>
             <Link to="/ministries" className="text-gray-400 hover:text-white transition-colors">Ministries</Link>
-            <Link to="/flow" className="text-gray-400 hover:text-white transition-colors">Program</Link>
+            <Link to="path: '/#program-schedule'" className="text-gray-400 hover:text-white transition-colors">Program</Link>
           </div>
           
           <div className="flex space-x-4">
