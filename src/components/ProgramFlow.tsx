@@ -63,14 +63,14 @@ const ProgramFlow = () => {
   const [selectedDay, setSelectedDay] = useState<DayKey>('day1');
 
   return (
-    <div className="space-y-8 bg-green-950 text-white p-8 rounded-xl">
+    <div className="space-y-8">
       <div className="flex justify-center gap-4 mb-12">
         {(['day1', 'day2', 'day3'] as const).map((day) => (
           <Button
             key={day}
-            variant={selectedDay === day ? "yellow" : "outline"}
+            variant={selectedDay === day ? "default" : "outline"}
             onClick={() => setSelectedDay(day)}
-            className={`min-w-[100px] ${selectedDay !== day ? "border-white text-white hover:bg-white/10" : ""}`}
+            className="min-w-[100px]"
           >
             Day {day.charAt(day.length - 1)}
           </Button>
@@ -78,7 +78,7 @@ const ProgramFlow = () => {
       </div>
 
       <div className="relative">
-        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-white/20" />
+        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gray-200" />
         <div className="space-y-12">
           {programFlows[selectedDay].map((step, index) => (
             <motion.div
@@ -92,15 +92,15 @@ const ProgramFlow = () => {
               }`}
             >
               <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
-                <h3 className="text-xl font-semibold text-white">{step.title}</h3>
-                <p className="text-gray-300 mt-2">{step.description}</p>
+                <h3 className="text-xl font-semibold">{step.title}</h3>
+                <p className="text-gray-600 mt-2">{step.description}</p>
               </div>
               <div className="relative flex items-center justify-center w-12 h-12">
-                <div className="absolute w-12 h-12 rounded-full bg-green-900 shadow-lg border border-white/20" />
-                <div className="relative z-10 w-4 h-4 rounded-full bg-yellow-500" />
+                <div className="absolute w-12 h-12 rounded-full bg-white shadow-lg" />
+                <div className="relative z-10 w-4 h-4 rounded-full bg-primary" />
               </div>
               <div className="flex-1">
-                <span className="text-yellow-300 font-medium">{step.duration}</span>
+                <span className="text-gray-500 font-medium">{step.duration}</span>
               </div>
             </motion.div>
           ))}

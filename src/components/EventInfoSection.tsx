@@ -18,8 +18,8 @@ const EventInfoSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 to-green-900/70" />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="flex flex-col lg:flex-row items-start gap-8 md:gap-12">
-          <div className="w-full lg:w-2/5 lg:sticky lg:top-24">
+        <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12">
+          <div className="w-full lg:w-2/5">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -87,12 +87,12 @@ const EventInfoSection = () => {
                   onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-8 py-6 rounded-full font-bold text-lg"
                 >
-                  REGISTER
+                  REGISTER NOW
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => setShowVideo(true)}
-                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
+                  className="border-2 border-white text-black hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
                 >
                   <Play className="h-5 w-5" />
                   <span>PLAY VIDEO</span>

@@ -1,57 +1,160 @@
 
 import { motion } from 'framer-motion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProgramFlow from './ProgramFlow';
+import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Calendar, Users, Music, Book, Coffee, MapPin, Clock } from 'lucide-react';
+
+const programSchedule = [
+  {
+    day: "February 28, 2026 (Day 1)",
+    events: [
+      { time: "8:00 AM", title: "Registration & Welcome", desc: "Check-in and welcome packet distribution" },
+      { time: "9:30 AM", title: "Opening Ceremony", desc: "Official opening of the 50th Anniversary celebration" },
+      { time: "10:30 AM", title: "Morning Worship", desc: "Praise and worship led by the Lighthouse worship team" },
+      { time: "11:00 AM", title: "Keynote Message", desc: "Special message from our founding pastor" },
+      { time: "12:30 PM", title: "Lunch Break", desc: "Fellowship lunch with all attendees" },
+      { time: "2:00 PM", title: "Ministry Showcase", desc: "Presentations from different Lighthouse ministries" },
+      { time: "4:00 PM", title: "Historical Walk", desc: "Interactive exhibit of Lighthouse's 50-year history" },
+      { time: "6:00 PM", title: "Dinner", desc: "Fellowship dinner" },
+      { time: "7:30 PM", title: "Evening Celebration", desc: "Special music and inspirational messages" },
+      { time: "9:30 PM", title: "Closing Prayer", desc: "End of Day 1 activities" }
+    ]
+  },
+  {
+    day: "March 1, 2026 (Day 2)",
+    events: [
+      { time: "8:30 AM", title: "Morning Devotion", desc: "Prayer and devotional time" },
+      { time: "9:30 AM", title: "Worship Service", desc: "Special anniversary worship service" },
+      { time: "11:00 AM", title: "Vision Casting", desc: "Message on the future of Lighthouse BBC" },
+      { time: "12:30 PM", title: "Anniversary Lunch", desc: "Special celebration lunch" },
+      { time: "2:00 PM", title: "Testimonies & Sharing", desc: "Stories of God's faithfulness through 50 years" },
+      { time: "3:30 PM", title: "Ministry Commitment", desc: "Recommitment ceremony for all members" },
+      { time: "5:00 PM", title: "Closing Ceremony", desc: "Final message and prayer for the future" },
+      { time: "6:30 PM", title: "Fellowship Dinner", desc: "Final celebration dinner" },
+      { time: "8:00 PM", title: "Worship Concert", desc: "Praise and worship celebration concert" },
+      { time: "10:00 PM", title: "Closing Prayer", desc: "End of 50th Anniversary Celebration" }
+    ]
+  }
+];
 
 const ProgramScheduleSection = () => {
+  const [activeDay, setActiveDay] = useState(0);
+  
   return (
-    <div id="program-schedule" className="py-16 md:py-24 relative overflow-hidden">
-      {/* Background image with overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-5"
-        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
-      />
-      
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-white/10" />
-      
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+    <div id="program-schedule" className="py-16 md:py-24 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-yellow-500 mb-2">Follow our schedule for the 3-day celebration</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">EVENT PROGRAM</h2>
-          </motion.div>
+          <h2 className="text-3xl md:text-4xl font-bold text-green-900 mb-4">PROGRAM SCHEDULE</h2>
+          <p className="text-gray-600 max-w-3xl mx-auto">
+            Join us for two days of celebration, fellowship, and spiritual renewal as we commemorate 
+            50 years of God's faithfulness in Lighthouse Bible Baptist Church.
+          </p>
         </div>
         
-        <Tabs defaultValue="flow" className="w-full">
-          <TabsList className="w-full max-w-md mx-auto grid grid-cols-2 mb-10">
-            <TabsTrigger value="flow" className="text-base">Program Flow</TabsTrigger>
-            <TabsTrigger value="venue" className="text-base">Venue Map</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="flow" className="mt-6">
-            <ProgramFlow />
-          </TabsContent>
-          
-          <TabsContent value="venue" className="mt-6">
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20">
-              <h3 className="text-2xl font-bold text-white mb-6 text-center">Venue Map</h3>
-              <div className="aspect-[16/9] w-full bg-gray-800 rounded-lg relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center text-gray-600">
-                  Venue map will be uploaded soon
+        <div className="mb-8 flex justify-center space-x-4">
+          {programSchedule.map((day, index) => (
+            <Button
+              key={index}
+              onClick={() => setActiveDay(index)}
+              variant={activeDay === index ? "default" : "outline"}
+              className={activeDay === index ? 
+                "bg-green-900 hover:bg-green-800 text-white" : 
+                "border-green-900 text-green-900 hover:bg-green-100"
+              }
+            >
+              <Calendar className="mr-2 h-4 w-4" />
+              {day.day.split(' ')[0]} {day.day.split(' ')[1]}
+            </Button>
+          ))}
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-1/3 flex flex-col">
+              <div className="bg-green-900 text-white p-6 rounded-t-lg">
+                <h3 className="text-xl font-bold mb-1">{programSchedule[activeDay].day}</h3>
+                <div className="flex items-center text-yellow-300">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  <span>World Trade Center, Pasay City</span>
                 </div>
               </div>
-              <p className="text-gray-300 mt-4 text-center">
-                The event will be held at the World Trade Center, Pasay City. 
-                This map will be updated with specific venue layouts closer to the event date.
-              </p>
+              
+              <div className="bg-green-100 p-6 flex-grow rounded-b-lg">
+                <div className="mb-4">
+                  <h4 className="font-semibold flex items-center text-green-900 mb-2">
+                    <Clock className="h-4 w-4 mr-2" />
+                    Event Schedule
+                  </h4>
+                  <p className="text-gray-700 text-sm">8:00 AM - 10:00 PM</p>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold flex items-center text-green-900 mb-2">
+                    <Users className="h-4 w-4 mr-2" />
+                    Expected Attendance
+                  </h4>
+                  <p className="text-gray-700 text-sm">5,000+ members and guests</p>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold flex items-center text-green-900 mb-2">
+                    <Music className="h-4 w-4 mr-2" />
+                    Worship Teams
+                  </h4>
+                  <p className="text-gray-700 text-sm">Combined Lighthouse worship teams</p>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold flex items-center text-green-900 mb-2">
+                    <Book className="h-4 w-4 mr-2" />
+                    Main Speakers
+                  </h4>
+                  <p className="text-gray-700 text-sm">Pastor Paul Escobar and guest speakers</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold flex items-center text-green-900 mb-2">
+                    <Coffee className="h-4 w-4 mr-2" />
+                    Meals Provided
+                  </h4>
+                  <p className="text-gray-700 text-sm">Breakfast, lunch, and dinner for registered attendees</p>
+                </div>
+              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+            
+            <div className="w-full md:w-2/3">
+              <h3 className="text-xl font-bold text-green-900 mb-6 border-b border-gray-200 pb-2">Detailed Schedule</h3>
+              <div className="space-y-6 max-h-[500px] overflow-y-auto pr-2">
+                {programSchedule[activeDay].events.map((event, index) => (
+                  <motion.div 
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className="flex gap-4"
+                  >
+                    <div className="w-24 flex-shrink-0">
+                      <div className="font-bold text-green-900">{event.time}</div>
+                    </div>
+                    <div className="flex-grow border-l-2 border-green-200 pl-4 pb-6">
+                      <h4 className="font-bold text-green-800">{event.title}</h4>
+                      <p className="text-gray-600">{event.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="text-center mt-12">
+          <Button 
+            onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-8 py-3 rounded-full font-bold text-lg"
+          >
+            REGISTER FOR THIS EVENT
+          </Button>
+        </div>
       </div>
     </div>
   );

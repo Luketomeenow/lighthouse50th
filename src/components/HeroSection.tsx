@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
-import { Play } from 'lucide-react';
 
 type HeroSectionProps = {
   title: string;
@@ -40,7 +39,6 @@ const HeroSection = ({
 }: HeroSectionProps) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -113,20 +111,12 @@ const HeroSection = ({
                 <p className="text-gray-300">World Trade Center, Pasay City</p>
               </div>
 
-              <div className="text-center lg:text-left flex flex-wrap gap-4 justify-center lg:justify-start">
+              <div className="text-center lg:text-left">
                 <Button 
                   onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-yellow-500 hover:bg-yellow-600 text-green-950 font-bold py-3 px-8 rounded-full text-lg"
                 >
-                  REGISTER
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowVideo(true)}
-                  className="border-2 border-white text-white hover:bg-white/10 py-3 px-8 rounded-full text-lg flex items-center space-x-2"
-                >
-                  <Play className="h-5 w-5" />
-                  <span>VIEW VIDEO</span>
+                  REGISTER NOW
                 </Button>
               </div>
             </motion.div>
@@ -280,7 +270,7 @@ const HeroSection = ({
                     disabled={isSubmitting}
                     className="w-full bg-yellow-500 hover:bg-yellow-600 text-green-950 py-3 rounded-full font-semibold text-lg"
                   >
-                    {isSubmitting ? "Submitting..." : "REGISTER"}
+                    {isSubmitting ? "Submitting..." : "REGISTER NOW"}
                   </Button>
                 </form>
               </Form>
@@ -288,31 +278,6 @@ const HeroSection = ({
           </div>
         </div>
       </div>
-      
-      {/* Video modal */}
-      {showVideo && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="relative w-full max-w-4xl">
-            <button 
-              onClick={() => setShowVideo(false)}
-              className="absolute -top-12 right-0 text-white hover:text-yellow-300"
-              aria-label="Close video"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="aspect-video bg-black rounded-lg overflow-hidden">
-              <video 
-                src="https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4" 
-                controls 
-                autoPlay
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
