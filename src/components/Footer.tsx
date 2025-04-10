@@ -36,7 +36,7 @@ const Footer = () => {
   };
   
   return (
-    <footer className="bg-gray-900 text-white relative overflow-hidden">
+    <footer className="bg-black text-white relative overflow-hidden">
       {/* Background pattern */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-5"
@@ -50,10 +50,6 @@ const Footer = () => {
             alt="Lighthouse BBC 50th Anniversary" 
             className="h-16 w-auto mb-6"
           />
-          <p className="text-center max-w-2xl text-gray-400 mb-8">
-            Lighthouse Bible Baptist Churches and Ministries celebrates 50 years of serving the Lord and spreading His Word.
-            Join us as we commemorate this significant milestone in our journey of faith.
-          </p>
         </div>
         
         {showContactForm ? (
@@ -107,62 +103,58 @@ const Footer = () => {
           </div>
         ) : null}
         
-        <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-800 pt-8">
-          <p className="text-sm text-gray-500 mb-4 md:mb-0">
-            © {currentYear} Lighthouse BBC Official Website. All rights reserved.
+        <div className="max-w-4xl mx-auto text-center mb-8">
+          <p className="text-gray-400 mb-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+            Duis aute irure dolor.
           </p>
-          
-          <div className="flex space-x-6 mb-4 md:mb-0">
-            <button 
-              onClick={() => setShowContactForm(true)}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              Contact Us
-            </button>
-            <Link to="/ministries" className="text-gray-400 hover:text-white transition-colors">Ministries</Link>
-            <Link to="path: '/#program-schedule'" className="text-gray-400 hover:text-white transition-colors">Program</Link>
-          </div>
-          
-          <div className="flex space-x-4">
-            <a 
-              href="https://web.facebook.com/lighthousebbcmain" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-blue-500 transition-colors"
-              aria-label="Facebook"
-            >
-              <Facebook size={22} />
-            </a>
-            <a 
-              href="https://www.instagram.com/lighthousebbc/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-pink-500 transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram size={22} />
-            </a>
-            <a 
-              href="https://www.youtube.com/@LighthouseBibleBaptistChurch" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-red-500 transition-colors"
-              aria-label="Youtube"
-            >
-              <Youtube size={22} />
-            </a>
-            <a 
-              href="mailto:ministries@lighthousebbc.org" 
-              className="text-gray-400 hover:text-green-500 transition-colors"
-              aria-label="Email"
-            >
-              <Mail size={22} />
-            </a>
-          </div>
         </div>
         
-        <div className="text-center mt-6 text-sm text-gray-500">
-          "To be the salt of the earth, and the light of the world"
+        <div className="flex flex-col md:flex-row justify-center items-center gap-8 mb-8">
+          <a 
+            href="https://web.facebook.com/lighthousebbcmain" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Facebook
+          </a>
+          <a 
+            href="https://www.instagram.com/lighthousebbc/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Instagram
+          </a>
+          <a 
+            href="mailto:ministries@lighthousebbc.org" 
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Email Us
+          </a>
+          <a 
+            href="https://www.lighthousebbc.org" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Lighthouse BBC Official Website
+          </a>
+        </div>
+        
+        <div className="text-center pt-6 border-t border-gray-800">
+          <p className="text-gray-500 text-sm mb-2">
+            "Ad His Glory, All For His Glory"
+          </p>
+          <p className="text-gray-600 text-xs">
+            © {currentYear} Lighthouse BBC Official Website. All rights reserved.
+          </p>
+          <div className="flex justify-center mt-2 space-x-4">
+            <Link to="/terms" className="text-gray-500 hover:text-white text-xs">Terms of Service</Link>
+            <Link to="/privacy" className="text-gray-500 hover:text-white text-xs">Privacy Policy</Link>
+          </div>
         </div>
       </div>
     </footer>

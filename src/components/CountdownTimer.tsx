@@ -40,32 +40,17 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   };
 
   return (
-    <div className="bg-yellow-500 p-5 sm:p-6 rounded-xl text-green-950 max-w-full mx-auto shadow-lg">
-      <div className="text-center mb-4">
-        <h2 className="text-2xl sm:text-3xl font-bold">Until 50th Anniversary</h2>
+    <div className="w-full h-24 sm:h-32 flex items-center justify-between px-6 sm:px-12">
+      <div className="flex flex-col items-start">
+        <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">
+          {formatNumber(timeLeft.days)}:{formatNumber(timeLeft.hours)}:{formatNumber(timeLeft.minutes)}:{formatNumber(timeLeft.seconds)}
+        </span>
+        <span className="text-white text-lg sm:text-xl mt-1">Until 50th Anniversary</span>
       </div>
       
-      <div className="grid grid-cols-4 gap-2 sm:gap-3">
-        {[
-          { label: 'DAYS', value: timeLeft.days },
-          { label: 'HOURS', value: timeLeft.hours },
-          { label: 'MINUTES', value: timeLeft.minutes },
-          { label: 'SECONDS', value: timeLeft.seconds }
-        ].map((item, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <motion.div
-              key={`${item.label}-${item.value}`}
-              initial={{ opacity: 0.8 }}
-              animate={{ opacity: 1 }}
-              className="bg-green-950 rounded-lg w-full aspect-square flex items-center justify-center shadow-inner"
-            >
-              <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-500">
-                {item.value < 100 ? formatNumber(item.value) : item.value}
-              </span>
-            </motion.div>
-            <span className="mt-1 text-xs sm:text-sm font-semibold uppercase text-green-950">{item.label}</span>
-          </div>
-        ))}
+      <div className="flex flex-col items-end">
+        <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">250 Members</span>
+        <span className="text-white text-lg sm:text-xl mt-1">Registered</span>
       </div>
     </div>
   );
