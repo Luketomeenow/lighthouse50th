@@ -2,40 +2,6 @@
 import { motion } from 'framer-motion';
 
 const ExpectationsSection = () => {
-  // Array of expectation items with images
-  const expectationItems = [
-    {
-      title: "Worship Services",
-      description: "Join uplifting praise and worship sessions led by our talented music team.",
-      image: "/lovable-uploads/c81cecf7-b9e9-49b4-ac2e-2e6b36e515f2.png",
-      alt: "Worship Service"
-    },
-    {
-      title: "Bible Preaching",
-      description: "Be inspired by powerful messages from God's Word by respected pastors and speakers.",
-      image: "/lovable-uploads/ff50462c-67ed-4886-a5e9-59860dc8cdfe.png",
-      alt: "Bible Preaching"
-    },
-    {
-      title: "Fellowship",
-      description: "Connect with brothers and sisters in Christ from different Lighthouse churches.",
-      image: "/lovable-uploads/84060376-4fab-44a2-bdcb-c29a645d420b.png",
-      alt: "Fellowship"
-    },
-    {
-      title: "Testimonies",
-      description: "Hear moving stories of God's faithfulness throughout 50 years of ministry.",
-      image: "/lovable-uploads/0c93a163-cea4-4410-af1b-45179c47e1a5.png",
-      alt: "Testimonies"
-    },
-    {
-      title: "Church Gathering",
-      description: "Be part of a momentous gathering of believers celebrating God's faithfulness.",
-      image: "/lovable-uploads/2281f3ca-74a4-4811-98e5-809209882729.png",
-      alt: "Church Gathering"
-    },
-  ];
-
   return (
     <div className="py-16 md:py-24 bg-green-900 text-white relative overflow-hidden w-full" id="expectations">
       {/* Background image with overlay */}
@@ -52,29 +18,83 @@ const ExpectationsSection = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-white">WHAT TO EXPECT?</h2>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {expectationItems.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="bg-white/10 backdrop-blur-md rounded-lg overflow-hidden group h-full"
-            >
-              <div className="relative h-52 sm:h-64 w-full overflow-hidden">
-                <img 
-                  src={item.image} 
-                  alt={item.alt} 
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                  <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="text-sm text-gray-300">{item.description}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* Image Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          {/* First Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            viewport={{ once: true }}
+            className="rounded-xl overflow-hidden h-[200px] col-span-1"
+          >
+            <img 
+              src="/lovable-uploads/89e57cf9-ac9d-413a-87e1-4bd2a16ac665.png" 
+              alt="Church Gathering" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="rounded-xl overflow-hidden h-[200px] col-span-2"
+          >
+            <img 
+              src="/lovable-uploads/89e57cf9-ac9d-413a-87e1-4bd2a16ac665.png" 
+              alt="Bible Preaching" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+          
+          {/* Second Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="rounded-xl overflow-hidden h-[200px] col-span-2"
+          >
+            <img 
+              src="/lovable-uploads/89e57cf9-ac9d-413a-87e1-4bd2a16ac665.png" 
+              alt="Fellowship" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="rounded-xl overflow-hidden h-[200px] col-span-1"
+          >
+            <img 
+              src="/lovable-uploads/89e57cf9-ac9d-413a-87e1-4bd2a16ac665.png" 
+              alt="Testimonies" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </div>
+        
+        {/* Text Descriptions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-6xl mx-auto">
+          <div>
+            <h3 className="text-lg font-semibold text-yellow-300">Worship Services</h3>
+            <p className="text-sm text-gray-300">Join uplifting praise and worship sessions led by our talented music team.</p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold text-yellow-300">Fellowship</h3>
+            <p className="text-sm text-gray-300">Connect with brothers and sisters in Christ from different Lighthouse churches.</p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold text-yellow-300">Bible Teaching</h3>
+            <p className="text-sm text-gray-300">Be inspired by powerful messages from God's Word by respected pastors and speakers.</p>
+          </div>
         </div>
       </div>
     </div>

@@ -83,6 +83,15 @@ const Footer = () => {
               </div>
             </div>
             
+            {/* Logo in the center */}
+            <div className="mb-8 flex justify-center items-center">
+              <img 
+                src="/lovable-uploads/f701d314-3648-43be-8b79-d291a16500d5.png" 
+                alt="Lighthouse 50th Anniversary Logo" 
+                className="h-24 md:h-32"
+              />
+            </div>
+            
             {/* Social Links */}
             <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8">
               <a href="https://web.facebook.com/lighthousebbcmain" target="_blank" rel="noopener noreferrer" 
