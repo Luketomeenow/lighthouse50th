@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "sonner";
@@ -14,7 +13,7 @@ import EventInfoSection from '@/components/EventInfoSection';
 import ProgramScheduleSection from '@/components/ProgramScheduleSection';
 import ExpectationsSection from '@/components/ExpectationsSection';
 import FAQSection from '@/components/FAQSection';
-import CTASection from '@/components/CTASection';
+// CTASection is now removed
 import Footer from '@/components/Footer';
 
 type EventSettings = {
@@ -169,7 +168,7 @@ const Index = () => {
         
         <FAQSection />
         
-        <CTASection />
+        {/* CTASection removed */}
         
         <Footer />
       </div>
