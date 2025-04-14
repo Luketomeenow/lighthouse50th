@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Youtube } from 'lucide-react';
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [showContactForm, setShowContactForm] = useState(false);
@@ -14,6 +16,7 @@ const Footer = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -30,21 +33,30 @@ const Footer = () => {
       setShowContactForm(false);
     }, 1000);
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
-  return <footer className="relative">
+
+  return (
+    <footer className="relative">
       {/* Top yellow divider */}
       <div className="h-1 bg-yellow-500"></div>
       
-      <div className="bg-black text-white py-10">      
+      <div className="bg-black text-white py-10 relative">      
+        {/* Logo Background */}
+        <div 
+          className="absolute inset-0 opacity-10 bg-no-repeat bg-center pointer-events-none" 
+          style={{ 
+            backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')`,
+            backgroundSize: '60%'
+          }}
+        ></div>
+        
         <div className="container mx-auto px-6 md:px-12 relative z-10">
           {/* Main Footer Content */}
           <div className="flex flex-col items-center mb-8">
@@ -52,7 +64,7 @@ const Footer = () => {
               <div className="flex flex-col">
                 <p className="text-yellow-500 text-sm mb-2">Join us on this Grand Lighthouse Celebration</p>
                 <h2 className="text-2xl font-bold mb-4">BE PART OF OUR GREAT WORK!</h2>
-                <div className="flex space-x-4 mt-2">
+                <div className="flex flex-wrap gap-4 mt-2">
                   <a href="#registration-form" className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full text-sm font-bold px-[28px] py-[6px] mx-0">
                     REGISTER WITH US
                   </a>
@@ -64,23 +76,39 @@ const Footer = () => {
               
               <div className="flex flex-col">
                 <p className="text-gray-400 mb-6">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
-                  aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  The Lighthouse Bible Baptist Church and Ministries celebrates 50 years of God's faithfulness. 
+                  Join us in this momentous occasion as we gather to worship, fellowship, and reflect on God's 
+                  goodness throughout our journey.
                 </p>
               </div>
             </div>
             
-            <div className="flex justify-center mb-8">
-              <img src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" alt="Lighthouse BBC 50th Anniversary" className="h-16 w-auto opacity-80" />
+            {/* Social Links */}
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8">
+              <a href="https://web.facebook.com/lighthousebbcmain" target="_blank" rel="noopener noreferrer" 
+                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <Facebook className="h-5 w-5" />
+                <span className="hidden sm:inline">Facebook</span>
+              </a>
+              <a href="https://www.instagram.com/lighthousebbc/" target="_blank" rel="noopener noreferrer" 
+                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <Instagram className="h-5 w-5" />
+                <span className="hidden sm:inline">Instagram</span>
+              </a>
+              <a href="mailto:ministries@lighthousebbc.org" 
+                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <Mail className="h-5 w-5" />
+                <span className="hidden sm:inline">Email Us</span>
+              </a>
+              <a href="https://www.lighthousebbc.org" target="_blank" rel="noopener noreferrer" 
+                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <span>Lighthouse BBC Official Website</span>
+              </a>
             </div>
-            
-            <p className="text-center max-w-3xl text-gray-400 mb-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
           </div>
           
-          {showContactForm ? <div className="max-w-md mx-auto bg-gray-800/60 p-6 rounded-lg mb-8">
+          {showContactForm ? (
+            <div className="max-w-md mx-auto bg-gray-800/60 p-6 rounded-lg mb-8">
               <h3 className="text-xl font-bold mb-4">Contact Us</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -104,29 +132,14 @@ const Footer = () => {
                   </Button>
                 </div>
               </form>
-            </div> : null}
-          
-          {/* Social Links */}
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 border-t border-gray-800 pt-8">
-            <a href="https://web.facebook.com/lighthousebbcmain" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-              Facebook
-            </a>
-            <a href="https://www.instagram.com/lighthousebbc/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-              Instagram
-            </a>
-            <a href="mailto:ministries@lighthousebbc.org" className="text-gray-400 hover:text-white transition-colors">
-              Email Us
-            </a>
-            <a href="https://www.lighthousebbc.org" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-              Lighthouse BBC Official Website
-            </a>
-          </div>
+            </div>
+          ) : null}
           
           {/* Copyright and Legal Links */}
           <div className="text-center mt-8 text-sm text-gray-500 flex flex-col space-y-4">
             <p>"To be the salt of the earth, and the light of the world"</p>
             
-            <div className="flex justify-center space-x-4 mt-4">
+            <div className="flex flex-wrap justify-center gap-4 mt-4">
               <Link to="/terms" className="text-gray-500 hover:text-white transition-colors">
                 Terms of Service
               </Link>
@@ -144,6 +157,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;

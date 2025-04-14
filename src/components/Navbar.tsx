@@ -2,18 +2,33 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'History', path: '/history' },
-    { name: 'Program', path: '/#program-schedule' }, // Updated to anchor link
+    { name: 'Program', path: '/#program-schedule' },
     { name: 'Activities', path: '/activities' },
     { name: 'Resources', path: '/resources' },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -22,7 +37,9 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full fixed top-0 left-0 z-50 flex justify-between items-center py-4 px-6 md:px-12 lg:px-24 bg-green-900/90 backdrop-blur-md"
+      className={`w-full fixed top-0 left-0 z-50 flex justify-between items-center py-4 px-6 md:px-12 lg:px-24 transition-all duration-300 ${
+        scrolled ? 'bg-green-900/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      }`}
     >
       <div className="flex items-center">
         <Link to="/">
@@ -39,7 +56,9 @@ const Navbar = () => {
           <li key={item.name}>
             <Link 
               to={item.path}
-              className="text-white hover:text-yellow-300 transition-colors duration-300 font-medium"
+              className={`text-white hover:text-yellow-300 transition-colors duration-300 font-medium ${
+                scrolled ? 'text-white' : 'text-white'
+              }`}
               onClick={(e) => {
                 // Handle anchor links
                 if (item.path.startsWith('/#')) {

@@ -47,6 +47,11 @@
     @apply bg-background text-foreground font-montserrat antialiased;
     overflow-x: hidden;
   }
+
+  #root {
+    @apply w-full;
+    overflow-x: hidden;
+  }
 }
 
 @layer utilities {
@@ -90,3 +95,16 @@
   animation: countdown-flip 0.6s ease-in-out;
 }
 
+/* Make buttons with yellow background have white text */
+.bg-yellow-500, 
+.bg-yellow-600,
+button[class*="bg-yellow-"] {
+  @apply text-white;
+}
+
+/* Responsive fixes */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+}
