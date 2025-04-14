@@ -43,26 +43,29 @@ const StatsSection = () => {
   }, []);
 
   return (
-    <div className="bg-yellow-500 py-6 md:py-8 relative overflow-hidden">
+    <div className="bg-yellow-500 py-8 relative overflow-hidden">
       {/* Background pattern */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
         style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
       />
       
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="flex flex-col items-center gap-4 sm:gap-5">
-          <CountdownTimer targetDate={targetDate} />
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="text-center md:text-left mb-6 md:mb-0">
+            <CountdownTimer targetDate={targetDate} />
+            <p className="text-green-950 mt-2 text-lg">Until 50th Anniversary</p>
+          </div>
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="bg-green-950 text-yellow-500 py-3 px-6 rounded-xl text-center shadow-lg w-full max-w-xs"
+            className="text-center md:text-right"
           >
-            <h2 className="text-3xl font-bold mb-0">{registeredCount}</h2>
-            <p className="text-yellow-300 font-medium text-base">Members Registered</p>
+            <h2 className="text-5xl font-bold text-white">{registeredCount} Members</h2>
+            <p className="text-green-950 text-lg">Registered</p>
           </motion.div>
         </div>
       </div>
