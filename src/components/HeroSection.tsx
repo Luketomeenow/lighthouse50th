@@ -153,7 +153,7 @@ const HeroSection = ({
   };
 
   return (
-    <div className="relative min-h-screen bg-green-900 flex items-center overflow-hidden pt-20 w-full">
+    <div className="relative min-h-screen bg-green-900 flex flex-col items-center overflow-hidden pt-20 w-full">
       {/* Background image with 50th anniversary logo */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
@@ -162,36 +162,35 @@ const HeroSection = ({
       
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 via-green-900/60 to-green-900/90" />
       
-      <div className="container mx-auto px-4 md:px-12 z-10 py-12 md:py-0">
-        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12">
+      <div className="container mx-auto px-4 md:px-8 z-10 py-8 md:py-12">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
           <div className="w-full lg:w-1/2">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="text-center lg:text-left"
             >
-              <p className="text-yellow-300 mb-2 tracking-wider text-center lg:text-left">Lighthouse Bible Baptist Churches and Ministries at 50</p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 text-center lg:text-left">
+              <p className="text-yellow-300 mb-4 tracking-wider">Lighthouse Bible Baptist Churches and Ministries at 50</p>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
                 Celebrating God's Faithfulness at 50 in Lighthouse Bible Baptist Church
               </h1>
-              <p className="text-gray-200 mb-8 leading-relaxed text-center lg:text-left">
+              <p className="text-gray-200 mb-8 leading-relaxed text-base md:text-lg">
                 Join us for a momentous occasion celebrating 50 years of God's faithfulness. Experience uplifting worship, insightful teachings, and heartfelt fellowship as we commemorate this significant milestone together.
               </p>
               
-              <div className="text-center lg:text-left mb-4">
-                <p className="text-white font-medium text-lg">February 28 - March 1, 2026</p>
+              <div className="mb-6">
+                <p className="text-white font-medium text-lg md:text-xl">February 28 - March 1, 2026</p>
                 <p className="text-gray-300">World Trade Center, Pasay City</p>
               </div>
 
-              <div className="text-center lg:text-left">
-                <Button 
-                  onClick={scrollToVideoSection} 
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-full text-lg flex items-center gap-2 px-[40px] my-[8px] mx-auto lg:mx-0"
-                >
-                  <Play className="h-5 w-5" />
-                  WATCH VIDEO
-                </Button>
-              </div>
+              <Button 
+                onClick={scrollToVideoSection} 
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 md:py-3 md:px-8 rounded-full text-base md:text-lg flex items-center gap-2 mx-auto lg:mx-0"
+              >
+                <Play className="h-4 w-4 md:h-5 md:w-5" />
+                WATCH VIDEO
+              </Button>
             </motion.div>
           </div>
           
@@ -406,13 +405,13 @@ const HeroSection = ({
       </div>
 
       {/* Video Section */}
-      <div ref={videoSectionRef} className="w-full">
-        <div className="container mx-auto px-4 md:px-12 py-12">
+      <div ref={videoSectionRef} className="w-full bg-green-950/50 mt-8">
+        <div className="container mx-auto px-4 md:px-8 py-8 md:py-12">
           <div className="flex justify-center">
             <video 
               src="https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4" 
               controls 
-              className="max-w-full max-h-[70vh] rounded-lg" 
+              className="w-full max-h-[70vh] rounded-lg shadow-lg" 
             />
           </div>
         </div>
