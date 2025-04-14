@@ -121,7 +121,7 @@ const Footer = () => {
                   <Button type="submit" disabled={isSubmitting} variant="yellow" className="w-full text-white">
                     {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
-                  <Button type="button" variant="outline" onClick={() => setShowContactForm(false)}>
+                  <Button type="button" variant="outline" onClick={() => setShowContactForm(false)} className="text-gray-950">
                     Cancel
                   </Button>
                 </div>
