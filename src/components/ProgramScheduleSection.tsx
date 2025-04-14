@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Music, Book, Coffee, MapPin, Clock } from 'lucide-react';
-
 const programSchedule = [{
   day: "February 28, 2026 (Day 1)",
   events: [{
@@ -90,12 +89,9 @@ const programSchedule = [{
     desc: "End of 50th Anniversary Celebration"
   }]
 }];
-
 const ProgramScheduleSection = () => {
   const [activeDay, setActiveDay] = useState(0);
-  
-  return (
-    <div id="program-schedule" className="py-16 md:py-24 bg-green-950 relative overflow-hidden">
+  return <div id="program-schedule" className="py-16 md:py-24 bg-green-950 relative overflow-hidden">
       {/* Program Flow Header Banner */}
       <div className="w-full bg-green-950 mb-8 relative"></div>
 
@@ -106,7 +102,7 @@ const ProgramScheduleSection = () => {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="text-white mb-6 md:mb-0 text-center md:text-left">
                 <p className="text-yellow-400 font-medium">Event Flow @ World Trade Center, Pasay City</p>
-                <h2 className="text-3xl md:text-4xl font-bold mt-1">PROGRAM FLOW</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mt-1 text-center">PROGRAM FLOW</h2>
               </div>
               <div className="text-white text-center md:text-right">
                 <p className="text-yellow-400 font-medium">Save The Date!</p>
@@ -118,19 +114,11 @@ const ProgramScheduleSection = () => {
       
         <div className="container mx-auto px-4 md:px-6 lg:px-12">
           <div className="mb-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-0 sm:space-x-4">
-            <Button 
-              onClick={() => setActiveDay(0)} 
-              variant={activeDay === 0 ? "default" : "outline"} 
-              className={`rounded-md ${activeDay === 0 ? "bg-yellow-500 hover:bg-yellow-600 text-green-950" : "border-yellow-500 text-yellow-500 hover:bg-green-900"} w-full sm:w-auto`}
-            >
+            <Button onClick={() => setActiveDay(0)} variant={activeDay === 0 ? "default" : "outline"} className={`rounded-md ${activeDay === 0 ? "bg-yellow-500 hover:bg-yellow-600 text-green-950" : "border-yellow-500 text-yellow-500 hover:bg-green-900"} w-full sm:w-auto`}>
               <Calendar className="mr-2 h-4 w-4" />
               February 28, 2026
             </Button>
-            <Button 
-              onClick={() => setActiveDay(1)} 
-              variant={activeDay === 1 ? "default" : "outline"} 
-              className={`rounded-md ${activeDay === 1 ? "bg-yellow-500 hover:bg-yellow-600 text-green-950" : "border-yellow-500 text-yellow-500 hover:bg-green-900"} w-full sm:w-auto`}
-            >
+            <Button onClick={() => setActiveDay(1)} variant={activeDay === 1 ? "default" : "outline"} className={`rounded-md ${activeDay === 1 ? "bg-yellow-500 hover:bg-yellow-600 text-green-950" : "border-yellow-500 text-yellow-500 hover:bg-green-900"} w-full sm:w-auto`}>
               <Calendar className="mr-2 h-4 w-4" />
               March 1, 2026
             </Button>
@@ -193,14 +181,16 @@ const ProgramScheduleSection = () => {
               <div className="w-full md:w-2/3 mt-6 md:mt-0">
                 <h3 className="text-xl font-bold mb-6 border-b border-yellow-500/20 pb-2 text-slate-50">Detailed Schedule</h3>
                 <div className="space-y-6 max-h-[400px] md:max-h-[500px] overflow-y-auto pr-2 text-yellow-100">
-                  {programSchedule[activeDay].events.map((event, index) => (
-                    <motion.div 
-                      key={index} 
-                      initial={{ opacity: 0, y: 10 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      transition={{ duration: 0.3, delay: index * 0.05 }} 
-                      className="flex gap-4"
-                    >
+                  {programSchedule[activeDay].events.map((event, index) => <motion.div key={index} initial={{
+                  opacity: 0,
+                  y: 10
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.3,
+                  delay: index * 0.05
+                }} className="flex gap-4">
                       <div className="w-20 md:w-24 flex-shrink-0">
                         <div className="font-bold text-yellow-300">{event.time}</div>
                       </div>
@@ -208,27 +198,21 @@ const ProgramScheduleSection = () => {
                         <h4 className="font-bold text-yellow-300">{event.title}</h4>
                         <p className="text-slate-50">{event.desc}</p>
                       </div>
-                    </motion.div>
-                  ))}
+                    </motion.div>)}
                 </div>
               </div>
             </div>
           </div>
           
           <div className="text-center mt-8 md:mt-12">
-            <Button 
-              onClick={() => document.getElementById('registration-form')?.scrollIntoView({
-                behavior: 'smooth'
-              })} 
-              className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-6 py-2.5 md:px-8 md:py-3 rounded-full font-bold text-base md:text-lg w-full sm:w-auto"
-            >
+            <Button onClick={() => document.getElementById('registration-form')?.scrollIntoView({
+            behavior: 'smooth'
+          })} className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-6 py-2.5 md:px-8 md:py-3 rounded-full font-bold text-base md:text-lg w-full sm:w-auto">
               REGISTER FOR THIS EVENT
             </Button>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ProgramScheduleSection;
