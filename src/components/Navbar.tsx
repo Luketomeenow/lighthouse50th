@@ -80,7 +80,7 @@ const Navbar = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={`w-full fixed top-0 left-0 z-50 flex justify-between items-center py-4 px-6 md:px-12 lg:px-24 transition-all duration-300 ${
-          scrolled ? 'bg-green-900/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+          scrolled ? 'bg-green-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
         }`}
       >
         <div className="flex items-center">
@@ -91,7 +91,7 @@ const Navbar = () => {
             <img 
               src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" 
               alt="Lighthouse BBC 50th Anniversary" 
-              className="h-12 md:h-16 w-auto"
+              className="h-10 md:h-16 w-auto"
             />
           </Link>
         </div>
@@ -122,40 +122,42 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile menu with fixed position and improved background */}
+      {/* Mobile menu - fixed position with consistent background */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[999] md:hidden">
-          {/* Overlay backdrop for the menu */}
-          <div className="absolute inset-0 bg-green-950/95 backdrop-blur-md">
-            <div className="absolute top-6 right-6">
+        <div className="mobile-nav-overlay">
+          <div className="fixed inset-0 flex flex-col items-center pt-20 pb-10 px-6 overflow-y-auto">
+            <div className="absolute top-4 right-6">
               <button 
                 onClick={toggleMenu}
-                className="text-white focus:outline-none p-2"
+                className="text-white hover:text-yellow-300 focus:outline-none p-2 transition-colors duration-300"
               >
                 <X className="h-6 w-6" />
               </button>
             </div>
             
-            <div className="flex flex-col h-full pt-24 px-8">
-              <ul className="flex flex-col space-y-8">
+            <div className="w-full max-w-md flex flex-col items-center mt-8">
+              <ul className="flex flex-col w-full space-y-6">
                 {navItems.map((item) => (
-                  <li key={item.name}>
+                  <li key={item.name} className="w-full">
                     <a 
                       href={item.path}
-                      className="text-white text-xl hover:text-yellow-300 transition-colors duration-300 font-medium block"
+                      className="text-white text-xl md:text-2xl hover:text-yellow-300 transition-colors duration-300 font-medium block text-center py-2"
                       onClick={(e) => handleNavigation(e, item.path)}
                     >
                       {item.name}
                     </a>
                   </li>
                 ))}
-                <li className="mt-12 pt-8 border-t border-green-800">
-                  <div className="text-white text-lg">
-                    50th Anniversary -<br />
-                    Lighthouse Bible Baptist Church
-                  </div>
-                </li>
               </ul>
+              
+              <div className="mt-12 pt-8 border-t border-green-800 w-full text-center">
+                <div className="text-yellow-400 text-base md:text-lg font-medium mb-2">
+                  50th Anniversary Celebration
+                </div>
+                <div className="text-white text-sm md:text-base">
+                  Lighthouse Bible Baptist Church
+                </div>
+              </div>
             </div>
           </div>
         </div>
