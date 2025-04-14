@@ -25,7 +25,7 @@ const EventInfoSection = () => {
             duration: 0.7
           }} viewport={{
             once: true
-          }} className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 my-0 py-[108px] px-[24px] mx-[7px]">
+          }} className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 my-0 px-[24px] mx-[7px] py-[80px]">
               {showVideo ? <div className="aspect-video rounded-lg overflow-hidden">
                   <video src="https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4" controls autoPlay className="w-full h-full object-cover" />
                 </div> : <div className="aspect-video rounded-lg relative overflow-hidden cursor-pointer group" onClick={() => setShowVideo(true)}>
