@@ -14,31 +14,82 @@ const ExpectationsSection = () => {
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center mb-12">
-          <p className="text-yellow-300 mb-2">Activities at the Lighthouse Bible Baptist Church 50th Anniversary</p>
-          <h2 className="text-3xl md:text-4xl font-bold">WHAT TO EXPECT?</h2>
+          <p className="text-yellow-300 mb-2">Activities At the Lighthouse Bible Baptist Church and Ministries' 50th Anniversary</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white">WHAT TO EXPECT?</h2>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <motion.div
-              key={item}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: item * 0.1 }}
-              viewport={{ once: true }}
-              className={`bg-white/10 backdrop-blur-md border border-white/20 rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 ${
-                item > 3 ? 'sm:col-span-2 lg:col-span-1' : ''
-              }`}
-            >
-              <div className="aspect-video bg-gray-300/20"></div>
-              <div className="p-4">
-                <h3 className="font-bold text-lg mb-2">Event {item}</h3>
-                <p className="text-gray-300 text-sm">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam.
-                </p>
-              </div>
-            </motion.div>
-          ))}
+        <div className="grid grid-cols-12 gap-4">
+          {/* First row */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            viewport={{ once: true }}
+            className="col-span-12 md:col-span-4 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+          >
+            <img 
+              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
+              alt="Worship Service" 
+              className="w-full h-full object-cover opacity-40"
+            />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="col-span-12 md:col-span-5 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+          >
+            <img 
+              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
+              alt="Conference Session" 
+              className="w-full h-full object-cover opacity-40"
+            />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="col-span-12 md:col-span-3 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+          >
+            <img 
+              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
+              alt="Fellowship" 
+              className="w-full h-full object-cover opacity-40"
+            />
+          </motion.div>
+          
+          {/* Second row */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="col-span-12 md:col-span-6 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+          >
+            <img 
+              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
+              alt="Group Activities" 
+              className="w-full h-full object-cover opacity-40"
+            />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="col-span-12 md:col-span-6 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+          >
+            <img 
+              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
+              alt="Celebration Event" 
+              className="w-full h-full object-cover opacity-40"
+            />
+          </motion.div>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
+import { Play } from 'lucide-react';
 
 type HeroSectionProps = {
   title: string;
@@ -39,6 +40,7 @@ const HeroSection = ({
 }: HeroSectionProps) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -80,6 +82,12 @@ const HeroSection = ({
     }
   };
 
+  const handlePlayVideo = () => {
+    setShowVideo(true);
+    // Scroll to video section
+    document.getElementById('event-info')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="relative min-h-screen bg-green-900 flex items-center overflow-hidden pt-20">
       {/* Background image with 50th anniversary logo */}
@@ -113,10 +121,11 @@ const HeroSection = ({
 
               <div className="text-center lg:text-left">
                 <Button 
-                  onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-green-950 font-bold py-3 px-8 rounded-full text-lg"
+                  onClick={handlePlayVideo}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full text-lg flex items-center gap-2"
                 >
-                  REGISTER NOW
+                  <Play className="h-5 w-5" />
+                  WATCH VIDEO
                 </Button>
               </div>
             </motion.div>
@@ -255,7 +264,7 @@ const HeroSection = ({
                           <Checkbox
                             checked={field.value}
                             onCheckedChange={field.onChange}
-                            className="data-[state=checked]:bg-yellow-500 data-[state=checked]:text-green-900"
+                            className="data-[state=checked]:bg-yellow-500 data-[state=checked]:text-white"
                           />
                         </FormControl>
                         <div className="space-y-1 leading-none">
@@ -268,9 +277,9 @@ const HeroSection = ({
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-green-950 py-3 rounded-full font-semibold text-lg"
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-full font-semibold text-lg"
                   >
-                    {isSubmitting ? "Submitting..." : "REGISTER NOW"}
+                    {isSubmitting ? "Submitting..." : "REGISTER"}
                   </Button>
                 </form>
               </Form>

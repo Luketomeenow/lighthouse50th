@@ -8,7 +8,7 @@ const EventInfoSection = () => {
   const [showVideo, setShowVideo] = useState(false);
   
   return (
-    <div className="py-16 md:py-24 bg-green-900 relative overflow-hidden">
+    <div id="event-info" className="py-16 md:py-24 bg-green-900 relative overflow-hidden">
       {/* Background image with overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10" 
@@ -48,7 +48,7 @@ const EventInfoSection = () => {
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/60 transition-all">
                     <div className="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center pulse">
-                      <Play className="h-8 w-8 text-green-950 fill-current" />
+                      <Play className="h-8 w-8 text-white fill-current" />
                     </div>
                   </div>
                 </div>
@@ -85,14 +85,14 @@ const EventInfoSection = () => {
               <div className="flex flex-col sm:flex-row gap-4 mt-8">
                 <Button 
                   onClick={() => document.getElementById('registration-form')?.scrollIntoView({behavior: 'smooth'})} 
-                  className="bg-yellow-500 hover:bg-yellow-600 text-green-950 px-8 py-6 rounded-full font-bold text-lg"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 rounded-full font-bold text-lg"
                 >
                   REGISTER NOW
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => setShowVideo(true)} 
-                  className="border-2 border-white text-black hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
+                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
                 >
                   <Play className="h-5 w-5" />
                   <span>PLAY VIDEO</span>
