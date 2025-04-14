@@ -48,10 +48,11 @@ const Footer = () => {
       <div className="h-1 bg-yellow-500"></div>
       
       <div className="bg-black text-white py-10 relative">      
-        {/* Logo Background */}
+        {/* Logo Background - improved for mobile */}
         <div className="absolute inset-0 opacity-10 bg-no-repeat bg-center pointer-events-none" style={{
           backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')`,
-          backgroundSize: '60%'
+          backgroundSize: 'contain',
+          backgroundPosition: 'center'
         }}></div>
         
         <div className="container mx-auto px-6 md:px-12 relative z-10">

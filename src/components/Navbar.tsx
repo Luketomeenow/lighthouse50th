@@ -131,6 +131,12 @@ const Navbar = () => {
                   </a>
                 </li>
               ))}
+              <li className="mt-8">
+                <div className="text-white text-lg">
+                  50th Anniversary -<br />
+                  Lighthouse Bible Baptist Church
+                </div>
+              </li>
             </ul>
           </div>
         </div>
