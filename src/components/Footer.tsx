@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Youtube } from 'lucide-react';
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [showContactForm, setShowContactForm] = useState(false);
@@ -14,6 +16,7 @@ const Footer = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -30,26 +33,26 @@ const Footer = () => {
       setShowContactForm(false);
     }, 1000);
   };
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
-  return <footer className="relative">
+  
+  return (
+    <footer className="relative">
       {/* Top yellow divider */}
       <div className="h-1 bg-yellow-500"></div>
       
       <div className="bg-black text-white py-10 relative">      
         {/* Logo Background */}
         <div className="absolute inset-0 opacity-10 bg-no-repeat bg-center pointer-events-none" style={{
-        backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')`,
-        backgroundSize: '60%'
-      }}></div>
+          backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')`,
+          backgroundSize: '60%'
+        }}></div>
         
         <div className="container mx-auto px-6 md:px-12 relative z-10">
           {/* Main Footer Content */}
@@ -79,7 +82,11 @@ const Footer = () => {
             
             {/* Logo in the center */}
             <div className="mb-8 flex justify-center items-center">
-              <img alt="Lighthouse 50th Anniversary Logo" className="h-24 md:h-32" src="/lovable-uploads/8e25eafe-f70c-4e8d-af99-16f07e523d3f.png" />
+              <img 
+                alt="Lighthouse 50th Anniversary Logo" 
+                className="h-24 md:h-32" 
+                src="/lovable-uploads/8e25eafe-f70c-4e8d-af99-16f07e523d3f.png" 
+              />
             </div>
             
             {/* Social Links */}
@@ -102,7 +109,8 @@ const Footer = () => {
             </div>
           </div>
           
-          {showContactForm ? <div className="max-w-md mx-auto bg-gray-800/60 p-6 rounded-lg mb-8">
+          {showContactForm ? (
+            <div className="max-w-md mx-auto bg-gray-800/60 p-6 rounded-lg mb-8">
               <h3 className="text-xl font-bold mb-4">Contact Us</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -126,7 +134,8 @@ const Footer = () => {
                   </Button>
                 </div>
               </form>
-            </div> : null}
+            </div>
+          ) : null}
           
           {/* Copyright and Legal Links */}
           <div className="text-center mt-8 text-sm text-gray-500 flex flex-col space-y-4">
@@ -150,6 +159,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;

@@ -1,6 +1,7 @@
+
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
-import { Play } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+
+// Country codes data
+const countryCodes = [
+  { code: '+1', name: 'United States/Canada' },
+  { code: '+63', name: 'Philippines' },
+  { code: '+44', name: 'United Kingdom' },
+  { code: '+61', name: 'Australia' },
+  { code: '+65', name: 'Singapore' },
+  { code: '+82', name: 'South Korea' },
+  { code: '+81', name: 'Japan' },
+  { code: '+86', name: 'China' },
+  { code: '+852', name: 'Hong Kong' },
+  { code: '+60', name: 'Malaysia' },
+  { code: '+66', name: 'Thailand' },
+  { code: '+971', name: 'United Arab Emirates' },
+  { code: '+49', name: 'Germany' },
+  { code: '+33', name: 'France' },
+  { code: '+39', name: 'Italy' },
+  { code: '+34', name: 'Spain' },
+].sort((a, b) => a.name.localeCompare(b.name));
 
 type HeroSectionProps = {
   title: string;
@@ -27,6 +49,7 @@ const formSchema = z.object({
   ageGroup: z.enum(["Children", "YP", "SWYP", "Adult", "Senior"], {
     required_error: "Please select an age group",
   }),
+  countryCode: z.string().min(1, { message: "Country code is required" }),
   contact: z.string().min(6, { message: "Contact number is required" }),
   lighthouseWork: z.string().min(2, { message: "Please specify your work" }),
   needsAccommodation: z.boolean().default(false),
@@ -40,6 +63,8 @@ const HeroSection = ({
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +74,7 @@ const HeroSection = ({
       email: "",
       age: undefined,
       ageGroup: undefined,
+      countryCode: "+63", // Default to Philippines
       contact: "",
       lighthouseWork: "",
       needsAccommodation: false,
@@ -64,7 +90,7 @@ const HeroSection = ({
         email: values.email,
         age: values.age,
         age_group: values.ageGroup,
-        contact: values.contact,
+        contact: `${values.countryCode} ${values.contact}`, // Include country code
         lighthouse_work: values.lighthouseWork,
         needs_accommodation: values.needsAccommodation,
       });
@@ -81,10 +107,29 @@ const HeroSection = ({
     }
   };
 
-  const handlePlayVideo = () => {
-    setShowVideo(true);
-    // Scroll to video section
-    document.getElementById('event-info')?.scrollIntoView({ behavior: 'smooth' });
+  const handleVideoControl = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    } else {
+      setShowVideo(true);
+      // We'll set isPlaying to true when the video element is created and ready
+    }
+  };
+
+  const handleVideoReady = () => {
+    if (videoRef.current) {
+      videoRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(err => {
+          console.error("Error playing video:", err);
+          setIsPlaying(false);
+        });
+    }
   };
 
   return (
@@ -119,13 +164,41 @@ const HeroSection = ({
               </div>
 
               <div className="text-center lg:text-left">
-                <Button 
-                  onClick={handlePlayVideo}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full text-lg flex items-center gap-2"
-                >
-                  <Play className="h-5 w-5" />
-                  WATCH VIDEO
-                </Button>
+                <Drawer>
+                  <DrawerTrigger asChild>
+                    <Button 
+                      onClick={handleVideoControl}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full text-lg flex items-center gap-2"
+                    >
+                      {isPlaying ? (
+                        <>
+                          <Pause className="h-5 w-5" />
+                          PAUSE VIDEO
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-5 w-5" />
+                          WATCH VIDEO
+                        </>
+                      )}
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent className="px-4 py-6 bg-black">
+                    <div className="flex justify-center">
+                      {showVideo && (
+                        <video
+                          ref={videoRef}
+                          onLoadedData={handleVideoReady}
+                          onPlay={() => setIsPlaying(true)}
+                          onPause={() => setIsPlaying(false)}
+                          src="https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4"
+                          controls
+                          className="max-w-full max-h-[70vh] rounded-lg"
+                        />
+                      )}
+                    </div>
+                  </DrawerContent>
+                </Drawer>
               </div>
             </motion.div>
           </div>
@@ -226,19 +299,55 @@ const HeroSection = ({
                     />
                   </div>
                   
-                  <FormField
-                    control={form.control}
-                    name="contact"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-white">Contact Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter your contact number" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="countryCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">Country</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                                <SelectValue placeholder="Select country" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="max-h-[300px]">
+                              {countryCodes.map((country) => (
+                                <SelectItem key={country.code} value={country.code}>
+                                  {country.name} ({country.code})
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="contact"
+                      render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                          <FormLabel className="text-white">Contact Number</FormLabel>
+                          <div className="flex">
+                            <div className="bg-white/10 border-white/20 text-white py-2 px-3 rounded-l-md border border-r-0">
+                              {form.watch("countryCode")}
+                            </div>
+                            <FormControl>
+                              <Input 
+                                placeholder="Enter your contact number" 
+                                {...field} 
+                                className="rounded-l-none bg-white/10 border-white/20 text-white placeholder:text-gray-400" 
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   
                   <FormField
                     control={form.control}

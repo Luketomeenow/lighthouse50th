@@ -31,6 +31,34 @@ const Navbar = () => {
   }, [scrolled]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (path === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsMenuOpen(false);
+    } else if (path.startsWith('/#')) {
+      e.preventDefault();
+      const element = document.querySelector(path.substring(1));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        setIsMenuOpen(false);
+      } else if (window.location.pathname === '/') {
+        // If we're already on the homepage, just scroll to the section
+        const sectionId = path.split('#')[1];
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+          setIsMenuOpen(false);
+        }
+      } else {
+        // Navigate to homepage then to the section
+        window.location.href = path;
+      }
+    } else {
+      setIsMenuOpen(false);
+    }
+  };
 
   return (
     <motion.nav 
@@ -42,46 +70,30 @@ const Navbar = () => {
       }`}
     >
       <div className="flex items-center">
-        <Link to="/">
+        <a 
+          href="/" 
+          onClick={(e) => handleNavigation(e, '/')}
+        >
           <img 
             src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" 
             alt="Lighthouse BBC 50th Anniversary" 
             className="h-12 md:h-16 w-auto"
           />
-        </Link>
+        </a>
       </div>
       
       <ul className="hidden md:flex space-x-8">
         {navItems.map((item) => (
           <li key={item.name}>
-            <Link 
-              to={item.path}
+            <a 
+              href={item.path}
               className={`text-white hover:text-yellow-300 transition-colors duration-300 font-medium ${
                 scrolled ? 'text-white' : 'text-white'
               }`}
-              onClick={(e) => {
-                // Handle anchor links
-                if (item.path.startsWith('/#')) {
-                  e.preventDefault();
-                  const element = document.querySelector(item.path.substring(1));
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  } else if (window.location.pathname === '/') {
-                    // If we're already on the homepage, just scroll to the section
-                    const sectionId = item.path.split('#')[1];
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                      section.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  } else {
-                    // Navigate to homepage then to the section
-                    window.location.href = item.path;
-                  }
-                }
-              }}
+              onClick={(e) => handleNavigation(e, item.path)}
             >
               {item.name}
-            </Link>
+            </a>
           </li>
         ))}
       </ul>
@@ -95,38 +107,28 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu with improved background */}
       {isMenuOpen && (
         <div className="fixed inset-0 bg-green-900/95 z-50 md:hidden flex flex-col pt-20">
+          <div className="absolute top-6 right-6">
+            <button 
+              onClick={toggleMenu}
+              className="text-white focus:outline-none"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
           <div className="px-6">
             <ul className="flex flex-col space-y-6">
               {navItems.map((item) => (
                 <li key={item.name}>
-                  <Link 
-                    to={item.path}
+                  <a 
+                    href={item.path}
                     className="text-white text-xl hover:text-yellow-300 transition-colors duration-300 font-medium"
-                    onClick={(e) => {
-                      if (item.path.startsWith('/#')) {
-                        e.preventDefault();
-                        setIsMenuOpen(false);
-                        // If we're already on the homepage
-                        if (window.location.pathname === '/') {
-                          const sectionId = item.path.split('#')[1];
-                          const section = document.getElementById(sectionId);
-                          if (section) {
-                            section.scrollIntoView({ behavior: 'smooth' });
-                          }
-                        } else {
-                          // Navigate to homepage then to the section
-                          window.location.href = item.path;
-                        }
-                      } else {
-                        setIsMenuOpen(false);
-                      }
-                    }}
+                    onClick={(e) => handleNavigation(e, item.path)}
                   >
                     {item.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
