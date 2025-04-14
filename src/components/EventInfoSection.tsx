@@ -92,7 +92,7 @@ const EventInfoSection = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => setShowVideo(true)} 
-                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
+                  className="border-2 border-white text-black hover:bg-white/10 px-8 py-6 rounded-full font-bold text-lg flex items-center space-x-2"
                 >
                   <Play className="h-5 w-5" />
                   <span>PLAY VIDEO</span>
