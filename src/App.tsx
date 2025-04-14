@@ -47,19 +47,19 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/activities" element={<Activities />} />
             
             {/* User Panel Routes */}
             <Route path="/dashboard" element={<UserPanelLayout><Dashboard /></UserPanelLayout>} />
-            <Route path="/resources" element={<UserPanelLayout><Resources /></UserPanelLayout>} />
             <Route path="/ministries" element={<UserPanelLayout><Ministries /></UserPanelLayout>} />
             <Route path="/latest-news" element={<UserPanelLayout><LatestNews /></UserPanelLayout>} />
-            <Route path="/flow" element={<UserPanelLayout><Flow /></UserPanelLayout>} />
-            <Route path="/history" element={<UserPanelLayout><History /></UserPanelLayout>} />
+            <Route path="/flow" element={<Flow />} />
             <Route path="/profile" element={<UserPanelLayout><Profile /></UserPanelLayout>} />
             <Route path="/seat-plan" element={<UserPanelLayout><SeatPlan /></UserPanelLayout>} />
             <Route path="/settings" element={<UserPanelLayout><Settings /></UserPanelLayout>} />
             <Route path="/funding" element={<UserPanelLayout><Funding /></UserPanelLayout>} />
-            <Route path="/activities" element={<UserPanelLayout><Activities /></UserPanelLayout>} />
             
             {/* Catch All */}
             <Route path="*" element={<NotFound />} />
