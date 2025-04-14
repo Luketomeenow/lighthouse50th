@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
@@ -115,7 +114,7 @@ const ProgramFlow = () => {
 
   return (
     <div className="py-4">
-      {/* Program Flow Header - text only, no images */}
+      {/* Program Flow Header - text only, as shown in the image */}
       <div className="bg-green-900 py-8 mb-10 rounded-lg">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
@@ -125,12 +124,13 @@ const ProgramFlow = () => {
             </div>
             <div className="text-white text-center md:text-right">
               <p className="text-yellow-400 font-medium">Save The Date!</p>
-              <h3 className="text-xl md:text-2xl font-semibold">February 28 – March 2, 2026</h3>
+              <h3 className="text-xl md:text-2xl font-semibold">February 28 – March 2, 2025</h3>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Rest of the component remains the same */}
       <div className="container mx-auto px-4">
         {/* Day Selection Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
