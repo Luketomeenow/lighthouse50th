@@ -1,3 +1,4 @@
+
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
@@ -114,23 +115,22 @@ const ProgramFlow = () => {
 
   return (
     <div className="py-4">
-      {/* Program Flow Header - text only, as shown in the image */}
+      {/* Program Flow Header */}
       <div className="bg-green-900 py-8 mb-10 rounded-lg">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-white mb-4 md:mb-0">
-              <p className="text-yellow-400 font-medium">Event Flow @ The Philippine International Convention Center</p>
+              <p className="text-yellow-400 font-medium">Event Flow @ World Trade Center, Pasay City</p>
               <h2 className="text-3xl md:text-4xl font-bold mt-1">PROGRAM FLOW</h2>
             </div>
             <div className="text-white text-center md:text-right">
               <p className="text-yellow-400 font-medium">Save The Date!</p>
-              <h3 className="text-xl md:text-2xl font-semibold">February 28 – March 2, 2025</h3>
+              <h3 className="text-xl md:text-2xl font-semibold">February 28 – March 2, 2026</h3>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Rest of the component remains the same */}
       <div className="container mx-auto px-4">
         {/* Day Selection Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -156,7 +156,7 @@ const ProgramFlow = () => {
                 <h3 className="text-xl font-bold mb-1">{dayLabels[selectedDay]}</h3>
                 <div className="flex items-center text-green-900">
                   <MapPin className="h-4 w-4 mr-2" />
-                  <span>Philippine International Convention Center</span>
+                  <span>World Trade Center, Pasay City</span>
                 </div>
               </div>
               
@@ -164,7 +164,7 @@ const ProgramFlow = () => {
                 <div className="mb-4">
                   <h4 className="font-semibold flex items-center text-yellow-300 mb-2">
                     <Clock className="h-4 w-4 mr-2" />
-                    Day Schedule
+                    Event Schedule
                   </h4>
                   <p className="text-sm text-white">8:00 AM - 5:00 PM</p>
                 </div>
@@ -179,7 +179,7 @@ const ProgramFlow = () => {
             
             {/* Schedule details */}
             <div className="w-full md:w-2/3">
-              <h3 className="text-xl font-bold mb-6 border-b border-yellow-500/20 pb-2">Day {selectedDay.charAt(selectedDay.length - 1)} Schedule</h3>
+              <h3 className="text-xl font-bold mb-6 border-b border-yellow-500/20 pb-2">Detailed Schedule</h3>
               <div className="space-y-6 max-h-[500px] overflow-y-auto pr-2">
                 {programFlows[selectedDay].map((item, index) => (
                   <motion.div 
