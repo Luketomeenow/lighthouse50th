@@ -94,8 +94,8 @@ const ProgramScheduleSection = () => {
   return <div id="program-schedule" className="py-16 md:py-24 bg-green-950 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-yellow-500 mb-4">PROGRAM SCHEDULE</h2>
-          <p className="text-yellow-100 max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-yellow-500 mb-4 text-left mx-0">PROGRAM SCHEDULE</h2>
+          <p className="text-yellow-100 max-w-3xl text-left px-0 my-[16px] mx-0">
             Join us for two days of celebration, fellowship, and spiritual renewal as we commemorate 
             50 years of God's faithfulness in Lighthouse Bible Baptist Church.
           </p>

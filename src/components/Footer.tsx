@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Youtube } from 'lucide-react';
@@ -6,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [showContactForm, setShowContactForm] = useState(false);
@@ -16,27 +14,33 @@ const Footer = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       toast.success("Message sent! We'll get back to you soon.");
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({
+        name: '',
+        email: '',
+        message: ''
+      });
       setIsSubmitting(false);
       setShowContactForm(false);
     }, 1000);
   };
-  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const {
+      name,
+      value
+    } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
-  
-  return (
-    <footer className="relative">
+  return <footer className="relative">
       {/* Top yellow divider */}
       <div className="h-1 bg-yellow-500"></div>
       
@@ -49,18 +53,10 @@ const Footer = () => {
                 <p className="text-yellow-500 text-sm mb-2">Join us on this Grand Lighthouse Celebration</p>
                 <h2 className="text-2xl font-bold mb-4">BE PART OF OUR GREAT WORK!</h2>
                 <div className="flex space-x-4 mt-2">
-                  <a 
-                    href="#registration-form" 
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-full text-sm font-bold"
-                  >
+                  <a href="#registration-form" className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full text-sm font-bold px-[28px] py-[6px] mx-0">
                     REGISTER WITH US
                   </a>
-                  <a 
-                    href="https://www.lighthousebbc.org" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="border border-white hover:bg-white/10 text-white py-2 px-6 rounded-full text-sm font-bold"
-                  >
+                  <a href="https://www.lighthousebbc.org" target="_blank" rel="noopener noreferrer" className="border border-white hover:bg-white/10 text-white py-2 px-6 rounded-full text-sm font-bold">
                     VISIT OUR WEBSITE
                   </a>
                 </div>
@@ -75,11 +71,7 @@ const Footer = () => {
             </div>
             
             <div className="flex justify-center mb-8">
-              <img 
-                src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" 
-                alt="Lighthouse BBC 50th Anniversary" 
-                className="h-16 w-auto opacity-80"
-              />
+              <img src="/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png" alt="Lighthouse BBC 50th Anniversary" className="h-16 w-auto opacity-80" />
             </div>
             
             <p className="text-center max-w-3xl text-gray-400 mb-8">
@@ -88,44 +80,20 @@ const Footer = () => {
             </p>
           </div>
           
-          {showContactForm ? (
-            <div className="max-w-md mx-auto bg-gray-800/60 p-6 rounded-lg mb-8">
+          {showContactForm ? <div className="max-w-md mx-auto bg-gray-800/60 p-6 rounded-lg mb-8">
               <h3 className="text-xl font-bold mb-4">Contact Us</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-1">Name</label>
-                  <Input 
-                    id="name" 
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleChange} 
-                    required 
-                    className="bg-gray-700/50 border-gray-600"
-                  />
+                  <Input id="name" name="name" value={formData.name} onChange={handleChange} required className="bg-gray-700/50 border-gray-600" />
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-                  <Input 
-                    id="email" 
-                    name="email" 
-                    type="email" 
-                    value={formData.email} 
-                    onChange={handleChange} 
-                    required 
-                    className="bg-gray-700/50 border-gray-600"
-                  />
+                  <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="bg-gray-700/50 border-gray-600" />
                 </div>
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium mb-1">Message</label>
-                  <Textarea 
-                    id="message" 
-                    name="message" 
-                    value={formData.message} 
-                    onChange={handleChange} 
-                    required 
-                    rows={4}
-                    className="bg-gray-700/50 border-gray-600"
-                  />
+                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={4} className="bg-gray-700/50 border-gray-600" />
                 </div>
                 <div className="flex space-x-3">
                   <Button type="submit" disabled={isSubmitting} variant="yellow" className="w-full text-white">
@@ -136,39 +104,20 @@ const Footer = () => {
                   </Button>
                 </div>
               </form>
-            </div>
-          ) : null}
+            </div> : null}
           
           {/* Social Links */}
           <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 border-t border-gray-800 pt-8">
-            <a 
-              href="https://web.facebook.com/lighthousebbcmain" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-white transition-colors"
-            >
+            <a href="https://web.facebook.com/lighthousebbcmain" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
               Facebook
             </a>
-            <a 
-              href="https://www.instagram.com/lighthousebbc/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-white transition-colors"
-            >
+            <a href="https://www.instagram.com/lighthousebbc/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
               Instagram
             </a>
-            <a 
-              href="mailto:ministries@lighthousebbc.org" 
-              className="text-gray-400 hover:text-white transition-colors"
-            >
+            <a href="mailto:ministries@lighthousebbc.org" className="text-gray-400 hover:text-white transition-colors">
               Email Us
             </a>
-            <a 
-              href="https://www.lighthousebbc.org" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-white transition-colors"
-            >
+            <a href="https://www.lighthousebbc.org" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
               Lighthouse BBC Official Website
             </a>
           </div>
@@ -184,10 +133,7 @@ const Footer = () => {
               <Link to="/privacy" className="text-gray-500 hover:text-white transition-colors">
                 Privacy Policy
               </Link>
-              <button 
-                onClick={() => setShowContactForm(true)}
-                className="text-gray-500 hover:text-white transition-colors"
-              >
+              <button onClick={() => setShowContactForm(true)} className="text-gray-500 hover:text-white transition-colors">
                 Contact Us
               </button>
             </div>
@@ -198,8 +144,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
