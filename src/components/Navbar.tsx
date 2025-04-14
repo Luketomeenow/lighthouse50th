@@ -35,7 +35,7 @@ const Navbar = () => {
   const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
     if (path === '/') {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.location.href = '/';  // Direct page reload to index
       setIsMenuOpen(false);
     } else if (path.startsWith('/#')) {
       e.preventDefault();
@@ -70,8 +70,8 @@ const Navbar = () => {
       }`}
     >
       <div className="flex items-center">
-        <a 
-          href="/" 
+        <Link 
+          to="/" 
           onClick={(e) => handleNavigation(e, '/')}
         >
           <img 
@@ -79,7 +79,7 @@ const Navbar = () => {
             alt="Lighthouse BBC 50th Anniversary" 
             className="h-12 md:h-16 w-auto"
           />
-        </a>
+        </Link>
       </div>
       
       <ul className="hidden md:flex space-x-8">
