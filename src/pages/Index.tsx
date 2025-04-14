@@ -112,7 +112,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-green-900">
+    <div className="min-h-screen bg-green-900 overflow-x-hidden w-full">
       {/* Admin controls - only visible to admins */}
       {isAdmin && (
         <div className="fixed top-4 right-4 z-50 flex flex-col sm:flex-row gap-2">
@@ -150,7 +150,7 @@ const Index = () => {
       )}
       
       {/* Main content */}
-      <div className="relative">
+      <div className="relative w-full">
         <Navbar />
         
         <HeroSection 

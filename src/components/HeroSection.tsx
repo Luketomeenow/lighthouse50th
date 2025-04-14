@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
@@ -89,7 +88,7 @@ const HeroSection = ({
   };
 
   return (
-    <div className="relative min-h-screen bg-green-900 flex items-center overflow-hidden pt-20">
+    <div className="relative min-h-screen bg-green-900 flex items-center overflow-hidden pt-20 w-full">
       {/* Background image with 50th anniversary logo */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15" 
@@ -98,7 +97,7 @@ const HeroSection = ({
       
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 via-green-900/60 to-green-900/90" />
       
-      <div className="container mx-auto px-6 md:px-12 z-10 py-12 md:py-0">
+      <div className="container mx-auto px-4 md:px-12 z-10 py-12 md:py-0">
         <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12">
           <div className="w-full lg:w-1/2">
             <motion.div 

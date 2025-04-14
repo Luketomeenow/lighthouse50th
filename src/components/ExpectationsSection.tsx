@@ -1,9 +1,44 @@
 
 import { motion } from 'framer-motion';
+import { Image, Users, Music, BookOpen, Camera, PenTool } from 'lucide-react';
 
 const ExpectationsSection = () => {
+  // Array of expectation items with images
+  const expectationItems = [
+    {
+      title: "Worship Services",
+      description: "Join uplifting praise and worship sessions led by our talented music team.",
+      image: "/lovable-uploads/c81cecf7-b9e9-49b4-ac2e-2e6b36e515f2.png",
+      alt: "Worship Service"
+    },
+    {
+      title: "Bible Preaching",
+      description: "Be inspired by powerful messages from God's Word by respected pastors and speakers.",
+      image: "/lovable-uploads/ff50462c-67ed-4886-a5e9-59860dc8cdfe.png",
+      alt: "Bible Preaching"
+    },
+    {
+      title: "Fellowship",
+      description: "Connect with brothers and sisters in Christ from different Lighthouse churches.",
+      image: "/lovable-uploads/84060376-4fab-44a2-bdcb-c29a645d420b.png",
+      alt: "Fellowship"
+    },
+    {
+      title: "Testimonies",
+      description: "Hear moving stories of God's faithfulness throughout 50 years of ministry.",
+      image: "/lovable-uploads/c81cecf7-b9e9-49b4-ac2e-2e6b36e515f2.png",
+      alt: "Testimonies"
+    },
+    {
+      title: "Special Performances",
+      description: "Enjoy special musical numbers and presentations celebrating our history.",
+      image: "/lovable-uploads/ff50462c-67ed-4886-a5e9-59860dc8cdfe.png",
+      alt: "Special Performances"
+    },
+  ];
+
   return (
-    <div className="py-16 md:py-24 bg-green-900 text-white relative overflow-hidden">
+    <div className="py-16 md:py-24 bg-green-900 text-white relative overflow-hidden w-full">
       {/* Background image with overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
@@ -12,26 +47,32 @@ const ExpectationsSection = () => {
       
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 to-green-900/70" />
       
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+      <div className="container mx-auto px-4 md:px-12 relative z-10">
         <div className="text-center mb-12">
           <p className="text-yellow-300 mb-2">Activities At the Lighthouse Bible Baptist Church and Ministries' 50th Anniversary</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white">WHAT TO EXPECT?</h2>
         </div>
         
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           {/* First row */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
             viewport={{ once: true }}
-            className="col-span-12 md:col-span-4 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+            className="md:col-span-4 bg-white/10 backdrop-blur-md rounded-lg overflow-hidden group"
           >
-            <img 
-              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
-              alt="Worship Service" 
-              className="w-full h-full object-cover opacity-40"
-            />
+            <div className="relative h-52 sm:h-64 w-full overflow-hidden">
+              <img 
+                src={expectationItems[0].image} 
+                alt={expectationItems[0].alt} 
+                className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                <h3 className="text-lg font-semibold text-white">{expectationItems[0].title}</h3>
+                <p className="text-sm text-gray-300">{expectationItems[0].description}</p>
+              </div>
+            </div>
           </motion.div>
           
           <motion.div
@@ -39,13 +80,19 @@ const ExpectationsSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
             viewport={{ once: true }}
-            className="col-span-12 md:col-span-5 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+            className="md:col-span-5 bg-white/10 backdrop-blur-md rounded-lg overflow-hidden group"
           >
-            <img 
-              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
-              alt="Conference Session" 
-              className="w-full h-full object-cover opacity-40"
-            />
+            <div className="relative h-52 sm:h-64 w-full overflow-hidden">
+              <img 
+                src={expectationItems[1].image} 
+                alt={expectationItems[1].alt} 
+                className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                <h3 className="text-lg font-semibold text-white">{expectationItems[1].title}</h3>
+                <p className="text-sm text-gray-300">{expectationItems[1].description}</p>
+              </div>
+            </div>
           </motion.div>
           
           <motion.div
@@ -53,13 +100,19 @@ const ExpectationsSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.2 }}
             viewport={{ once: true }}
-            className="col-span-12 md:col-span-3 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+            className="md:col-span-3 bg-white/10 backdrop-blur-md rounded-lg overflow-hidden group"
           >
-            <img 
-              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
-              alt="Fellowship" 
-              className="w-full h-full object-cover opacity-40"
-            />
+            <div className="relative h-52 sm:h-64 w-full overflow-hidden">
+              <img 
+                src={expectationItems[2].image} 
+                alt={expectationItems[2].alt} 
+                className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                <h3 className="text-lg font-semibold text-white">{expectationItems[2].title}</h3>
+                <p className="text-sm text-gray-300">{expectationItems[2].description}</p>
+              </div>
+            </div>
           </motion.div>
           
           {/* Second row */}
@@ -68,13 +121,19 @@ const ExpectationsSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.3 }}
             viewport={{ once: true }}
-            className="col-span-12 md:col-span-6 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+            className="md:col-span-6 bg-white/10 backdrop-blur-md rounded-lg overflow-hidden group"
           >
-            <img 
-              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
-              alt="Group Activities" 
-              className="w-full h-full object-cover opacity-40"
-            />
+            <div className="relative h-52 sm:h-64 w-full overflow-hidden">
+              <img 
+                src={expectationItems[3].image} 
+                alt={expectationItems[3].alt} 
+                className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                <h3 className="text-lg font-semibold text-white">{expectationItems[3].title}</h3>
+                <p className="text-sm text-gray-300">{expectationItems[3].description}</p>
+              </div>
+            </div>
           </motion.div>
           
           <motion.div
@@ -82,13 +141,19 @@ const ExpectationsSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.4 }}
             viewport={{ once: true }}
-            className="col-span-12 md:col-span-6 aspect-video bg-white/10 backdrop-blur-md rounded-lg overflow-hidden"
+            className="md:col-span-6 bg-white/10 backdrop-blur-md rounded-lg overflow-hidden group"
           >
-            <img 
-              src="/lovable-uploads/8d7a74f2-af3e-412b-a989-f2a6321ea7da.png" 
-              alt="Celebration Event" 
-              className="w-full h-full object-cover opacity-40"
-            />
+            <div className="relative h-52 sm:h-64 w-full overflow-hidden">
+              <img 
+                src={expectationItems[4].image} 
+                alt={expectationItems[4].alt} 
+                className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                <h3 className="text-lg font-semibold text-white">{expectationItems[4].title}</h3>
+                <p className="text-sm text-gray-300">{expectationItems[4].description}</p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

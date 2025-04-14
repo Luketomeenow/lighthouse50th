@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 
 const CTASection = () => {
   return (
-    <div className="py-16 bg-black relative overflow-hidden">
+    <div className="py-16 bg-black relative overflow-hidden w-full">
       {/* Yellow divider at the top */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-500"></div>
       
-      <div className="container mx-auto px-6 md:px-12">
+      <div className="container mx-auto px-4 md:px-12">
         <div className="bg-black/70 rounded-2xl p-8 md:p-12 relative overflow-hidden">
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
@@ -23,7 +23,7 @@ const CTASection = () => {
               <Button 
                 variant="yellow" 
                 size="xl" 
-                className="rounded-full text-white"
+                className="rounded-full text-white font-semibold"
                 onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 REGISTER NOW
