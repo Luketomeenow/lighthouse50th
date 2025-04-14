@@ -96,7 +96,24 @@ const ProgramScheduleSection = () => {
       <div className="w-full bg-green-950 mb-8 relative">
         
       </div>
-      
+
+      <div className="py-4">
+      {/* Program Flow Header */}
+      <div className="bg-green-900 py-8 mb-10 rounded-lg">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="text-white mb-4 md:mb-0">
+              <p className="text-yellow-400 font-medium">Event Flow @ World Trade Center, Pasay City</p>
+              <h2 className="text-3xl md:text-4xl font-bold mt-1">PROGRAM FLOW</h2>
+            </div>
+            <div className="text-white text-center md:text-right">
+              <p className="text-yellow-400 font-medium">Save The Date!</p>
+              <h3 className="text-xl md:text-2xl font-semibold">February 28 – March 2, 2026</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    
       <div className="container mx-auto px-6 md:px-12">
         <div className="mb-8 flex justify-center space-x-4">
           <Button onClick={() => setActiveDay(0)} variant={activeDay === 0 ? "default" : "outline"} className={`rounded-md ${activeDay === 0 ? "bg-yellow-500 hover:bg-yellow-600 text-green-950" : "border-yellow-500 text-yellow-500 hover:bg-green-900"}`}>
