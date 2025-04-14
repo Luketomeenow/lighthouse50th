@@ -102,7 +102,7 @@ const ProgramScheduleSection = () => {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="text-white mb-6 md:mb-0 text-center md:text-left">
                 <p className="text-yellow-400 font-medium">Event Flow @ World Trade Center, Pasay City</p>
-                <h2 className="text-3xl md:text-4xl font-bold mt-1 text-center">PROGRAM FLOW</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mt-1 text-left">PROGRAM FLOW</h2>
               </div>
               <div className="text-white text-center md:text-right">
                 <p className="text-yellow-400 font-medium">Save The Date!</p>
