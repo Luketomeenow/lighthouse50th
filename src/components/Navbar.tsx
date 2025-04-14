@@ -109,7 +109,7 @@ const Navbar = () => {
 
       {/* Mobile menu with improved background */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-green-900/95 z-50 md:hidden flex flex-col pt-20">
+        <div className="fixed inset-0 bg-green-900/95 backdrop-blur-md z-50 md:hidden flex flex-col pt-20">
           <div className="absolute top-6 right-6">
             <button 
               onClick={toggleMenu}
@@ -118,8 +118,8 @@ const Navbar = () => {
               <X className="h-6 w-6" />
             </button>
           </div>
-          <div className="px-6">
-            <ul className="flex flex-col space-y-6">
+          <div className="px-8">
+            <ul className="flex flex-col space-y-8">
               {navItems.map((item) => (
                 <li key={item.name}>
                   <a 
@@ -131,7 +131,7 @@ const Navbar = () => {
                   </a>
                 </li>
               ))}
-              <li className="mt-8">
+              <li className="mt-12 pt-8 border-t border-green-800">
                 <div className="text-white text-lg">
                   50th Anniversary -<br />
                   Lighthouse Bible Baptist Church
