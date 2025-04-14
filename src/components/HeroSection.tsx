@@ -204,7 +204,7 @@ const HeroSection = ({
               <div className="text-center lg:text-left">
                 <Drawer>
                   <DrawerTrigger asChild>
-                    <Button onClick={handleVideoControl} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-full text-lg flex items-center gap-2 px-[40px] my-[8px] mx-[41px]">
+                    <Button onClick={handleVideoControl} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-full text-lg flex items-center gap-2 px-[40px] my-[8px] mx-0">
                       {isPlaying ? <>
                           <Pause className="h-5 w-5" />
                           PAUSE VIDEO
