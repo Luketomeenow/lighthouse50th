@@ -63,13 +63,11 @@ const countryCodes = [{
   code: '+34',
   name: 'Spain'
 }].sort((a, b) => a.name.localeCompare(b.name));
-
 type HeroSectionProps = {
   title: string;
   venue: string;
   targetDate: string;
 };
-
 const formSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name is required"
@@ -97,7 +95,6 @@ const formSchema = z.object({
   }),
   needsAccommodation: z.boolean().default(false)
 });
-
 const HeroSection = ({
   title,
   venue,
@@ -106,7 +103,6 @@ const HeroSection = ({
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const videoSectionRef = useRef<HTMLDivElement>(null);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -121,7 +117,6 @@ const HeroSection = ({
       needsAccommodation: false
     }
   });
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     try {
@@ -147,30 +142,31 @@ const HeroSection = ({
       setIsSubmitting(false);
     }
   };
-
   const scrollToVideoSection = () => {
-    videoSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    videoSectionRef.current?.scrollIntoView({
+      behavior: 'smooth'
+    });
   };
-
-  return (
-    <div className="relative min-h-screen bg-green-900 flex flex-col items-center overflow-hidden pt-20 w-full">
+  return <div className="relative min-h-screen bg-green-900 flex flex-col items-center overflow-hidden pt-20 w-full">
       {/* Background image with 50th anniversary logo */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
-        style={{ backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')` }}
-      />
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15" style={{
+      backgroundImage: `url('/lovable-uploads/bc98acf5-b602-4dcd-8a14-2785cc0af270.png')`
+    }} />
       
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/90 via-green-900/60 to-green-900/90" />
       
       <div className="container mx-auto px-4 md:px-8 z-10 py-8 md:py-12">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
           <div className="w-full lg:w-1/2">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center lg:text-left"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.8
+          }} className="text-center lg:text-left">
               <p className="text-yellow-300 mb-4 tracking-wider">Lighthouse Bible Baptist Churches and Ministries at 50</p>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
                 Celebrating God's Faithfulness at 50 in Lighthouse Bible Baptist Church
@@ -184,10 +180,7 @@ const HeroSection = ({
                 <p className="text-gray-300">World Trade Center, Pasay City</p>
               </div>
 
-              <Button 
-                onClick={scrollToVideoSection} 
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 md:py-3 md:px-8 rounded-full text-base md:text-lg flex items-center gap-2 mx-auto lg:mx-0"
-              >
+              <Button onClick={scrollToVideoSection} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 md:py-3 md:px-8 rounded-full text-base md:text-lg flex items-center gap-2 mx-auto lg:mx-0">
                 <Play className="h-4 w-4 md:h-5 md:w-5" />
                 WATCH VIDEO
               </Button>
@@ -195,97 +188,66 @@ const HeroSection = ({
           </div>
           
           <div className="w-full lg:w-1/2" id="registration-form">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            scale: 0.9
+          }} animate={{
+            opacity: 1,
+            scale: 1
+          }} transition={{
+            duration: 0.8,
+            delay: 0.2
+          }} className="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
               <h2 className="text-2xl font-bold text-white mb-4 text-center">Register for the Event</h2>
               
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
+                    <FormField control={form.control} name="firstName" render={({
+                    field
+                  }) => <FormItem>
                           <FormLabel className="text-white">First Name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your first name"
-                              {...field}
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                            />
+                            <Input placeholder="Enter your first name" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                           </FormControl>
                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </FormItem>} />
                     
-                    <FormField
-                      control={form.control}
-                      name="lastName"
-                      render={({ field }) => (
-                        <FormItem>
+                    <FormField control={form.control} name="lastName" render={({
+                    field
+                  }) => <FormItem>
                           <FormLabel className="text-white">Last Name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your last name"
-                              {...field}
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                            />
+                            <Input placeholder="Enter your last name" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                           </FormControl>
                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </FormItem>} />
                   </div>
                   
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
+                  <FormField control={form.control} name="email" render={({
+                  field
+                }) => <FormItem>
                         <FormLabel className="text-white">Email</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Enter your email"
-                            {...field}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                          />
+                          <Input placeholder="Enter your email" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                         </FormControl>
                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      </FormItem>} />
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="age"
-                      render={({ field }) => (
-                        <FormItem>
+                    <FormField control={form.control} name="age" render={({
+                    field
+                  }) => <FormItem>
                           <FormLabel className="text-white">Age</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your age"
-                              type="number"
-                              {...field}
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                            />
+                            <Input placeholder="Enter your age" type="number" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                           </FormControl>
                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </FormItem>} />
                     
-                    <FormField
-                      control={form.control}
-                      name="ageGroup"
-                      render={({ field }) => (
-                        <FormItem>
+                    <FormField control={form.control} name="ageGroup" render={({
+                    field
+                  }) => <FormItem>
                           <FormLabel className="text-white">Age Group</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -302,17 +264,13 @@ const HeroSection = ({
                             </SelectContent>
                           </Select>
                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </FormItem>} />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="countryCode"
-                      render={({ field }) => (
-                        <FormItem>
+                    <FormField control={form.control} name="countryCode" render={({
+                    field
+                  }) => <FormItem>
                           <FormLabel className="text-white">Country</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -321,78 +279,50 @@ const HeroSection = ({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="max-h-[300px]">
-                              {countryCodes.map(country => (
-                                <SelectItem key={country.code} value={country.code}>
+                              {countryCodes.map(country => <SelectItem key={country.code} value={country.code}>
                                   {country.name} ({country.code})
-                                </SelectItem>
-                              ))}
+                                </SelectItem>)}
                             </SelectContent>
                           </Select>
                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </FormItem>} />
 
-                    <FormField
-                      control={form.control}
-                      name="contact"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
+                    <FormField control={form.control} name="contact" render={({
+                    field
+                  }) => <FormItem className="md:col-span-2">
                           <FormLabel className="text-white">Contact Number</FormLabel>
                           <div className="flex">
                             <div className="bg-white/10 border-white/20 text-white py-2 px-3 rounded-l-md border border-r-0">
                               {form.watch("countryCode")}
                             </div>
                             <FormControl>
-                              <Input
-                                placeholder="Enter your contact number"
-                                {...field}
-                                className="rounded-l-none bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                              />
+                              <Input placeholder="Enter your contact number" {...field} className="rounded-l-none bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                             </FormControl>
                           </div>
                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </FormItem>} />
                   </div>
                   
-                  <FormField
-                    control={form.control}
-                    name="lighthouseWork"
-                    render={({ field }) => (
-                      <FormItem>
+                  <FormField control={form.control} name="lighthouseWork" render={({
+                  field
+                }) => <FormItem>
                         <FormLabel className="text-white">Work in Lighthouse Ministry</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Enter your work in the ministry"
-                            {...field}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                          />
+                          <Input placeholder="Enter your work in the ministry" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                         </FormControl>
                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      </FormItem>} />
                   
-                  <FormField
-                    control={form.control}
-                    name="needsAccommodation"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md">
+                  <FormField control={form.control} name="needsAccommodation" render={({
+                  field
+                }) => <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md">
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="data-[state=checked]:bg-yellow-500 data-[state=checked]:text-white"
-                          />
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-yellow-500 data-[state=checked]:text-white" />
                         </FormControl>
                         <div className="space-y-1 leading-none">
                           <FormLabel className="text-white">I need accommodation during the event</FormLabel>
                         </div>
-                      </FormItem>
-                    )}
-                  />
+                      </FormItem>} />
                   
                   <Button type="submit" disabled={isSubmitting} className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-full font-semibold text-lg">
                     {isSubmitting ? "Submitting..." : "REGISTER"}
@@ -408,16 +338,10 @@ const HeroSection = ({
       <div ref={videoSectionRef} className="w-full bg-green-950/50 mt-8">
         <div className="container mx-auto px-4 md:px-8 py-8 md:py-12">
           <div className="flex justify-center">
-            <video 
-              src="https://fwxblkgnyneqwotlsqss.supabase.co/storage/v1/object/public/videos//00af3f67-1dce-40fe-af62-2b534af8a691.mp4" 
-              controls 
-              className="w-full max-h-[70vh] rounded-lg shadow-lg" 
-            />
+            
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default HeroSection;
