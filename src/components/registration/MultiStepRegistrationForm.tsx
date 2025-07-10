@@ -6,7 +6,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { EducationWorkStep } from "./steps/EducationWorkStep";
 import { ChurchHistoryStep } from "./steps/ChurchHistoryStep";
-import { AgeGroupLighthouseStep } from "./steps/AgeGroupLighthouseStep";
 import { PaymentAccommodationStep } from "./steps/PaymentAccommodationStep";
 import { ConsentConfirmationStep } from "./steps/ConsentConfirmationStep";
 import { useToast } from "@/hooks/use-toast";
@@ -60,9 +59,8 @@ const STEPS = [
   { id: 1, title: "Personal Information", component: PersonalInfoStep },
   { id: 2, title: "Education & Work", component: EducationWorkStep },
   { id: 3, title: "Church History", component: ChurchHistoryStep },
-  { id: 4, title: "Age Group & Lighthouse", component: AgeGroupLighthouseStep },
-  { id: 5, title: "Payment & Accommodation", component: PaymentAccommodationStep },
-  { id: 6, title: "Consent & Confirmation", component: ConsentConfirmationStep },
+  { id: 4, title: "Payment & Accommodation", component: PaymentAccommodationStep },
+  { id: 5, title: "Consent & Confirmation", component: ConsentConfirmationStep },
 ];
 
 export const MultiStepRegistrationForm = () => {

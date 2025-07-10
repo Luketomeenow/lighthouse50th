@@ -84,6 +84,34 @@ export const PersonalInfoStep = ({ formData, updateFormData }: PersonalInfoStepP
           />
         </div>
         <div>
+          <Label htmlFor="age">Age *</Label>
+          <Input
+            id="age"
+            type="number"
+            value={formData.age}
+            onChange={(e) => updateFormData({ age: parseInt(e.target.value) || 0 })}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="age_group">Age Group *</Label>
+          <Select onValueChange={(value) => updateFormData({ age_group: value })}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select age group" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Children">Children (0-12)</SelectItem>
+              <SelectItem value="YP">Young People (13-22)</SelectItem>
+              <SelectItem value="SWYP">Single Working Young People (23-35)</SelectItem>
+              <SelectItem value="Adult">Adults (36-59)</SelectItem>
+              <SelectItem value="Senior">Senior Adults (60+)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
           <Label htmlFor="gender">Gender</Label>
           <Select onValueChange={(value) => updateFormData({ gender: value })}>
             <SelectTrigger>
@@ -110,6 +138,26 @@ export const PersonalInfoStep = ({ formData, updateFormData }: PersonalInfoStepP
             </SelectContent>
           </Select>
         </div>
+        <div>
+          <Label htmlFor="lighthouse_work">Lighthouse Work *</Label>
+          <Input
+            id="lighthouse_work"
+            value={formData.lighthouse_work}
+            onChange={(e) => updateFormData({ lighthouse_work: e.target.value })}
+            placeholder="Your work in Lighthouse Ministry"
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="other_lighthouse_work">Other Lighthouse Work (if applicable)</Label>
+        <Textarea
+          id="other_lighthouse_work"
+          value={formData.other_lighthouse_work || ""}
+          onChange={(e) => updateFormData({ other_lighthouse_work: e.target.value })}
+          placeholder="Additional work or involvement in Lighthouse Ministry"
+        />
       </div>
     </div>
   );
