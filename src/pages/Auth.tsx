@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import RegistrationForm from "@/components/RegistrationForm";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -196,10 +195,10 @@ const Auth = () => {
               <div className="text-center mt-4">
                 <button
                   type="button"
-                  onClick={() => setIsSignUp(true)}
+                  onClick={() => navigate('/')}
                   className="text-sm text-blue-600 hover:underline"
                 >
-                  Don't have an account? Sign up
+                  Don't have an account? Register on homepage
                 </button>
               </div>
             </form>
@@ -216,11 +215,6 @@ const Auth = () => {
         </div>
       </div>
 
-      {/* Registration Form Dialog */}
-      <RegistrationForm 
-        open={isSignUp} 
-        onOpenChange={(open) => setIsSignUp(open)} 
-      />
     </>
   );
 };
