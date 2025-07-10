@@ -1,10 +1,10 @@
 
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import {
+//import { useState } from "react";
+//import { zodResolver } from "@hookform/resolvers/zod";
+//import { useForm } from "react-hook-form";
+//import * as z from "zod";
+//import { Button } from "@/components/ui/button";
+//import {
   Form,
   FormControl,
   FormField,
@@ -12,21 +12,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
+//import { Input } from "@/components/ui/input";
+//import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+//import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+//import { supabase } from "@/integrations/supabase/client";
+//import { toast } from "sonner";
+//import { Loader2 } from "lucide-react";
 
-const ageGroups = ["Children", "YP", "SWYP", "Adult", "Senior"] as const;
-const lighthouseWorks = [
+//const ageGroups = ["Children", "YP", "SWYP", "Adult", "Senior"] as const;
+//const lighthouseWorks = [
   "Bataan",
   "Cainta",
   "Marikina",
@@ -40,7 +40,7 @@ const lighthouseWorks = [
   "Others",
 ] as const;
 
-const formSchema = z.object({
+//const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -63,7 +63,7 @@ const formSchema = z.object({
   path: ["confirmPassword"],
 });
 
-const RegistrationFormSection = () => {
+//const RegistrationFormSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -84,9 +84,9 @@ const RegistrationFormSection = () => {
     },
   });
 
-  const lighthouseWorkValue = form.watch("lighthouseWork");
+  //const lighthouseWorkValue = form.watch("lighthouseWork");
 
-  const handleRegistration = async (values: z.infer<typeof formSchema>) => {
+ // const handleRegistration = async (values: z.infer<typeof formSchema>) => {
     console.log("Starting registration process...");
     setIsLoading(true);
 
@@ -170,7 +170,7 @@ const RegistrationFormSection = () => {
     }
   };
 
-  if (isSuccess) {
+ // if (isSuccess) {
     return (
       <div className="bg-white p-8 rounded-lg shadow text-center">
         <h3 className="text-2xl font-bold text-green-600 mb-4">Registration Complete!</h3>
