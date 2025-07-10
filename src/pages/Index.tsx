@@ -13,8 +13,8 @@ import EventInfoSection from '@/components/EventInfoSection';
 import ProgramScheduleSection from '@/components/ProgramScheduleSection';
 import ExpectationsSection from '@/components/ExpectationsSection';
 import FAQSection from '@/components/FAQSection';
-// CTASection is now removed
 import Footer from '@/components/Footer';
+import { MultiStepRegistrationForm } from '@/components/registration/MultiStepRegistrationForm';
 
 type EventSettings = {
   id: string;
@@ -168,7 +168,21 @@ const Index = () => {
         
         <FAQSection />
         
-        {/* CTASection removed */}
+        {/* Registration Section */}
+        <section id="registration" className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Event Registration
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Join us for "Seeing the Grace of God - In Lighthouse BBC @ 50". 
+                Please complete the registration form below.
+              </p>
+            </div>
+            <MultiStepRegistrationForm />
+          </div>
+        </section>
         
         <Footer />
       </div>

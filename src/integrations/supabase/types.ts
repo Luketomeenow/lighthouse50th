@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
       event_settings: {
@@ -44,49 +49,124 @@ export type Database = {
       }
       registrations: {
         Row: {
+          accommodation_type:
+            | Database["public"]["Enums"]["accommodation_type"]
+            | null
           age: number
           age_group: Database["public"]["Enums"]["age_group"]
+          birthday: string | null
+          civil_status: Database["public"]["Enums"]["civil_status_type"] | null
+          company_name: string | null
           contact: string
+          course_vocation: string | null
           created_at: string
+          data_processing_consent: boolean | null
+          date_baptized: string | null
+          date_saved: string | null
+          date_transferred: string | null
+          education_level:
+            | Database["public"]["Enums"]["education_level_type"]
+            | null
           email: string
           first_name: string
+          former_church_details: string | null
+          gender: Database["public"]["Enums"]["gender_type"] | null
+          home_address: string | null
           id: string
           last_name: string
           lighthouse_work: string
+          middle_name: string | null
           needs_accommodation: boolean
           other_lighthouse_work: string | null
+          payment_amount: number | null
+          payment_mode: Database["public"]["Enums"]["payment_mode_type"] | null
+          payment_proof_url: string | null
+          record_update_consent: boolean | null
+          school_name: string | null
+          special_requirements: string | null
           updated_at: string
           user_id: string | null
+          work_nature_role: string | null
         }
         Insert: {
+          accommodation_type?:
+            | Database["public"]["Enums"]["accommodation_type"]
+            | null
           age: number
           age_group: Database["public"]["Enums"]["age_group"]
+          birthday?: string | null
+          civil_status?: Database["public"]["Enums"]["civil_status_type"] | null
+          company_name?: string | null
           contact: string
+          course_vocation?: string | null
           created_at?: string
+          data_processing_consent?: boolean | null
+          date_baptized?: string | null
+          date_saved?: string | null
+          date_transferred?: string | null
+          education_level?:
+            | Database["public"]["Enums"]["education_level_type"]
+            | null
           email: string
           first_name: string
+          former_church_details?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"] | null
+          home_address?: string | null
           id?: string
           last_name: string
           lighthouse_work: string
+          middle_name?: string | null
           needs_accommodation?: boolean
           other_lighthouse_work?: string | null
+          payment_amount?: number | null
+          payment_mode?: Database["public"]["Enums"]["payment_mode_type"] | null
+          payment_proof_url?: string | null
+          record_update_consent?: boolean | null
+          school_name?: string | null
+          special_requirements?: string | null
           updated_at?: string
           user_id?: string | null
+          work_nature_role?: string | null
         }
         Update: {
+          accommodation_type?:
+            | Database["public"]["Enums"]["accommodation_type"]
+            | null
           age?: number
           age_group?: Database["public"]["Enums"]["age_group"]
+          birthday?: string | null
+          civil_status?: Database["public"]["Enums"]["civil_status_type"] | null
+          company_name?: string | null
           contact?: string
+          course_vocation?: string | null
           created_at?: string
+          data_processing_consent?: boolean | null
+          date_baptized?: string | null
+          date_saved?: string | null
+          date_transferred?: string | null
+          education_level?:
+            | Database["public"]["Enums"]["education_level_type"]
+            | null
           email?: string
           first_name?: string
+          former_church_details?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"] | null
+          home_address?: string | null
           id?: string
           last_name?: string
           lighthouse_work?: string
+          middle_name?: string | null
           needs_accommodation?: boolean
           other_lighthouse_work?: string | null
+          payment_amount?: number | null
+          payment_mode?: Database["public"]["Enums"]["payment_mode_type"] | null
+          payment_proof_url?: string | null
+          record_update_consent?: boolean | null
+          school_name?: string | null
+          special_requirements?: string | null
           updated_at?: string
           user_id?: string | null
+          work_nature_role?: string | null
         }
         Relationships: []
       }
@@ -153,8 +233,24 @@ export type Database = {
       }
     }
     Enums: {
+      accommodation_type: "none" | "hotel" | "homestay" | "church_accommodation"
       age_group: "Children" | "YP" | "SWYP" | "Adult" | "Senior"
       app_role: "admin" | "user"
+      civil_status_type:
+        | "single"
+        | "married"
+        | "widowed"
+        | "separated"
+        | "divorced"
+      education_level_type:
+        | "elementary"
+        | "high_school"
+        | "vocational"
+        | "college"
+        | "graduate"
+        | "post_graduate"
+      gender_type: "male" | "female"
+      payment_mode_type: "cash" | "gcash" | "bank_transfer" | "other"
       seat_status: "available" | "reserved" | "occupied"
     }
     CompositeTypes: {
@@ -163,21 +259,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -195,14 +295,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -218,14 +320,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -241,14 +345,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -256,14 +362,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
@@ -271,8 +379,26 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      accommodation_type: ["none", "hotel", "homestay", "church_accommodation"],
       age_group: ["Children", "YP", "SWYP", "Adult", "Senior"],
       app_role: ["admin", "user"],
+      civil_status_type: [
+        "single",
+        "married",
+        "widowed",
+        "separated",
+        "divorced",
+      ],
+      education_level_type: [
+        "elementary",
+        "high_school",
+        "vocational",
+        "college",
+        "graduate",
+        "post_graduate",
+      ],
+      gender_type: ["male", "female"],
+      payment_mode_type: ["cash", "gcash", "bank_transfer", "other"],
       seat_status: ["available", "reserved", "occupied"],
     },
   },
